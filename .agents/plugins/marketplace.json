@@ -1,0 +1,20 @@
+{
+  "name": "siteos-public",
+  "interface": {
+    "displayName": "SiteOS"
+  },
+  "plugins": [
+    {
+      "name": "siteos",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

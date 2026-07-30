@@ -1,0 +1,4 @@
+interface:
+  display_name: "SiteOS Forms"
+  short_description: "Build managed forms for any project"
+  default_prompt: "Use $siteos-forms to connect this project first, then add, register, and verify a managed contact form."

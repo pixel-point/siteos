@@ -1,0 +1,7 @@
+interface:
+  display_name: "SiteOS Search"
+  short_description: "Managed search setup and repair for external projects"
+  default_prompt: "Use $siteos-search to inspect this external project, discover its host framework, connect it to SiteOS through CLI if needed, and choose onboarding, existing-search, or repair-blocked mode."
+
+policy:
+  allow_implicit_invocation: true

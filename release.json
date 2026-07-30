@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "name": "siteos",
+  "version": "0.3.0",
+  "author": {
+    "name": "Pixel Point",
+    "email": "info@pixelpoint.io",
+    "url": "https://github.com/pixel-point"
+  },
+  "license": "MIT",
+  "source": {
+    "revision": "087da05c0a627edbbafe53acc1fa509a4d2339d3"
+  },
+  "artifact": {
+    "algorithm": "sha256",
+    "digest": "8669767cebb5078914740809a230e5a020aa7290ce59b8bf365524fc5b2c1c36",
+    "entries": 49,
+    "excludes": [
+      "release.json"
+    ]
+  },
+  "hosts": [
+    "claude-code",
+    "codex"
+  ],
+  "gates": [
+    {
+      "classification": "required",
+      "id": "skill-unit"
+    },
+    {
+      "classification": "required",
+      "id": "plugin-release-contract"
+    },
+    {
+      "classification": "required",
+      "id": "plugin-publication-boundary"
+    },
+    {
+      "classification": "required",
+      "id": "forms-linked"
+    },
+    {
+      "classification": "required",
+      "id": "search-current"
+    }
+  ],
+  "plannedMissing": [
+    {
+      "id": "R-019",
+      "contour": "external-project-search",
+      "status": "planned-missing"
+    }
+  ]
+}

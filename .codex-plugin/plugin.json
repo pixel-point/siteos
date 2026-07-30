@@ -1,0 +1,38 @@
+{
+  "name": "siteos",
+  "version": "0.3.0",
+  "description": "SiteOS agent skills for search, forms, and analytics workflows in external web projects.",
+  "author": {
+    "name": "Pixel Point",
+    "email": "info@pixelpoint.io",
+    "url": "https://github.com/pixel-point"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/pixel-point/siteos",
+  "repository": "https://github.com/pixel-point/siteos",
+  "keywords": [
+    "codex",
+    "skills",
+    "siteos",
+    "search",
+    "forms",
+    "analytics"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SiteOS",
+    "shortDescription": "Build and operate SiteOS-managed search, forms, and analytics",
+    "longDescription": "SiteOS provides agent skills for connecting external projects to SiteOS, scaffolding managed search and forms, syncing source data, delivering runtime UI, and inspecting analytics or diagnostics without exposing credentials.",
+    "developerName": "Pixel Point",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "$siteos-search inspect this external project and configure managed search",
+      "$siteos-forms add a managed contact form to this project",
+      "$siteos-analytics inspect search health and usage for this linked project"
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "candidateSources": [
+    {
+      "id": "products",
+      "label": "Products",
+      "thresholdBand": "strong",
+      "priorityTier": "P1",
+      "discoveryShape": "record-collection",
+      "confidence": "high",
+      "count": 18,
+      "documentOrigin": {
+        "type": "api-service",
+        "description": "Product documents come from the project-owned products API helper.",
+        "evidenceFiles": ["src/lib/products.ts"]
+      },
+      "evidence": ["src/app/products/[slug]/page.tsx", "src/lib/products.ts"],
+      "dataAccessFiles": ["src/lib/products.ts"],
+      "routeExamples": ["/products/[slug]"],
+      "linkBehavior": "internal",
+      "envRequirements": ["PRODUCTS_API_URL"],
+      "suggestedResultStrategy": {
+        "type": "url",
+        "description": "Use the product detail page route."
+      },
+      "risksOrQuestions": ["Confirm whether draft products should be indexed."],
+      "recommendedHandlerPath": "scripts/siteos-search/sources/products.mjs"
+    }
+  ],
+  "nextStep": "Confirm or record confirmed sources, result references, and search UI placement according to the session-state checkpoint policy."
+}

@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "search:sync": "node scripts/siteos-search/sync.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

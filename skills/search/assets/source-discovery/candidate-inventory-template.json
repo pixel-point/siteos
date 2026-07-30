@@ -1,0 +1,125 @@
+{
+  "sessionArtifact": {
+    "artifactSuffix": "source-candidates",
+    "description": "Temporary candidate inventory for the current onboarding discovery step.",
+    "extension": "json",
+    "stepId": "candidate-source-discovery"
+  },
+  "candidates": [
+    {
+      "id": "faq",
+      "label": "FAQ",
+      "count": 9,
+      "discoveryShape": "page-embedded-knowledge",
+      "priorityTier": "P2",
+      "thresholdBand": "candidate",
+      "confidence": "medium",
+      "sourceCategory": "knowledge-base",
+      "documentOrigin": {
+        "type": "code-defined-data",
+        "description": "FAQ entries are defined in a local component data module.",
+        "evidenceFiles": ["src/components/faq/faq-data.ts"]
+      },
+      "evidenceFiles": [
+        "src/app/faq/page.tsx",
+        "src/components/faq/faq-data.ts"
+      ],
+      "routeExamples": ["/faq"],
+      "envRequirements": [],
+      "resultStrategySuggestion": {
+        "type": "url",
+        "description": "Use the FAQ page with a stable section or item anchor when fragment-aware linking is supported."
+      },
+      "linkBehavior": "internal",
+      "userDecision": "proposed",
+      "notes": ["Confirm whether all FAQ entries should be indexed."]
+    },
+    {
+      "id": "integrations",
+      "label": "Integrations",
+      "count": 14,
+      "discoveryShape": "curated-cards",
+      "priorityTier": "P2",
+      "thresholdBand": "strong",
+      "confidence": "medium",
+      "sourceCategory": "integrations",
+      "documentOrigin": {
+        "type": "code-defined-data",
+        "description": "Integration cards are defined in a local component data module.",
+        "evidenceFiles": ["src/components/integrations/integrations-data.ts"]
+      },
+      "evidenceFiles": [
+        "src/app/integrations/page.tsx",
+        "src/components/integrations/integrations-data.ts"
+      ],
+      "routeExamples": ["/integrations"],
+      "envRequirements": [],
+      "resultStrategySuggestion": {
+        "type": "url",
+        "description": "Use the integrations page with a stable section, subgroup, or item anchor when fragment-aware linking is supported."
+      },
+      "linkBehavior": "mixed",
+      "userDecision": "proposed",
+      "notes": [
+        "Confirm whether grouped integration sections expose stable anchors."
+      ]
+    },
+    {
+      "id": "technology-partners",
+      "label": "Technology Partners",
+      "count": 11,
+      "discoveryShape": "external-linked-entities",
+      "priorityTier": "P3",
+      "thresholdBand": "candidate",
+      "confidence": "medium",
+      "sourceCategory": "partners",
+      "documentOrigin": {
+        "type": "external-integration",
+        "description": "Partner entities are locally curated and link to external destinations.",
+        "evidenceFiles": ["src/components/partners/partner-cards.ts"]
+      },
+      "evidenceFiles": [
+        "src/app/partners/page.tsx",
+        "src/components/partners/partner-cards.ts"
+      ],
+      "routeExamples": ["/partners"],
+      "envRequirements": [],
+      "resultStrategySuggestion": {
+        "type": "inline",
+        "description": "Keep the locally defined partner entity searchable and direct the final click-through to the external destination."
+      },
+      "linkBehavior": "external",
+      "userDecision": "proposed",
+      "notes": [
+        "Do not reject this candidate only because the click-through target is external."
+      ]
+    },
+    {
+      "id": "release-notes",
+      "label": "Release Notes",
+      "count": 0,
+      "discoveryShape": "curated-cards",
+      "priorityTier": "P3",
+      "thresholdBand": "skip",
+      "confidence": "low",
+      "sourceCategory": "updates",
+      "documentOrigin": {
+        "type": "disk-path",
+        "description": "Release-notes directory was present, but no indexable release note files were found.",
+        "evidenceFiles": ["content/release-notes"]
+      },
+      "evidenceFiles": ["content/release-notes"],
+      "routeExamples": [],
+      "envRequirements": [],
+      "resultStrategySuggestion": {
+        "type": "url",
+        "description": "Keep this candidate visible as zero documents until release-note files or routes exist."
+      },
+      "linkBehavior": "internal",
+      "userDecision": "proposed",
+      "notes": [
+        "Zero-count candidate: discovered origin evidence, but no indexable documents were found."
+      ]
+    }
+  ]
+}
