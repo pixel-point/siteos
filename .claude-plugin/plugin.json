@@ -1,14 +1,14 @@
 {
   "name": "siteos",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "One SiteOS plugin for CLI, Auth, Pulse, Forms, Search, and Search analytics workflows.",
   "author": {
     "name": "Pixel Point",
     "email": "info@pixelpoint.io",
     "url": "https://github.com/pixel-point"
   },
-  "homepage": "https://github.com/pixel-point/siteos-public",
-  "repository": "https://github.com/pixel-point/siteos-public",
+  "homepage": "https://github.com/pixel-point/siteos",
+  "repository": "https://github.com/pixel-point/siteos",
   "license": "MIT",
   "keywords": [
     "codex",

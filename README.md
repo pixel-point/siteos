@@ -2,15 +2,15 @@
 
 This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, Auth, Pulse, Forms, Search, and Search analytics.
 
-Release: 1.0.1.
+Release: 1.1.0.
 
 ## Install
 
 ### Codex
 
 ```sh
-codex plugin marketplace add https://github.com/pixel-point/siteos-public.git --ref main
-codex plugin add siteos@siteos-public
+codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v1.1.0
+codex plugin add siteos@siteos
 ```
 
 Start a new Codex session after installation to load the plugin.
@@ -18,8 +18,8 @@ Start a new Codex session after installation to load the plugin.
 ### Claude Code
 
 ```sh
-claude plugin marketplace add https://github.com/pixel-point/siteos-public.git
-claude plugin install siteos@siteos-public
+claude plugin marketplace add https://github.com/pixel-point/siteos.git
+claude plugin install siteos@siteos
 ```
 
 Run `/reload-plugins` to load the plugin in the current Claude Code session, or start a new session.
@@ -27,7 +27,7 @@ Run `/reload-plugins` to load the plugin in the current Claude Code session, or 
 ### Agent Skills installers
 
 ```sh
-npx skills add pixel-point/siteos-public --all
+npx skills add pixel-point/siteos --all
 ```
 
 This installs the complete suite in one command so the orchestrator can route to every sibling skill.
