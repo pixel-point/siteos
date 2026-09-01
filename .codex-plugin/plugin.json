@@ -1,6 +1,6 @@
 {
   "name": "siteos",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "One SiteOS plugin for CLI, Auth, Pulse, Forms, Search, and Search analytics workflows.",
   "author": {
     "name": "Pixel Point",
@@ -26,6 +26,10 @@
     "shortDescription": "Operate SiteOS services through one plugin and one CLI",
     "longDescription": "SiteOS routes setup and cross-service work to focused skills for the unified CLI, central Auth, and product-owned Pulse, Forms, and Search Projects without coupling their data or lifecycles.",
     "developerName": "Pixel Point",
+    "brandColor": "#000000",
+    "composerIcon": "./assets/siteos-logo.png",
+    "logo": "./assets/siteos-logo.png",
+    "logoDark": "./assets/siteos-logo.png",
     "category": "Developer Tools",
     "capabilities": [
       "Interactive",
