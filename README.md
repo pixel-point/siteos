@@ -2,7 +2,7 @@
 
 This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, Auth, Pulse, Forms, Search, and Search analytics.
 
-Release: 1.0.0.
+Release: 1.0.1.
 
 ## Install
 
@@ -48,7 +48,7 @@ Authenticates the CLI and selects the intended Organization. Auth never creates 
 
 ### Pulse (`$siteos-pulse`)
 
-Creates or selects a Pulse Project, manages versioned Playwright Checks, runs them locally, and builds or deploys bundles.
+Creates or selects a Pulse Project, authors and maintains versioned Playwright Checks, runs them locally, and builds or deploys bundles.
 
 ### Search (`$siteos-search`)
 
