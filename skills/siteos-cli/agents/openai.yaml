@@ -1,0 +1,7 @@
+interface:
+  display_name: "SiteOS CLI"
+  short_description: "Install and diagnose the unified SiteOS CLI"
+  default_prompt: "Use $siteos-cli to verify @siteoshq/cli readiness and choose only commands supported by the generated command reference."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,19 +1,21 @@
 {
   "name": "siteos",
-  "version": "0.3.0",
-  "description": "SiteOS agent skills for search, forms, and analytics workflows in external web projects.",
+  "version": "1.0.0",
+  "description": "One SiteOS plugin for CLI, Auth, Pulse, Forms, Search, and Search analytics workflows.",
   "author": {
     "name": "Pixel Point",
     "email": "info@pixelpoint.io",
     "url": "https://github.com/pixel-point"
   },
   "license": "MIT",
-  "homepage": "https://github.com/pixel-point/siteos",
-  "repository": "https://github.com/pixel-point/siteos",
+  "homepage": "https://github.com/pixel-point/siteos-public",
+  "repository": "https://github.com/pixel-point/siteos-public",
   "keywords": [
     "codex",
     "skills",
     "siteos",
+    "cli",
+    "pulse",
     "search",
     "forms",
     "analytics"
@@ -21,8 +23,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "SiteOS",
-    "shortDescription": "Build and operate SiteOS-managed search, forms, and analytics",
-    "longDescription": "SiteOS provides agent skills for connecting external projects to SiteOS, scaffolding managed search and forms, syncing source data, delivering runtime UI, and inspecting analytics or diagnostics without exposing credentials.",
+    "shortDescription": "Operate SiteOS services through one plugin and one CLI",
+    "longDescription": "SiteOS routes setup and cross-service work to focused skills for the unified CLI, central Auth, and product-owned Pulse, Forms, and Search Projects without coupling their data or lifecycles.",
     "developerName": "Pixel Point",
     "category": "Developer Tools",
     "capabilities": [
@@ -30,6 +32,10 @@
       "Write"
     ],
     "defaultPrompt": [
+      "$siteos set up SiteOS for this repository and route the work to the required services",
+      "$siteos-cli inspect CLI readiness and available commands",
+      "$siteos-auth authenticate and select the correct Organization",
+      "$siteos-pulse configure and deploy Playwright monitoring",
       "$siteos-search inspect this external project and configure managed search",
       "$siteos-forms add a managed contact form to this project",
       "$siteos-analytics inspect search health and usage for this linked project"

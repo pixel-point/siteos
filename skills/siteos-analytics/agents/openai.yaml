@@ -1,0 +1,7 @@
+interface:
+  display_name: "SiteOS Analytics"
+  short_description: "Managed search analytics and sidecar reports"
+  default_prompt: "Use $siteos-analytics to inspect this selected Search Project, fetch redacted analytics/diagnostics, and choose concise chat or a sidecar report."
+
+policy:
+  allow_implicit_invocation: true

@@ -3,12 +3,15 @@
   "owner": {
     "name": "Pixel Point"
   },
-  "description": "SiteOS agent skills for search, forms, and analytics workflows in external web projects.",
+  "description": "One SiteOS plugin for CLI, Auth, Pulse, Forms, Search, and Search analytics workflows.",
+  "metadata": {
+    "description": "One SiteOS plugin for CLI, Auth, Pulse, Forms, Search, and Search analytics workflows."
+  },
   "plugins": [
     {
       "name": "siteos",
       "source": "./",
-      "description": "SiteOS agent skills for search, forms, and analytics workflows in external web projects."
+      "description": "One SiteOS plugin for CLI, Auth, Pulse, Forms, Search, and Search analytics workflows."
     }
   ]
 }

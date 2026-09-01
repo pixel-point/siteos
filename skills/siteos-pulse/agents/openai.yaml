@@ -1,0 +1,7 @@
+interface:
+  display_name: "SiteOS Pulse"
+  short_description: "Build and deploy versioned Playwright monitoring"
+  default_prompt: "Use $siteos-pulse to select an independent Pulse Project, validate its Playwright Checks, test locally, and deploy only when requested."
+
+policy:
+  allow_implicit_invocation: true

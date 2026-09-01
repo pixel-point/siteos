@@ -1,0 +1,7 @@
+interface:
+  display_name: "SiteOS Auth"
+  short_description: "Authenticate and select a SiteOS Organization"
+  default_prompt: "Use $siteos-auth to authenticate the unified SiteOS CLI and select the intended Organization without creating product Projects."
+
+policy:
+  allow_implicit_invocation: true

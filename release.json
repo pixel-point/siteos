@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "siteos",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "author": {
     "name": "Pixel Point",
     "email": "info@pixelpoint.io",
@@ -9,15 +9,18 @@
   },
   "license": "MIT",
   "source": {
-    "revision": "087da05c0a627edbbafe53acc1fa509a4d2339d3"
+    "repository": "https://github.com/pixel-point/siteos-platform",
+    "path": "plugins/siteos",
+    "revision": "5ddfd21be987a170e2e54149855454afb3fc538c"
   },
   "artifact": {
     "algorithm": "sha256",
-    "digest": "8669767cebb5078914740809a230e5a020aa7290ce59b8bf365524fc5b2c1c36",
-    "entries": 49,
+    "digest": "f509e34fad328ee310a18bb40c4d894dd70e89eafdc59a8623e5b83f1273a71f",
+    "entries": 62,
     "excludes": [
       "release.json"
-    ]
+    ],
+    "format": "path-nul-mode-nul-content-nul-v1"
   },
   "hosts": [
     "claude-code",
@@ -30,6 +33,14 @@
     },
     {
       "classification": "required",
+      "id": "cli-skill-contract"
+    },
+    {
+      "classification": "required",
+      "id": "cli-current"
+    },
+    {
+      "classification": "required",
       "id": "plugin-release-contract"
     },
     {
@@ -38,7 +49,7 @@
     },
     {
       "classification": "required",
-      "id": "forms-linked"
+      "id": "forms-current"
     },
     {
       "classification": "required",
