@@ -22,6 +22,12 @@ The unified CLI obtains the exact Auth grant and product Project context interna
 the skill never handles either proof. The CLI installs runtime credentials into the ignored
 owner-only project `.env`; do not inspect or print that file.
 
+Ensure `.env` is ignored before running `credential issue --install`. The Forms installer writes
+`SITEOS_FORMS_SUBMISSION_CREDENTIAL` only; it does not install `SITEOS_FORMS_PUBLIC_URL`. Configure
+that non-secret URL separately for the selected SiteOS application, preserving all other entries
+without printing the file. Production uses `https://app.siteos.sh`; the separate staging
+installation uses `https://siteosapp.xui.se`. A Project's website URL is not its Forms API origin.
+
 ## Unlinked Forms Project Flow
 
 When the project is not linked:
@@ -130,11 +136,22 @@ browser -> local /api/forms/:formKey -> SiteOS API -> SiteOS storage
 
 The local endpoint reads SiteOS config and credentials server-side, validates basic request shape, and proxies to SiteOS. This keeps credentials out of the browser.
 
-For skill-time upstream smoke tests, use:
+For skill-time upstream smoke tests with the runtime environment already loaded, use:
 
 ```bash
 npx @siteoshq/cli forms submit --input <path> --json
 ```
+
+The CLI reads process environment values; saving `.env` does not load them into a later command.
+For the shared globally installed CLI on POSIX hosts with Node.js 22+, load the file safely with:
+
+```sh
+node --env-file=.env "$(command -v siteos)" forms submit --input <path> --json
+```
+
+On other hosts use the project's normal environment-loading runner. Do not print the credential,
+source `.env` as shell code, or issue another key to repair an unloaded environment. Keep the
+explicit API origin in the loaded environment when testing staging.
 
 Generated target-project runtime should still use this upstream submission contract unless newer source or docs explicitly override it:
 
@@ -159,9 +176,9 @@ Content-Type: application/json
 
 Do not switch to a project API-key submission path or a form-key path such as `/api/v1/project/forms/{formKey}/submissions`; the scoped credential selects the project environment and the payload selects the form.
 
-The CLI's hosted default is `https://app.siteos.sh` and credential installation writes that
-origin to `SITEOS_FORMS_PUBLIC_URL`. Generated runtime must still fail safely when the explicit
-installed value is missing or unsafe, and must send only `SITEOS_FORMS_SUBMISSION_CREDENTIAL` as runtime authority.
+The CLI's hosted default is `https://app.siteos.sh`; the credential installer does not write the
+API origin. Generated runtime must fail safely when the explicitly configured
+`SITEOS_FORMS_PUBLIC_URL` is missing or unsafe, and must send only `SITEOS_FORMS_SUBMISSION_CREDENTIAL` as runtime authority.
 It must never send an Auth grant, Project context, browser cookie, or Project API key.
 
 If the upstream response is HTML or another non-JSON payload, assume the route or environment contract is wrong and normalize the local error message accordingly.
