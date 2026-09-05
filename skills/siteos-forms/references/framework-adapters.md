@@ -46,7 +46,7 @@ Inspect before editing:
 ## Existing SiteOS-Exported Projects
 
 - Preserve existing generated helper patterns, but establish Forms repository selection only
-  through safe `siteos forms project status --json` output backed by `.siteos/forms/project.json`
+  through safe `siteos project status --json` output and its Forms attachment
   plus the private CLI binding.
 - Select or explicitly create the Forms-owned Environment through `siteos forms environment
   list/create`; mutable Organization, Project, or Environment names/slugs are never canonical

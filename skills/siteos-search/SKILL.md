@@ -1,6 +1,6 @@
 ---
 name: siteos-search
-description: Use when creating, selecting, configuring, verifying, repairing, or operating a product-owned SiteOS Search Project, including Environments, source discovery, scoped credentials, sync, query, and UI delivery through @siteoshq/cli.
+description: Use when creating, selecting, configuring, verifying, repairing, or operating SiteOS Search for a common website Project, including Environments, source discovery, scoped credentials, sync, query, and UI delivery through @siteoshq/cli.
 ---
 
 # SiteOS Search
@@ -9,7 +9,7 @@ Use this skill from the root of a target external project, or pass an explicit t
 
 This skill is the search implementation entrypoint only. It routes work across SiteOS connection, readiness, source discovery, scaffold/source handlers, sync/runtime repair, runtime-token tooling, and supported search UI delivery. Do not use this skill for analytics dashboards, search usage reporting, sidecar HTML reports, charts, or aggregate diagnostics reporting; use the sibling `siteos-analytics` skill for those tasks.
 
-Run `npx @siteoshq/cli auth status --json` before remote Search operations and delegate missing authentication or Organization selection to `$siteos-auth`. Search Project discovery, creation, and selection remain in this skill through `siteos search project ...`. Never call Auth, Project, or credential-management endpoints directly, inspect CLI private state, or use legacy Organization tokens or Project API keys.
+Run `npx @siteoshq/cli auth status --json` before remote Search operations and delegate missing authentication or Organization selection to `$siteos-auth`. Use the common `siteos project` workflow for discovery, creation and selection; use `siteos search project ...` only for legacy unbound repositories or explicit adoption. Never call Auth, Project, or credential-management endpoints directly, inspect CLI private state, or use legacy Organization tokens or Project API keys.
 
 Do not inspect secret-bearing environment files or process environment values with output-producing commands. Determine credential readiness through safe CLI metadata and run the intended Search commands without exposing plaintext. The tracked `.siteos/search/project.json` contains only version, service, and safe Project name/slug; the immutable ID lives in the repository-specific private binding. Runtime query and indexing credentials belong only in the ignored owner-only project `.env` installed by the CLI.
 
@@ -159,23 +159,25 @@ npx @siteoshq/cli search indexing-credential rotate --environment <slug> --insta
 
 1. Resolve the target project root.
 2. Run `npx @siteoshq/cli auth status --json`; delegate missing Auth or Organization selection to `$siteos-auth`.
-3. Run `npx @siteoshq/cli search project status --json`. When missing, list Projects with `npx @siteoshq/cli search project list --json`; require an explicit existing slug or new slug/name, then use `search project create` and/or `search project use` as needed.
+3. Run `npx @siteoshq/cli project status --json`. Use `$siteos` for missing common Project selection; run `npx @siteoshq/cli project connect search --json` when Search setup is requested and not yet attached.
 4. After SiteOS connection is usable, inspect only the local files needed for mode selection, verify SiteOS API v1 search readiness, classify the workflow mode, and report findings with secrets redacted.
 
 ## Linkage Check
 
-The first remote preflight is `npx @siteoshq/cli auth status --json`, followed by `npx @siteoshq/cli search project status --json`. Do not inspect `.siteos/search/project.json`, package metadata, routes, or project shape before this preflight completes, except for resolving the target project root.
+The first remote preflight is `npx @siteoshq/cli auth status --json`, followed by `npx @siteoshq/cli project status --json`. Do not inspect `.siteos/search/project.json`, package metadata, routes, or project shape before this preflight completes, except for resolving the target project root.
 
-A usable Search workspace requires a product-owned Project selection, the secret-free `.siteos/search/project.json`, its private immutable-ID binding, and an explicit environment slug. Creating or selecting it must never create, select, link, or mutate Pulse or Forms Projects.
+A usable Search workspace requires the common Project selection, an explicit Search attachment and a chosen common environment. Select it with `npx @siteoshq/cli project environment use <slug> --json`; operational `--environment` flags accept common catalog slugs. The CLI resolves the resource privately; `.siteos/search/project.json` is not required for this workflow. Search configuration and runtime data stay service-owned.
 
 Resolve the Search API origin in this order:
 
-1. `SITEOS_SEARCH_PUBLIC_URL`, when intentionally set for local, staging, or another deployment.
-2. The CLI hosted default `https://siteoapp.xui.se`.
+1. The common Project origin selected through `SITEOS_AUTH_BASE_URL` for management.
+2. `SITEOS_SEARCH_PUBLIC_URL` installed by the CLI for runtime requests.
+
+Legacy service-only bindings retain their explicit origin behavior.
 
 Never use legacy Project `apiBaseUrl`, Server Legacy, or another product origin as a Search fallback.
 
-If Auth or Organization selection is unavailable, delegate it to `$siteos-auth`. If the Search Project is unavailable, load [references/siteos-connection-onboarding.md](references/siteos-connection-onboarding.md) and complete the Search-owned list/create/use workflow. Do not fabricate IDs, copy a Project key, use `--replace` without approval, or silently select another Project.
+If Auth or Organization selection is unavailable, delegate it to `$siteos-auth`. If the Search Project is unavailable, load [references/siteos-connection-onboarding.md](references/siteos-connection-onboarding.md) and complete common selection and explicit Search setup. Do not fabricate IDs, copy a Project key, use `--replace` without approval, or silently select another Project.
 
 Never echo authorization codes, CLI sessions, service grants, scoped credentials, Project keys, Meilisearch keys, raw headers, or full config JSON. It is safe to report safe IDs, status, metadata, and which API base URL source was selected.
 
@@ -185,7 +187,7 @@ Use the SiteOS CLI diagnostics command. Do not read `.siteos/search/project.json
 
 ```bash
 npx @siteoshq/cli search diagnostics \
-  --environment prod \
+  --environment production \
   --json
 ```
 
@@ -197,19 +199,18 @@ Use the CLI JSON response to classify:
 - `not-ready`: SiteOS is reachable, but environment search health, accepted payload, sync success, or query target checks are not ready.
 - `api-blocked`: SiteOS API cannot be reached, authorization is rejected, the response is malformed, or the endpoint fails in a way that prevents a truthful readiness verdict. A `404` for the explicitly selected environment means it is unavailable or inaccessible to the current authorization; do not infer absence, select a fallback environment, or probe other environment slugs.
 
-Before the first live sync in onboarding mode, record the selected environment explicitly (normally `prod`), rerun diagnostics with `--environment <slug>`, and use the unified CLI to list then issue/install or intentionally rotate/install the environment's indexing credential. The first successful `pnpm search:sync` is the only Search setup path; do not activate or manage a runtime.
+Before the first live sync in onboarding mode, record the selected environment explicitly (normally `production`), rerun diagnostics with `--environment <slug>`, and use the unified CLI to list then issue/install or intentionally rotate/install the environment's indexing credential. The first successful `pnpm search:sync` is the only Search setup path; do not activate or manage a runtime.
 
-Search Environment lifecycle belongs to this skill after Search Project selection succeeds. Use only unified CLI commands:
+Manage shared environments through Project settings or the common CLI:
 
 ```bash
-npx @siteoshq/cli search environment list --json
-npx @siteoshq/cli search environment create --slug <slug> --name <name> --json
-npx @siteoshq/cli search environment update --environment <slug> --name <name> --json
-npx @siteoshq/cli search environment fork --source <slug> --slug <slug> --name <name> --json
-npx @siteoshq/cli search environment delete --environment <slug> --json
+npx @siteoshq/cli project environment list --json
+npx @siteoshq/cli project environment use <slug> --json
+npx @siteoshq/cli project environment create --slug <slug> --name <name> --url <url> --json
+npx @siteoshq/cli project environment update <slug> --name <name> --url <url> --json
 ```
 
-For first onboarding, list Environments and ask for an explicit slug and display name before creating one when none is suitable. For later dev, staging, or feature work, prefer `fork` when the user wants the latest successful immutable snapshot from an existing Environment; use `create` for an empty isolated Environment. Never infer `prod`, rename a slug, copy credentials, or delete without explicit confirmation. A fork copies no credentials, browser authorization, leases, or history and must complete its queued indexer job before query readiness.
+Use the explicitly selected common slug for service commands. Installed runtime values retain the actual service environment slug resolved by the CLI. Common environments start empty and never copy credentials or Production content. Service-local environment update/fork/delete commands are legacy operations for unbound repositories; do not bypass the shared lifecycle with them.
 
 ## Project Shape Inspection
 

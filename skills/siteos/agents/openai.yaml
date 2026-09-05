@@ -1,7 +1,7 @@
 interface:
   display_name: "SiteOS"
   short_description: "Route setup and cross-service SiteOS work"
-  default_prompt: "Use $siteos to inspect this SiteOS request, select only the required service skills, and keep Pulse, Forms, and Search Projects independent."
+  default_prompt: "Use $siteos to inspect this SiteOS request, select only the required service skills, and use one common Project with explicit service attachments."
 
 policy:
   allow_implicit_invocation: true

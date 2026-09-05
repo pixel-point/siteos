@@ -20,7 +20,7 @@ Inspect identity and Search Project readiness first:
 
 ```text
 npx @siteoshq/cli auth status --json
-npx @siteoshq/cli search project status --json
+npx @siteoshq/cli project status --json
 ```
 
 Prefer analytics as the primary source:

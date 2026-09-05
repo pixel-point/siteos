@@ -1,0 +1,7 @@
+interface:
+  display_name: "SiteOS Trace"
+  short_description: "Configure analytics observation and tracking plans"
+  default_prompt: "Use $siteos-trace to inspect tracking evidence and configure the requested Project environment."
+
+policy:
+  allow_implicit_invocation: true

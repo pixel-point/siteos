@@ -26,6 +26,7 @@ Load [references/command-reference.md](references/command-reference.md) whenever
 - Authenticate once through `siteos auth`; product commands obtain audience-bound service grants without exposing the durable Auth session.
 - Never print one-time tokens, sessions, service grants, runtime credentials, authorization headers, private binding files, or `.env` contents.
 - Private state belongs under `${SITEOS_HOME:-~/.siteos}` and must not be committed.
-- The tracked references are product-specific: `siteos.config.json`, `.siteos/forms/project.json`, and `.siteos/search/project.json`.
-- There is no root `siteos project` command and no global `.siteos/project.json`.
+- `siteos project use` selects one common Project privately for the repository. `siteos.config.json` remains the tracked Pulse monitoring configuration. Existing `.siteos/forms/project.json` and `.siteos/search/project.json` are legacy service references, not prerequisites for a common Project.
+- Use `siteos project` for common selection, service setup and environments. Use `siteos project environment use <slug>` to switch every service together; Project settings own the name and per-environment URL. Never create a tracked `.siteos/project.json`.
+- Common Projects and the Cookie, Trace and Integrations commands require CLI 1.1.0 or newer and the matching SiteOS server. Check the installed help before using them; a source checkout does not prove the public package has been released.
 - If a command is absent from the generated reference, run the appropriate `--help`; do not invent it or call a private API as a substitute.

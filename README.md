@@ -1,15 +1,15 @@
-# <img src="assets/siteos-logo.png" alt="SiteOS logo" height="42" align="absbottom"> SiteOS
+# <img src="assets/siteos-logo.svg" alt="SiteOS logo" height="42" align="absbottom"> SiteOS
 
-This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, Auth, Pulse, Forms, Search, and Search analytics.
+This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, Integrations, and Search analytics.
 
-Release: 1.2.0.
+Release: 1.3.0.
 
 ## Install
 
 ### Codex
 
 ```sh
-codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v1.2.0
+codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v1.3.0
 codex plugin add siteos@siteos
 ```
 
@@ -48,7 +48,19 @@ Authenticates the CLI and selects the intended Organization. Auth never creates 
 
 ### Pulse (`$siteos-pulse`)
 
-Creates or selects a Pulse Project, authors and maintains versioned Playwright Checks, runs them locally, and builds or deploys bundles.
+Configures monitoring for the selected common Project, authors versioned Playwright Checks, runs them locally, and builds or deploys bundles.
+
+### Cookie (`$siteos-cookie`)
+
+Configures consent banner drafts, installs the loader, publishes reviewed configuration, and verifies consent behavior.
+
+### Trace (`$siteos-trace`)
+
+Configures analytics observation and tracking plans, installs the published snippet, and reports actual evidence.
+
+### Integrations (`$siteos-integrations`)
+
+Connects Organization providers and configures explicit notification destinations without sending messages implicitly.
 
 ### Search (`$siteos-search`)
 
@@ -90,7 +102,7 @@ $siteos-analytics inspect search health and usage for this linked project
 
 ## Architecture and contribution boundary
 
-Pulse, Forms, and Search own independent Projects. Matching names or slugs never imply shared identity, and configuring one service does not provision another.
+One common Project represents the website or product. Services retain their own data and credentials through explicit attachments. Selecting a Project never provisions a service; new setup and environment creation are explicit coordinated actions.
 
 The plugin and skills in this repository are a generated, public-safe release projection of `pixel-point/siteos-platform/plugins/siteos`. CLI and service changes are made and verified upstream, then reproduced here through the publication manifest and release gates. Open issues in this public repository for bugs or proposals; do not hand-edit generated release files.
 
