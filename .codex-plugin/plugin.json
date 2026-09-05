@@ -1,7 +1,7 @@
 {
   "name": "siteos",
-  "version": "1.2.0",
-  "description": "One SiteOS plugin for CLI, Auth, Pulse, Forms, Search, and Search analytics workflows.",
+  "version": "1.3.0",
+  "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, Integrations and analytics.",
   "author": {
     "name": "Pixel Point",
     "email": "info@pixelpoint.io",
@@ -18,18 +18,22 @@
     "pulse",
     "search",
     "forms",
-    "analytics"
+    "analytics",
+    "projects",
+    "cookie",
+    "trace",
+    "integrations"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "SiteOS",
     "shortDescription": "Operate SiteOS services through one plugin and one CLI",
-    "longDescription": "SiteOS routes setup and cross-service work to focused skills for one application origin, the unified CLI, canonical Auth, and product-owned Pulse, Forms, and Search Projects without coupling their data or lifecycles.",
+    "longDescription": "Select one website Project and work across SiteOS through one CLI, with focused skills for each service and explicit configuration, publication and runtime verification.",
     "developerName": "Pixel Point",
     "brandColor": "#000000",
-    "composerIcon": "./assets/siteos-logo.png",
-    "logo": "./assets/siteos-logo.png",
-    "logoDark": "./assets/siteos-logo.png",
+    "composerIcon": "./assets/siteos-logo.svg",
+    "logo": "./assets/siteos-logo.svg",
+    "logoDark": "./assets/siteos-logo.svg",
     "category": "Developer Tools",
     "capabilities": [
       "Interactive",
@@ -42,7 +46,10 @@
       "$siteos-pulse configure and deploy Playwright monitoring",
       "$siteos-search inspect this external project and configure managed search",
       "$siteos-forms add a managed contact form to this project",
-      "$siteos-analytics inspect search health and usage for this linked project"
+      "$siteos-analytics inspect search health and usage for this linked project",
+      "$siteos-cookie configure the consent banner for this Project",
+      "$siteos-trace inspect analytics observation and installation",
+      "$siteos-integrations inspect Organization connections and notification destinations"
     ]
   }
 }

@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@1.0.0`
+Package: `@siteoshq/cli@1.1.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -11,6 +11,10 @@ Regenerate this file after CLI command or help changes with `pnpm siteos:cli-con
 ```text
 siteos health-check [--json]
 siteos auth --help
+siteos project --help
+siteos cookie --help
+siteos trace --help
+siteos integrations --help
 siteos pulse --help
 siteos search --help
 siteos forms --help
@@ -26,6 +30,53 @@ siteos auth organizations [--json]
 siteos auth organizations create --display-name <display-name> [--json]
 siteos auth select --organization <organization-id> [--json]
 siteos auth logout [--json]
+```
+
+## Projects
+
+```text
+siteos project list [--json]
+siteos project create --name <name> --slug <slug> [--url <url>] [--domain <domain>] [--json]
+siteos project use <id-or-slug> [--json]
+siteos project update [--name <name>] [--slug <slug>] [--url <production-url>] [--json]
+siteos project status [--json]
+siteos project connect <pulse|cookie|forms|search|trace> [--resource <id>] [--json]
+siteos project environment list [--json]
+siteos project environment create --name <name> --slug <slug> [--url <url>] [--json]
+siteos project environment use <slug> [--json]
+siteos project environment update <slug> [--name <name>] [--url <url>] [--json]
+siteos project environment resources <pulse|cookie|forms|search|trace> [--json]
+siteos project environment connect <pulse|cookie|forms|search|trace> --environment <slug> [--resource <id>] [--json]
+```
+
+## Cookie
+
+```text
+siteos cookie status [--json]
+siteos cookie installation [--json]
+siteos cookie draft get [--json]
+siteos cookie draft save --input <draft.json> [--json]
+siteos cookie publish --input <publication.json> [--json]
+siteos cookie analytics [--range-days <7|30|90>] [--json]
+```
+
+## Trace
+
+```text
+siteos trace status [--json]
+siteos trace environments [--json]
+siteos trace report [--environment <slug>] [--json]
+siteos trace installation <show|ensure|save|publish> [--environment <slug>] [--input <draft.json>] [--json]
+siteos trace tracking-plan <show|ensure|save|publish> [--environment <slug>] [--input <plan.json>] [--json]
+```
+
+## Integrations
+
+```text
+siteos integrations status [--json]
+siteos integrations connect [--json]
+siteos integrations channels [--query <name>] [--cursor <cursor>] [--json]
+siteos integrations destination create --channel <provider-channel-id> [--json]
 ```
 
 ## Pulse
@@ -92,7 +143,8 @@ siteos search indexing-credential revoke --environment <slug> --credential <cred
 ## State and overrides
 
 - Private: `~/.siteos/auth.json`, `~/.siteos/project-bindings.json`
+- Common selection: `siteos project use`; private and repository/origin specific
 - Tracked Pulse: `siteos.config.json`
-- Tracked Forms: `.siteos/forms/project.json`
-- Tracked Search: `.siteos/search/project.json`
+- Legacy tracked Forms: `.siteos/forms/project.json`
+- Legacy tracked Search: `.siteos/search/project.json`
 - Overrides: `SITEOS_HOME`, `SITEOS_AUTH_BASE_URL`, `SITEOS_PULSE_API_URL`, `SITEOS_FORMS_PUBLIC_URL`, `SITEOS_SEARCH_PUBLIC_URL`

@@ -1,0 +1,7 @@
+interface:
+  display_name: "SiteOS Integrations"
+  short_description: "Connect providers and notification destinations"
+  default_prompt: "Use $siteos-integrations to inspect Organization connections and configure the requested destination."
+
+policy:
+  allow_implicit_invocation: true

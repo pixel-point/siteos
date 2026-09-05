@@ -9,13 +9,13 @@ description: Build and connect SiteOS-managed forms in any project or framework.
 
 Build forms through the unified SiteOS CLI and the Forms-owned runtime API, never through direct database access. The skill may create local form code, validation, routes, config files, and API calls. Auth owns users and Organizations. Forms owns its Projects, repository references, Environments, definitions, scoped credentials, submissions, storage, and product permissions even though its APIs share the SiteOS application origin.
 
-Run `npx @siteoshq/cli auth status --json` before remote Forms operations and delegate missing authentication or Organization selection to `$siteos-auth`. Project discovery, creation, and selection remain in this Forms skill through `siteos forms project ...`; never ask Auth or another product to create a Forms Project.
+Run `npx @siteoshq/cli auth status --json` before remote Forms operations and delegate missing authentication or Organization selection to `$siteos-auth`. Use `$siteos` for common Project selection and `siteos project connect forms` for explicit Forms setup.
 
 Do not inspect secret-bearing environment files or process environment values with output-producing commands such as `cat`, `sed`, `env`, `printenv`, or shell interpolation. Determine credential readiness through SiteOS CLI diagnostics and run the intended SiteOS command without exposing the underlying value. A secret appearing in a tool trace or verification log is a credential leak even when it is not repeated in the final response.
 
-For missing Forms linkage, use the product-owned Project and Environment gates in `references/siteos-connection-onboarding.md`. The CLI owns service-grant exchange, private binding, and secret installation.
+For missing Forms linkage, use the common Project and explicit environment workflow in `references/siteos-connection-onboarding.md`. The CLI owns service-grant exchange, private binding, and secret installation.
 
-Missing Forms Project or repository selection is normal onboarding state and is resolved with `siteos forms project list|create|use|status`. `project use` writes `.siteos/forms/project.json` and the private immutable-ID binding; never inspect or edit the private binding directly. Creating or selecting a Forms Project must not create, select, link, or mutate Pulse or Search Projects.
+Missing common Project selection is normal onboarding state. Use `siteos project list|create|use|status`, then connect Forms explicitly. The CLI resolves the Forms resource from the common attachment; no second selection or tracked service reference is required. Never inspect or edit private binding state.
 
 A request to add a SiteOS-managed form includes onboarding, project connection, definition sync, and a submission smoke test. Do not reinterpret it as a request for local UI only. Unless the user explicitly asks for an offline prototype, connection is a hard gate: do not edit form code while SiteOS linkage is missing.
 
@@ -25,10 +25,9 @@ Use SiteOS naming exclusively. When a touched target-project file still uses leg
 
 1. Resolve the target project root and pass the SiteOS connection gate.
    - Run `npx @siteoshq/cli auth status --json`; delegate only missing Auth or Organization selection to `$siteos-auth`.
-   - Run `npx @siteoshq/cli forms project status --json` from the target project root.
-   - When no Forms Project is selected, run `npx @siteoshq/cli forms project list --json`. Require an explicit existing slug or an explicit new slug/name, then run `npx @siteoshq/cli forms project use <slug> --json` or `npx @siteoshq/cli forms project create --slug <slug> --name <name> --json` followed by `project use`.
-   - Use `--replace` only after explicit approval to replace this repository's Forms binding.
-   - List Forms-owned Environments with `npx @siteoshq/cli forms environment list --json`. If none exists, require an explicit environment slug and display name from the user or task context, then create it with `npx @siteoshq/cli forms environment create --slug <slug> --name <name> --json`. Never infer `prod` or create an Environment silently.
+   - Run `npx @siteoshq/cli project status --json` and complete common selection through `$siteos` when needed.
+   - Run `npx @siteoshq/cli project connect forms --json` only when Forms setup is part of the task and no resource is attached.
+   - List Forms environments with `npx @siteoshq/cli forms environment list --json`. Setup uses the selected common environment. Choose it with `npx @siteoshq/cli project environment use <slug> --json`; operational flags accept that common slug. For additional or existing environments, use the common environment workflow in `../siteos/references/projects-and-environments.md`.
    - When Forms Project or Environment selection needs a user decision, load `references/siteos-connection-onboarding.md` and stop before project edits at the first required decision.
    - Do not create the UI, proxy route, validation code, or definition artifact while the connection gate is incomplete.
 
@@ -85,7 +84,7 @@ Do not report a newly created SiteOS form as complete unless the CLI definition 
 
 Load only the reference needed for the task:
 
-- `references/siteos-connection-onboarding.md`: Auth prerequisite plus Forms-owned Project, Environment, and credential gates.
+- `references/siteos-connection-onboarding.md`: Auth, common Project selection, explicit Forms attachment, environments and credentials.
 - `references/onboarding-report-template.md`: user-facing form onboarding checkpoint and blocker report shape.
 - `references/form-contract.md`: field contract rules, validation ownership, and metadata boundaries.
 - `references/api-onboarding.md`: Forms-owned same-origin routing, scoped credential installation, and security rules.

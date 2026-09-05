@@ -11,20 +11,11 @@ generated project runtime -> SiteOS API -> SiteOS domain use cases -> database
 
 ## Forms Project And Environment
 
-A repository is connected to Forms only when `siteos forms project status --json` reports a
-product-owned selection. The tracked `.siteos/forms/project.json` carries the safe Forms name and
-slug; the immutable ID stays in the private CLI binding. Never read or write private binding state.
+A repository uses the common Project selection and its Forms attachment, reported by `siteos project status --json`. The CLI keeps immutable resource IDs private. New setup prepares the Project environments; existing resources require explicit environment binding. Load `siteos-connection-onboarding.md` for setup.
 
-After the Auth prerequisite is ready, select Forms-owned state explicitly:
-
-```bash
+```sh
 npx @siteoshq/cli forms environment list --json
-```
-
-If the Environment list is empty, require a user- or task-supplied slug and display name before running:
-
-```bash
-npx @siteoshq/cli forms environment create --slug <slug> --name <name> --json
+npx @siteoshq/cli project environment create --slug <slug> --name <name> --json
 ```
 
 The unified CLI obtains the exact Auth grant and product Project context internally for management;
@@ -37,7 +28,7 @@ When the project is not linked:
 
 1. Load `references/siteos-connection-onboarding.md`.
 2. Delegate missing Auth or Organization selection to `$siteos-auth`.
-3. Run `forms project status --json`, then list, create, or select only the intended Forms Project.
+3. Run `project status --json`, select the intended common Project and explicitly connect Forms.
 4. After the Forms Project boundary succeeds, list Forms Environments.
 5. If none exists, stop for an explicit Environment slug and display name before creating one.
 6. After an explicit Environment is selected, use Forms credential metadata to choose initial issue/install or intentional rotate/install.

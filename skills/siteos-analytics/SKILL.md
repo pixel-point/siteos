@@ -13,7 +13,7 @@ Start by using safe CLI output to confirm Auth, the Search Project, and the sele
 
 1. Resolve the target project root.
 2. Run `npx @siteoshq/cli auth status --json`. Delegate missing Auth or Organization selection to `$siteos-auth`.
-3. Run `npx @siteoshq/cli search project status --json`. Delegate missing Search Project selection or product repair to `$siteos-search`; never interpret private binding state or inspect credential-bearing files.
+3. Run `npx @siteoshq/cli project status --json`. Delegate missing Search Project selection or product repair to `$siteos-search`; never interpret private binding state or inspect credential-bearing files.
 4. Read `siteos-search.config.ts` only when needed to resolve an explicitly configured environment slug or explain source labels. Stop when no environment is selected; do not fall back to `prod`.
 5. Run `npx @siteoshq/cli search analytics --environment <slug> --json` as the primary source.
 6. Run `npx @siteoshq/cli search diagnostics --environment <slug> --json` only when supporting readiness context is needed.

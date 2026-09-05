@@ -1,55 +1,12 @@
-# SiteOS Search connection onboarding
+# Search connection onboarding
 
-Use this reference before editing a target repository when authentication, the Search Project selection, or an explicit Search Environment slug is unavailable.
+1. Run `npx @siteoshq/cli auth status --json`. Use `$siteos-auth` for missing authentication or Organization selection.
+2. Run `npx @siteoshq/cli project status --json`. Select the intended common Project with `$siteos`; its [Project workflow](../../siteos/SKILL.md) documents list/create/use.
+3. If Search is not attached and the task requests setup, run `npx @siteoshq/cli project connect search --json`. Use `--resource <id>` explicitly to retain an existing resource and its data. Matching names never establish identity.
+4. Run `npx @siteoshq/cli search environment list --json`. A newly configured resource includes the common Project's environments. For an existing resource, connect the intended environment explicitly using [the common environment workflow](../../siteos/references/projects-and-environments.md).
+5. Select the common environment with `npx @siteoshq/cli project environment use <slug> --json`. Use its common catalog slug for Search operations. Preserve existing credentials; install a scoped credential only when the task needs it and no suitable credential exists. Never inspect `.env` or private CLI bindings.
 
-## Auth prerequisite
-
-Run `npx @siteoshq/cli auth status --json`. If signed out or no Organization is selected, invoke `$siteos-auth` and stop Search work until that identity prerequisite succeeds. Auth does not create or select Search Projects.
-
-## Search Project gate
-
-```sh
-npx @siteoshq/cli search project status --json
-npx @siteoshq/cli search project list --json
-```
-
-When the intended existing Search Project is explicit:
-
-```sh
-npx @siteoshq/cli search project use <slug> --json
-```
-
-When a new Search Project is required, require an explicit slug and display name:
-
-```sh
-npx @siteoshq/cli search project create --slug <slug> --name <name> --json
-npx @siteoshq/cli search project use <slug> --json
-```
-
-Use `--replace` only after explicit approval. The tracked `.siteos/search/project.json` contains version 1, service `search`, and the safe name/slug. The immutable Project ID remains in private CLI state. Never inspect, print, or edit `~/.siteos/project-bindings.json`.
-
-No Search command may create, select, link, or mutate a Pulse or Forms Project. Matching names/slugs are not shared identity.
-
-## Search Environment gate
-
-After Search Project selection succeeds, use `npx @siteoshq/cli search environment list --json`. Require an explicit Environment slug and display name from the user or task context. Create an empty Environment or fork a named source Environment only after that choice; never infer `prod` or silently select another Environment.
-
-Record only product-owned safe state:
-
-```sh
-node .agents/skills/siteos-search/scripts/session-state-cli.mjs set-siteos-connection \
-  --session-file "$SESSION_FILE" \
-  --linkage-status ready \
-  --api-base-url-source config \
-  --project-name "<project-name>" \
-  --project-slug "<project-slug>" \
-  --environment-slug "<environment-slug>" \
-  --config-path ".siteos/search/project.json"
-```
-
-Do not store Auth status, Organization selection, immutable Project IDs, authorization proofs, service grants, runtime credentials, headers, or full config content in Search session state.
-
-## Scoped Search credentials
+Missing common selection does not require editing `.siteos/search/project.json`. Older service-only repositories may still have that reference; keep it intact during explicit adoption. Record only safe Project name/slug, common environment slug and readiness in reports. Do not store grants, Auth sessions, runtime credentials, authorization headers or private file content.
 
 ```sh
 npx @siteoshq/cli search indexing-credential list --environment <slug> --json
@@ -58,8 +15,4 @@ npx @siteoshq/cli search indexing-credential issue --environment <slug> --instal
 npx @siteoshq/cli search credential issue --environment <slug> --install --json
 ```
 
-Issue only when no suitable active credential exists. Use matching `rotate --install --json` only for intentional replacement. Never inspect `.env` or reveal installed plaintext.
-
-## Safe reporting
-
-Report only Auth readiness, safe Organization identity, Search Project name/slug/status, explicit Environment slug, credential metadata, and installation status returned by the CLI. Never report tokens, sessions, assertions, grants, immutable private bindings, runtime credentials, headers, private files, environment contents, or absolute private paths.
+Search session state may record the safe Search Project name/slug and environment slug, with `config-path` set to the project-owned Search configuration when one exists. It must not point to a fabricated service reference or private CLI file. Rotation is an intentional replacement, not routine setup.

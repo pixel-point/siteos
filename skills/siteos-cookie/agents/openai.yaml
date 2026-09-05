@@ -1,0 +1,7 @@
+interface:
+  display_name: "SiteOS Cookie"
+  short_description: "Configure and verify consent banners"
+  default_prompt: "Use $siteos-cookie to configure this Project’s consent banner and verify its installation."
+
+policy:
+  allow_implicit_invocation: true

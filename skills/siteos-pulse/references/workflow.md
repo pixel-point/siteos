@@ -11,7 +11,7 @@
 
 The CLI reads version 1 and normalizes it to version 2, but new work should retain version 2. Never edit generated archives as configuration.
 
-The private binding in `~/.siteos/project-bindings.json` is keyed by service, API origin, and the repository's real path. This prevents a Pulse selection from becoming a Forms or Search selection.
+The private binding in `~/.siteos/project-bindings.json` is keyed by service, API origin, and the repository's real path. A common Project binding also stores the selected environment and resolves each service through explicit attachments. Legacy service-specific bindings remain isolated.
 
 ## Commands
 
@@ -20,8 +20,8 @@ The private binding in `~/.siteos/project-bindings.json` is keyed by service, AP
 - `pulse sync --check --json` detects whether interactive discovery would change the tracked config without mutating it.
 - `pulse sync --json` may update tracked Pulse configuration; review the diff and rerun validation.
 - `pulse test` runs the selected Playwright tests locally and may accept Playwright options after `--`.
-- `pulse deploy --dry-run --json` builds the same versioned JSON manifest and archive as deploy, writes only the requested/local artifact, and makes no API request.
-- `pulse deploy --json` requires Auth, the selected Organization, and a repository-specific Pulse binding, then uploads against the immutable bound Pulse Project ID.
+- `pulse deploy --dry-run --json` builds the same versioned JSON manifest and archive as deploy, writes only the requested/local artifact, and never uploads. With a common Project selected, it reads authenticated metadata to resolve the current environment URL and bound resource identity.
+- `pulse deploy --json` requires Auth, the selected Organization, and a repository-specific common Project/environment selection or legacy Pulse binding, then uploads against the immutable bound Pulse Project ID.
 
 Use `SITEOS_PULSE_API_URL` only for an intentional local or staging override. Pulse APIs share the normal hosted SiteOS application origin `https://siteoapp.xui.se`.
 
