@@ -19,6 +19,16 @@ Run `npx @siteoshq/cli health-check --json` for read-only local diagnostics. It 
 
 Load [references/command-reference.md](references/command-reference.md) whenever exact commands, flags, exit codes, state files, or environment overrides matter. That file is generated from the current CLI help and must not be edited manually.
 
+## Hosted installation
+
+CLI 1.1.1 and newer defaults to `https://app.siteos.sh`. Upgrade older versions before starting
+production setup. Existing authentication and repository bindings preserve their selected origin;
+do not overwrite or copy them to switch installations. Authenticate at the intended origin.
+
+For explicitly requested SiteOS staging work, set `SITEOS_AUTH_BASE_URL`, `SITEOS_PULSE_API_URL`,
+`SITEOS_FORMS_PUBLIC_URL`, and `SITEOS_SEARCH_PUBLIC_URL` to `https://siteosapp.xui.se` together
+before authentication. This selects a separate SiteOS installation, not a Project Environment.
+
 ## Operating Rules
 
 - Use `--json` for agent and automation workflows whenever the command supports it.

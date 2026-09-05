@@ -159,7 +159,7 @@ Content-Type: application/json
 
 Do not switch to a project API-key submission path or a form-key path such as `/api/v1/project/forms/{formKey}/submissions`; the scoped credential selects the project environment and the payload selects the form.
 
-The CLI's hosted default is `https://siteoapp.xui.se` and credential installation writes that
+The CLI's hosted default is `https://app.siteos.sh` and credential installation writes that
 origin to `SITEOS_FORMS_PUBLIC_URL`. Generated runtime must still fail safely when the explicit
 installed value is missing or unsafe, and must send only `SITEOS_FORMS_SUBMISSION_CREDENTIAL` as runtime authority.
 It must never send an Auth grant, Project context, browser cookie, or Project API key.
