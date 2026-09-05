@@ -57,7 +57,7 @@ Inspect before editing:
 - For linked Forms projects, sync the form definition before treating the form as complete. Project and Environment selection do not register the form.
 - For skill-time SiteOS-backed definition sync, write the definition payload to a local JSON file and run `npx @siteoshq/cli forms definition sync --environment <slug> --input <path> [--json]`.
 - When `.siteos/forms/manifest.json` exists, check and sync the manifest instead of syncing definitions one by one.
-- For SiteOS-backed submissions, the browser-facing local proxy may stay `/api/forms/:formKey`. The upstream independent Forms API expects a JSON `POST` to `{SITEOS_FORMS_PUBLIC_URL}/api/forms/submissions` with `formKey`, `payload`, `idempotencyKey`, and optional request context fields, authenticated only by the server-only `SITEOS_FORMS_SUBMISSION_CREDENTIAL` value in the `x-siteos-project-forms-credential` header.
+- For SiteOS-backed submissions, the browser-facing local proxy may stay `/api/forms/:formKey`. The upstream Forms-owned API on the shared SiteOS origin expects a JSON `POST` to `{SITEOS_FORMS_PUBLIC_URL}/api/forms/submissions` with `formKey`, `payload`, `idempotencyKey`, and optional request context fields, authenticated only by the server-only `SITEOS_FORMS_SUBMISSION_CREDENTIAL` value in the `x-siteos-project-forms-credential` header.
 - Do not generate nested upstream paths such as `/api/v1/project/forms/{formKey}/submissions` unless that exact route is verified in current source or docs.
 - If the upstream response is HTML or any non-JSON payload, treat it as an integration mismatch or wrong endpoint. Normalize the local error instead of surfacing raw HTML-oriented upstream messages to end users.
 

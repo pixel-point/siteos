@@ -1,6 +1,6 @@
 {
   "name": "siteos",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "One SiteOS plugin for CLI, Auth, Pulse, Forms, Search, and Search analytics workflows.",
   "author": {
     "name": "Pixel Point",

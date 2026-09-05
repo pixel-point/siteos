@@ -7,7 +7,7 @@ description: Build and connect SiteOS-managed forms in any project or framework.
 
 ## Core Rule
 
-Build forms through the unified SiteOS CLI and the independent Forms runtime API, never through direct database access. The skill may create local form code, validation, routes, config files, and API calls. Auth owns users and Organizations. Forms owns its Projects, repository references, Environments, definitions, scoped credentials, submissions, storage, and product permissions.
+Build forms through the unified SiteOS CLI and the Forms-owned runtime API, never through direct database access. The skill may create local form code, validation, routes, config files, and API calls. Auth owns users and Organizations. Forms owns its Projects, repository references, Environments, definitions, scoped credentials, submissions, storage, and product permissions even though its APIs share the SiteOS application origin.
 
 Run `npx @siteoshq/cli auth status --json` before remote Forms operations and delegate missing authentication or Organization selection to `$siteos-auth`. Project discovery, creation, and selection remain in this Forms skill through `siteos forms project ...`; never ask Auth or another product to create a Forms Project.
 
@@ -59,13 +59,13 @@ Use SiteOS naming exclusively. When a touched target-project file still uses leg
    - Do not write directly to the SiteOS database.
    - If the required CLI/API capability does not exist yet, implement the local form code and clearly report that remote registration is blocked by missing SiteOS capability.
    - Read the safe `ui.url` returned by definition sync and include it as an optional final link. Make clear that the CLI remains fully usable without opening SiteOS UI.
-   - If the user asks for a signed-in browser, use the safe `ui.url` returned by the CLI or the Forms-owned route `/app/projects/<forms-project-id>/forms`. Forms owns its Auth OIDC and Project authorization redirects. Do not construct OAuth, PKCE, or Project handoff material, and never extract, print, or reconstruct a handoff URL.
+   - If the user asks for a signed-in browser, use the safe `ui.url` returned by the CLI or the Forms-owned route `/forms/projects/<forms-project-id>`. The shared SiteOS shell uses the canonical host-only Auth session, while Forms retains its own Project authorization rules. Do not construct OAuth, PKCE, or Project handoff material, and never extract, print, or reconstruct a handoff URL.
 
 5. Add submit runtime.
-   - For server-capable projects, add a local server route that reads `SITEOS_FORMS_PUBLIC_URL` and the server-only `SITEOS_FORMS_SUBMISSION_CREDENTIAL`, then proxies submissions to the exact independent Forms endpoint `POST {SITEOS_FORMS_PUBLIC_URL}/api/forms/submissions`.
+   - For server-capable projects, add a local server route that reads `SITEOS_FORMS_PUBLIC_URL` and the server-only `SITEOS_FORMS_SUBMISSION_CREDENTIAL`, then proxies submissions to the exact Forms-owned endpoint `POST {SITEOS_FORMS_PUBLIC_URL}/api/forms/submissions`.
    - Verify the SiteOS submission endpoint contract from local source, existing generated runtime, or SiteOS API docs before writing the proxy. Do not guess path shapes or payload shapes.
    - For static-only projects, prefer a SiteOS public submission endpoint only if the API supports it. Otherwise explain that a serverless route or public endpoint is required.
-   - The runtime credential is Environment-scoped `pfs_` authority only. Do not send an Auth grant, Project context, Project API key, or browser cookie, and do not expose the credential to browser bundles. There is no hosted Forms default: missing `SITEOS_FORMS_PUBLIC_URL` is a configuration error.
+   - The runtime credential is Environment-scoped `pfs_` authority only. Do not send an Auth grant, Project context, Project API key, or browser cookie, and do not expose the credential to browser bundles. The CLI defaults to the hosted SiteOS application origin and installs `SITEOS_FORMS_PUBLIC_URL`; generated runtime must still require that explicit installed value so it never submits to production accidentally.
 
 6. Verify.
    - Run stack-appropriate lint/typecheck/tests.
@@ -88,7 +88,7 @@ Load only the reference needed for the task:
 - `references/siteos-connection-onboarding.md`: Auth prerequisite plus Forms-owned Project, Environment, and credential gates.
 - `references/onboarding-report-template.md`: user-facing form onboarding checkpoint and blocker report shape.
 - `references/form-contract.md`: field contract rules, validation ownership, and metadata boundaries.
-- `references/api-onboarding.md`: independent Forms routing, scoped credential installation, and security rules.
+- `references/api-onboarding.md`: Forms-owned same-origin routing, scoped credential installation, and security rules.
 - `references/framework-adapters.md`: implementation patterns for common stacks.
 
 ## Non-Negotiables

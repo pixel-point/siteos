@@ -168,8 +168,9 @@ Content-Type: application/json
 
 Do not switch to a project API-key submission path or a form-key path such as `/api/v1/project/forms/{formKey}/submissions`; the scoped credential selects the project environment and the payload selects the form.
 
-`SITEOS_FORMS_PUBLIC_URL` has no hosted fallback. Generated runtime must fail safely when it is
-missing or unsafe, and must send only `SITEOS_FORMS_SUBMISSION_CREDENTIAL` as runtime authority.
+The CLI's hosted default is `https://siteoapp.xui.se` and credential installation writes that
+origin to `SITEOS_FORMS_PUBLIC_URL`. Generated runtime must still fail safely when the explicit
+installed value is missing or unsafe, and must send only `SITEOS_FORMS_SUBMISSION_CREDENTIAL` as runtime authority.
 It must never send an Auth grant, Project context, browser cookie, or Project API key.
 
 If the upstream response is HTML or another non-JSON payload, assume the route or environment contract is wrong and normalize the local error message accordingly.

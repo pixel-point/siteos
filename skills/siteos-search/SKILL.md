@@ -168,10 +168,10 @@ The first remote preflight is `npx @siteoshq/cli auth status --json`, followed b
 
 A usable Search workspace requires a product-owned Project selection, the secret-free `.siteos/search/project.json`, its private immutable-ID binding, and an explicit environment slug. Creating or selecting it must never create, select, link, or mutate Pulse or Forms Projects.
 
-Resolve the independent Search origin in this order:
+Resolve the Search API origin in this order:
 
-1. `SITEOS_SEARCH_PUBLIC_URL`, when intentionally set for local, staging, or production.
-2. The CLI development default `http://localhost:3080` only for an intentional local run.
+1. `SITEOS_SEARCH_PUBLIC_URL`, when intentionally set for local, staging, or another deployment.
+2. The CLI hosted default `https://siteoapp.xui.se`.
 
 Never use legacy Project `apiBaseUrl`, Server Legacy, or another product origin as a Search fallback.
 
@@ -254,7 +254,7 @@ Next checkpoint: <one concrete checkpoint>
 
 Include relevant machine-readable diagnostic codes when the API returns them, but keep prose short. Redact all secrets.
 
-After successful search delivery, state the safe Search Project name/slug and environment slug. Make clear that opening SiteOS UI is not required. Present a safe destination only when an existing command returns one. If the user asks for a signed-in browser and no safe destination is available, explain that Search authenticates through central Auth OIDC. Do not invent or run a handoff command, and never extract, print, or reconstruct a handoff URL.
+After successful search delivery, state the safe Search Project name/slug and environment slug. Make clear that opening SiteOS UI is not required. Present a safe destination only when an existing command returns one. If the user asks for a signed-in browser and no safe destination is available, explain that `/search` runs inside the shared SiteOS shell with the canonical host-only Auth session. Do not invent or run a handoff command, and never extract, print, or reconstruct a handoff URL.
 
 For onboarding decision checkpoints and blockers after mode selection, use [references/onboarding-report-template.md](references/onboarding-report-template.md). The report title must be exactly `SiteOS Search Onboarding Flow`. Do not include a generic status table, completed-step recap, or remaining-step plan.
 

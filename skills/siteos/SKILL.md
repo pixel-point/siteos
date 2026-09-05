@@ -20,6 +20,7 @@ Route the request; do not duplicate detailed service procedures here.
 ## Boundaries
 
 - Auth owns accounts, Organizations, sessions, and short-lived service grants. It does not own product Projects.
+- Hosted browser and management API traffic shares `https://siteoapp.xui.se`; this composition detail does not merge product ownership or data lifecycles.
 - Pulse, Forms, and Search each own their Project records, tracked repository reference, private binding, lifecycle, Environments, credentials, and data.
 - Creating, selecting, renaming, or deleting a Project in one product must never create, select, link, or mutate a Project in another product.
 - Similar names or slugs across products are a user convention, not shared identity.

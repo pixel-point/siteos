@@ -23,7 +23,7 @@ The private binding in `~/.siteos/project-bindings.json` is keyed by service, AP
 - `pulse deploy --dry-run --json` builds the same versioned JSON manifest and archive as deploy, writes only the requested/local artifact, and makes no API request.
 - `pulse deploy --json` requires Auth, the selected Organization, and a repository-specific Pulse binding, then uploads against the immutable bound Pulse Project ID.
 
-Use `SITEOS_PULSE_API_URL` only for an intentional API-origin override. The normal hosted origin is `https://siteos-pulse.xui.se`.
+Use `SITEOS_PULSE_API_URL` only for an intentional local or staging override. Pulse APIs share the normal hosted SiteOS application origin `https://siteoapp.xui.se`.
 
 ## Safe migration
 
