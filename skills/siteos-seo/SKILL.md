@@ -85,9 +85,10 @@ npx @siteoshq/cli seo schedule set --enabled true --weekday 1 --time 09:00 --tim
 
 Read back the schedule and next run. Weekdays are Monday=1 through Sunday=7. A missing DST time
 is skipped; a repeated time runs once. After downtime only one due occurrence is considered.
-An active audit or exhausted allowance skips that slot; inspect `lastOutcome`, not just enabled.
-Manual audits, rechecks and schedules share 20 audits per Organization per UTC day. Do not loop
-on a 429 or create parallel work to evade limits. Disable by saving the same fields with
+An active audit or full queue skips that slot; inspect `lastOutcome`, not just enabled.
+Manual audits, rechecks and schedules are Unlimited during early access, with no daily quota.
+Usage & limits and the SEO header show Unlimited. Crawl budgets, one active audit per Organization
+and queue capacity still apply. Do not loop on a 429 or create parallel work to evade these limits. Disable by saving the same fields with
 `--enabled false` and the current revision. A revision conflict requires a fresh read and reconciliation.
 
 ## Send notifications through Integrations
@@ -129,3 +130,7 @@ Page details and changes expire after 90 days; summaries after 365 days. The lat
 audit and active baselines are protected. Current ignore decisions persist. An expired-evidence
 response is not a clean result; run a new authorized audit. Retention plan/apply is a trusted operator
 workflow, not an agent-facing browser or CLI deletion API.
+
+The crawler follows observed redirects between the selected hostname and its single www alias,
+including HTTP to HTTPS upgrades. It checks robots for each destination origin. Other hosts,
+subdomains and HTTPS downgrades remain outside scope; do not bypass the public-address policy.
