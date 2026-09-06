@@ -1,0 +1,4 @@
+interface:
+  display_name: "SiteOS SEO"
+  short_description: "Audit website HTML and verify SEO fixes"
+  default_prompt: "Use $siteos-seo to audit this Project environment and verify the fixes with saved evidence."

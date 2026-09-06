@@ -1,7 +1,7 @@
 {
   "name": "siteos",
-  "version": "1.4.0",
-  "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, Integrations and analytics.",
+  "version": "1.5.0",
+  "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO, Integrations and analytics.",
   "author": {
     "name": "Pixel Point",
     "email": "info@pixelpoint.io",
@@ -22,6 +22,7 @@
     "projects",
     "cookie",
     "trace",
+    "seo",
     "integrations"
   ],
   "skills": "./skills/",

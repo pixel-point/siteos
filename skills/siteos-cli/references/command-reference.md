@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@1.2.0`
+Package: `@siteoshq/cli@1.3.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -14,6 +14,7 @@ siteos auth --help
 siteos project --help
 siteos cookie --help
 siteos trace --help
+siteos seo --help
 siteos integrations --help
 siteos pulse --help
 siteos search --help
@@ -40,13 +41,13 @@ siteos project create --name <name> --slug <slug> [--url <url>] [--domain <domai
 siteos project use <id-or-slug> [--json]
 siteos project update [--name <name>] [--slug <slug>] [--url <production-url>] [--json]
 siteos project status [--json]
-siteos project connect <pulse|cookie|forms|search|trace> [--resource <id>] [--json]
+siteos project connect <pulse|cookie|forms|search|trace|seo> [--resource <id>] [--json]
 siteos project environment list [--json]
 siteos project environment create --name <name> --slug <slug> [--url <url>] [--json]
 siteos project environment use <slug> [--json]
 siteos project environment update <slug> [--name <name>] [--url <url>] [--json]
-siteos project environment resources <pulse|cookie|forms|search|trace> [--json]
-siteos project environment connect <pulse|cookie|forms|search|trace> --environment <slug> [--resource <id>] [--json]
+siteos project environment resources <pulse|cookie|forms|search|trace|seo> [--json]
+siteos project environment connect <pulse|cookie|forms|search|trace|seo> --environment <slug> [--resource <id>] [--json]
 ```
 
 ## Cookie
@@ -73,6 +74,28 @@ siteos trace environments [--json]
 siteos trace report [--environment <slug>] [--json]
 siteos trace installation <show|ensure|save|publish> [--environment <slug>] [--input <draft.json>] [--json]
 siteos trace tracking-plan <show|ensure|save|publish> [--environment <slug>] [--input <plan.json>] [--json]
+```
+
+## SEO
+
+```text
+siteos seo status [--environment <slug>] [--json]
+siteos seo audit run [--environment <slug>] [--json]
+siteos seo audit list [--environment <slug>] [--json]
+siteos seo audit show <id> [--environment <slug>] [--json]
+siteos seo audit cancel <id> [--environment <slug>] [--json]
+siteos seo pages [--audit <id>] [--query <text>] [--url <url>] [--page <number>] [--environment <slug>] [--json]
+siteos seo issues [--audit <id>] [--rule <id>] [--page <number>] [--environment <slug>] [--json]
+siteos seo changes [--audit <id>] [--state <new|reopened|still_present|resolved|not_rechecked>] [--page <number>] [--environment <slug>] [--json]
+siteos seo recheck --audit <id> --url <url> [--environment <slug>] [--json]
+siteos seo issue <ignore|restore> --audit <id> --url <url> --rule <id> --reason <text> --revision <number> [--environment <slug>] [--json]
+siteos seo schedule show [--environment <slug>] [--json]
+siteos seo schedule set --enabled <true|false> --weekday <1-7> --time <HH:mm> --timezone <IANA> --revision <number> [--environment <slug>] [--json]
+siteos seo notifications retry <notification-id> [--environment <slug>] [--json]
+siteos seo notifications show [--environment <slug>] [--json]
+siteos seo notifications destinations [--environment <slug>] [--json]
+siteos seo notifications set --enabled <true|false> [--destination <candidate-id>] --severity <error|warning> --failures <true|false> --revision <number> [--environment <slug>] [--json]
+siteos seo export --audit <id> --kind <pages|issues|changes> --format <csv|json> --output <new-file> [--query <text>] [--rule <id>] [--severity <error|warning|notice>] [--state <page-or-change-state>] [--environment <slug>] [--json]
 ```
 
 ## Integrations
