@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@1.3.0`
+Package: `@siteoshq/cli@1.4.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -132,6 +132,11 @@ siteos forms environment list [--json]
 siteos forms environment create --slug <slug> --name <name> [--json]
 siteos forms definition sync --environment <slug> --input <path> [--json]
 siteos forms definition sync --environment <slug> --manifest <path> [--json]
+siteos forms definition list --environment <slug> [--status <active|inactive|all>] [--json]
+siteos forms definition read --environment <slug> --form <form-id> [--json]
+siteos forms definition archive --environment <slug> --form <form-id> --expected-revision <revision> [--json]
+siteos forms definition restore --environment <slug> --form <form-id> --expected-revision <revision> [--json]
+siteos forms definition delete --environment <slug> --form <form-id> [--apply --confirm <form-key> --expected-revision <revision> --expected-submissions <count>] [--json]
 siteos forms definition check --input <path> [--json]
 siteos forms definition check --manifest <path> [--json]
 siteos forms credential list --environment <slug> [--json]
@@ -139,6 +144,9 @@ siteos forms credential issue --environment <slug> --install [--name <name>] [--
 siteos forms credential rotate --environment <slug> --install [--name <name>] [--json]
 siteos forms credential revoke --environment <slug> --credential <credential-id> [--json]
 siteos forms credentials issue --environment <slug> [--name <name>] [--json]
+siteos forms submissions list --environment <slug> --form <form-id> [--query <text>] [--status <status>] [--from <ISO>] [--to <ISO>] [--limit <1-100>] [--cursor <cursor>] [--json]
+siteos forms submissions read --environment <slug> --form <form-id> --submission <id> [--json]
+siteos forms submissions status --environment <slug> --form <form-id> --submission <id> --status <new|read|archived|spam> --expected-status <status> [--json]
 siteos forms submit --input <path> [--json]
 ```
 

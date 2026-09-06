@@ -75,10 +75,18 @@ Use the host project's own commands. Prefer:
 
 Treat these smoke-test outcomes differently:
 
-- definition sync `201`: form created or new version created.
-- definition sync `200`: sync succeeded and current version was reused.
+- Definition sync `200` or `201`: inspect `createdForm` and `createdVersion` in the result to
+  distinguish creation from reuse. The current Forms handler also returns `201` when it reuses
+  an unchanged version; HTTP status alone is not version-creation evidence.
 - HTML or non-JSON response: wrong route, wrong host, or wrong environment contract.
 - JSON `NOT_FOUND`: likely missing remote form registration, or submit ran before definition sync.
 - JSON validation/auth errors: runtime is reaching SiteOS, then fix payload or credentials.
+
+Keep the same idempotency key when retrying an unchanged submission after an uncertain response.
+Forms replays the original receipt for the same Environment, form, key and JSON payload, including
+when the active schema has changed since acceptance. Different data under that key returns
+`409 CONFLICT`. Older deployed servers can still return `409` for unchanged retries: explain the
+uncertainty and read back the receipt. Never generate a new key automatically after an uncertain
+response or treat a conflict as proof of successful delivery.
 
 If remote registration or submission cannot be tested because API credentials are intentionally not exposed in chat, state that limitation clearly.

@@ -1,13 +1,13 @@
 ---
 name: siteos-forms
-description: Build and connect SiteOS-managed forms in any project or framework. Use when the user asks to add, migrate, debug, or document a form that should submit to SiteOS, register with SiteOS, store submissions in SiteOS, or work without requiring the user to visit SiteOS app. Applies to React, Next.js, TanStack Start, Vite, plain HTML, and other web stacks.
+description: Build and connect SiteOS-managed forms in any project or framework. Use when the user asks to add, migrate, debug, archive, restore, delete, or document a form that should submit to SiteOS, register with SiteOS, store submissions in SiteOS, or work without requiring the user to visit SiteOS app. Applies to React, Next.js, TanStack Start, Vite, plain HTML, and other web stacks.
 ---
 
 # SiteOS Forms
 
 ## Core Rule
 
-Build forms through the unified SiteOS CLI and the Forms-owned runtime API, never through direct database access. The skill may create local form code, validation, routes, config files, and API calls. Auth owns users and Organizations. Forms owns its Projects, repository references, Environments, definitions, scoped credentials, submissions, storage, and product permissions even though its APIs share the SiteOS application origin.
+Build forms through the unified SiteOS CLI and the Forms-owned runtime API, never through direct database access. The skill may create local form code, validation, routes, config files, and API calls. Auth owns users and Organizations. Projects owns common Project identity and environment selection. Forms owns its explicitly attached resources, definitions, scoped credentials, submissions, storage, and product permissions inside the shared application.
 
 Run `npx @siteoshq/cli auth status --json` before remote Forms operations and delegate missing authentication or Organization selection to `$siteos-auth`. Use `$siteos` for common Project selection and `siteos project connect forms` for explicit Forms setup.
 
@@ -55,7 +55,7 @@ Use SiteOS naming exclusively. When a touched target-project file still uses leg
    - For linked SiteOS projects, sync the form definition immediately after creating or changing the form. Do not leave a new form in a submit-only state.
    - Treat definition sync as part of the implementation, not as a manual follow-up step.
    - Re-sync when the validation schema changes, when managed field metadata changes, or when form identity changes.
-   - Do not silently delete forms missing from a manifest. A removed form retains its submissions and requires an explicit archive/inactive operation when that API capability is available.
+   - Do not silently delete forms missing from a manifest. A removed form retains its submissions until an explicitly authorized lifecycle action. Load `references/form-lifecycle.md` for archive, restore and permanent deletion.
    - Do not write directly to the SiteOS database.
    - If the required CLI/API capability does not exist yet, implement the local form code and clearly report that remote registration is blocked by missing SiteOS capability.
    - Read the safe `ui.url` returned by definition sync and include it as an optional final link. Make clear that the CLI remains fully usable without opening SiteOS UI.
@@ -65,6 +65,7 @@ Use SiteOS naming exclusively. When a touched target-project file still uses leg
    - For server-capable projects, add a local server route that reads `SITEOS_FORMS_PUBLIC_URL` and the server-only `SITEOS_FORMS_SUBMISSION_CREDENTIAL`, then proxies submissions to the exact Forms-owned endpoint `POST {SITEOS_FORMS_PUBLIC_URL}/api/forms/submissions`.
    - Verify the SiteOS submission endpoint contract from local source, existing generated runtime, or SiteOS API docs before writing the proxy. Do not guess path shapes or payload shapes.
    - For static-only projects, prefer a SiteOS public submission endpoint only if the API supports it. Otherwise explain that a serverless route or public endpoint is required.
+   - For account-linked feedback, accept only the visible message from the browser and attach email from the host's authenticated server session. Explain the account link before sending with a short accessible notice; keep identity out of client-controlled hidden fields.
    - The runtime credential is Environment-scoped `pfs_` authority only. Do not send an Auth grant, Project context, Project API key, or browser cookie, and do not expose the credential to browser bundles. The CLI defaults to the hosted SiteOS application origin; generated runtime must require the separately configured `SITEOS_FORMS_PUBLIC_URL` so it never submits to production accidentally.
 
 6. Verify.
@@ -75,11 +76,14 @@ Use SiteOS naming exclusively. When a touched target-project file still uses leg
    - Confirm successful sync output contains the permanent optional SiteOS form URL. Do not treat opening that URL as a prerequisite for completion.
    - In Zod projects, confirm the server submission boundary calls the shared Zod schema with `safeParse` or `safeParseAsync`, and confirm the definition artifact is generated from that schema.
    - Run the project-owned stale-artifact check and the CLI manifest check when present.
+   - Read back the accepted receipt with `npx @siteoshq/cli forms submissions read --environment <slug> --form <form-id> --submission <submission-id> --json` on versions that list this command in `forms --help`. Confirm the complete payload and its saved version, not just a summary count. See `references/submission-inbox.md` for search, pagination and triage.
+   - Verify the actual browser form through its local server proxy, including empty/pending/error/success states. CLI acceptance proves the upstream path; it does not prove the browser integration.
+   - Report registration, runtime credential installation, accepted test submission and browser verification separately. A registered definition alone is not a working connection.
    - Report exactly what was verified and what remains blocked.
 
 ## Completion Invariant
 
-Do not report a newly created SiteOS form as complete unless the CLI definition sync succeeded. A local form plus a proxy returning a temporary `503` is unfinished, not a successful SiteOS Forms result. If onboarding needs an email or one-time login action, ask for it at the connection gate and resume the same workflow after the user completes it.
+Do not report a newly created SiteOS form as complete unless definition sync, a real submission through the intended integration, and receipt verification succeeded. A local form plus a proxy returning a temporary `503` is unfinished, not a successful SiteOS Forms result. If onboarding needs an email or one-time login action, ask for it at the connection gate and resume the same workflow after the user completes it.
 
 ## Reference Files
 
@@ -90,6 +94,8 @@ Load only the reference needed for the task:
 - `references/form-contract.md`: field contract rules, validation ownership, and metadata boundaries.
 - `references/api-onboarding.md`: Forms-owned same-origin routing, scoped credential installation, and security rules.
 - `references/framework-adapters.md`: implementation patterns for common stacks.
+- `references/submission-inbox.md`: full answers, pagination, safe retries and status changes.
+- `references/form-lifecycle.md`: archive, restore, exact deletion previews and reserved form keys.
 
 ## Non-Negotiables
 
