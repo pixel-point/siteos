@@ -35,7 +35,10 @@ Status:
 - Forms submission credential: <installed | missing | rotation-required | unknown>
 - Form implementation: <path> | not added yet | not found | unknown
 - Form contract: <formKey> | not added yet | not synced | synced | unknown
-- Definition sync: <not attempted | succeeded | failed | blocked | unknown>
+- Release key: <installed in deployment environment | missing | revoked | unknown>
+- Automatic build generation: <configured | missing | unknown>
+- Release publication: <not attempted | succeeded | failed | blocked | unknown>
+- Runtime version pinning: <verified | missing | unknown>
 - Submit proxy: <path> | not added yet | not found | unknown
 - Submit smoke test: <not attempted | succeeded | failed | blocked | unknown>
 ```
@@ -73,7 +76,10 @@ Status:
 - Forms submission credential: <installed | missing | rotation-required | unknown>
 - Form implementation: <path> | not added yet | not found | unknown
 - Form contract: <formKey> | not added yet | not synced | synced | unknown
-- Definition sync: <not attempted | succeeded | failed | blocked | unknown>
+- Release key: <installed in deployment environment | missing | revoked | unknown>
+- Automatic build generation: <configured | missing | unknown>
+- Release publication: <not attempted | succeeded | failed | blocked | unknown>
+- Runtime version pinning: <verified | missing | unknown>
 - Submit proxy: <path> | not added yet | not found | unknown
 - Submit smoke test: <not attempted | succeeded | failed | blocked | unknown>
 ```

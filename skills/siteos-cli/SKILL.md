@@ -40,3 +40,10 @@ before authentication. This selects a separate SiteOS installation, not a Projec
 - Use `siteos project` for common selection, service setup and environments. Use `siteos project environment use <slug>` to switch every service together; Project settings own the name and per-environment URL. Never create a tracked `.siteos/project.json`.
 - Common Projects and the Cookie, Trace and Integrations commands require CLI 1.1.0 or newer and the matching SiteOS server. Check the installed help before using them; a source checkout does not prove the public package has been released.
 - If a command is absent from the generated reference, run the appropriate `--help`; do not invent it or call a private API as a substitute.
+
+## Forms releases
+
+Use `forms deploy --manifest <path>` for non-interactive publication with an explicit Forms origin
+and release-only `SITEOS_FORMS_DEPLOYMENT_KEY`. `forms deployment-key issue|list|revoke` manages that
+separate Environment authority through normal Auth grants. Submission credentials cannot publish.
+Read `../siteos-forms/references/form-deployment.md` for generation, version pinning and rollback.

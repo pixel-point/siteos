@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@1.4.0`
+Package: `@siteoshq/cli@1.5.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -147,6 +147,10 @@ siteos forms credentials issue --environment <slug> [--name <name>] [--json]
 siteos forms submissions list --environment <slug> --form <form-id> [--query <text>] [--status <status>] [--from <ISO>] [--to <ISO>] [--limit <1-100>] [--cursor <cursor>] [--json]
 siteos forms submissions read --environment <slug> --form <form-id> --submission <id> [--json]
 siteos forms submissions status --environment <slug> --form <form-id> --submission <id> --status <new|read|archived|spam> --expected-status <status> [--json]
+siteos forms deploy --manifest <path> [--json]
+siteos forms deployment-key issue --environment <slug> --install [--name <name>] [--json]
+siteos forms deployment-key list --environment <slug> [--json]
+siteos forms deployment-key revoke --environment <slug> --credential <id> [--json]
 siteos forms submit --input <path> [--json]
 ```
 

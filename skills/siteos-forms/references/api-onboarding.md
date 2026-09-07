@@ -67,9 +67,15 @@ Registration should be idempotent. If the same schema is unchanged and normalize
 
 For current Forms-linked projects, definition sync should be treated as required before live submit. If a form is created locally but never synced, live submissions can return `NOT_FOUND` even though the Forms Project and Environment selection are valid.
 
-## Definition Sync Runtime
+## Automatic publication
 
-For current SiteOS-linked projects, skill-time definition sync should use:
+New integrations follow `form-deployment.md`: generate during build, publish with `forms deploy`
+in the release step, and send the generated `sourceExportId` as `contractVersion` from the host
+server. Deployment keys are separate from submission keys. Neither uses browser authority.
+
+## Legacy Definition Sync Runtime
+
+For existing unpinned integrations or explicit active-version management, legacy sync uses:
 
 ```bash
 npx @siteoshq/cli forms definition sync --environment <slug> --input <path> --json
@@ -173,6 +179,8 @@ Content-Type: application/json
   "ipAddress": "optional"
 }
 ```
+
+For new integrations, add `contractVersion: generatedDefinition.sourceExportId` to this server-created request. An unknown contract version fails; never fall back to an unpinned request after rejection.
 
 Do not switch to a project API-key submission path or a form-key path such as `/api/v1/project/forms/{formKey}/submissions`; the scoped credential selects the project environment and the payload selects the form.
 

@@ -40,25 +40,28 @@ Use SiteOS naming exclusively. When a touched target-project file still uses leg
    - Load `references/form-contract.md` before implementing validation or the registration artifact.
    - Use the host project's established validation library. In a TypeScript/JavaScript project with Zod installed, Zod is mandatory; do not hand-write a schema walker, email regex, or parallel field parser.
    - Keep one form definition whose fields own both their Zod schema and SiteOS managed metadata. Derive the object schema, TypeScript payload type, `schemaJson`, and `normalizedFieldsJson` from that definition. Do not independently maintain equivalent field lists or validation rules.
+   - For Zod 4 projects, start from `assets/define-form.ts` and `assets/contract-version.ts`, copied into the host project and adapted to its conventions. The first derives schemas/metadata from one field map; the second produces the portable contract fingerprint. These are project-owned source files, not imports from the installed skill or CLI.
    - Add a SiteOS form contract that describes managed semantics only.
    - For the SiteOS submission inbox, assign exactly one required, semantically useful field `displayRole: "primary"` and optional supporting fields `displayRole: "secondary"`. Choose roles from the form's meaning, never from property names. Always generate complete field metadata.
    - Keep generated definitions under `.siteos/forms/` and maintain `.siteos/forms/manifest.json` as the project-wide list of managed forms.
-   - Leave a project-owned generate/check script so later code changes can regenerate definitions and fail CI on stale artifacts. Generated project scripts must be self-contained; do not add a SiteOS CLI dependency only for these scripts.
+   - Leave a project-owned generate/check script. Run generation automatically from the ordinary build and keep check mode for CI. Generated project scripts must be self-contained; do not add a SiteOS CLI dependency only for these scripts.
    - Keep UI behavior such as success messages, redirects, placeholders, and browser autocomplete in UI code, not in SiteOS registration metadata.
 
-4. Register or sync the form through SiteOS.
+4. Register and connect publication through SiteOS.
+   - Load `references/form-deployment.md`. New integrations use generated `sourceExportId` fingerprints, `siteos forms deploy`, and pinned runtime `contractVersion`. Complete the one-time release setup; do not leave routine schema publication as a manual instruction.
+   - Keep legacy `definition sync` only for existing integrations being migrated or explicit active-version management. It changes the default version for unpinned clients; normal `forms deploy` preserves that default for existing forms.
    - Before runtime work, run `npx @siteoshq/cli forms credential list --environment <slug> --json`. For a new environment with no credential metadata, install one with `npx @siteoshq/cli forms credential issue --environment <slug> --install --json`. The compatibility spelling `npx @siteoshq/cli forms credentials issue --environment <slug> --install --json` remains supported, but prefer the singular command. Rotate only when replacement is intentional, using `npx @siteoshq/cli forms credential rotate --environment <slug> --install --json`.
    - Before credential installation, ensure Git ignores the repository's `.env`; the CLI refuses installation otherwise. Never read the installed plaintext result or inspect `.env`; successful CLI output reports only safe installation metadata.
    - The Forms installer writes the credential only. Configure the non-secret `SITEOS_FORMS_PUBLIC_URL` separately for the selected SiteOS installation, preserving other environment entries without printing them. Use the application origin, such as `https://app.siteos.sh`, rather than the Project's website URL. Preserve intentional staging overrides. See `references/api-onboarding.md` for runtime environment loading.
-   - Use `npx @siteoshq/cli forms definition sync --environment <slug> --input <path> [--json]` for skill-time definition sync when a linked SiteOS project is available.
-   - Prefer `npx @siteoshq/cli forms definition check --manifest .siteos/forms/manifest.json --json` followed by `npx @siteoshq/cli forms definition sync --environment <slug> --manifest .siteos/forms/manifest.json --json` when the project has a manifest. This validates every registered definition and rejects duplicate form keys before API writes.
+   - Use `npx @siteoshq/cli forms deploy --manifest .siteos/forms/manifest.json --json` for new integrations, with the release environment loaded and explicit `SITEOS_FORMS_PUBLIC_URL`.
+   - Run `npx @siteoshq/cli forms definition check --manifest .siteos/forms/manifest.json --json` before publication. `forms deploy` validates the complete inventory and publishes atomically; duplicate form keys fail before writes.
    - For linked SiteOS projects, sync the form definition immediately after creating or changing the form. Do not leave a new form in a submit-only state.
    - Treat definition sync as part of the implementation, not as a manual follow-up step.
    - Re-sync when the validation schema changes, when managed field metadata changes, or when form identity changes.
    - Do not silently delete forms missing from a manifest. A removed form retains its submissions until an explicitly authorized lifecycle action. Load `references/form-lifecycle.md` for archive, restore and permanent deletion.
    - Do not write directly to the SiteOS database.
    - If the required CLI/API capability does not exist yet, implement the local form code and clearly report that remote registration is blocked by missing SiteOS capability.
-   - Read the safe `ui.url` returned by definition sync and include it as an optional final link. Make clear that the CLI remains fully usable without opening SiteOS UI.
+   - When legacy definition sync returns a safe `ui.url`, include it as an optional final link. Deployment output provides the exact published versions and Environment ID. Make clear that the CLI remains fully usable without opening SiteOS UI.
    - If the user asks for a signed-in browser, use the safe `ui.url` returned by the CLI or the Forms-owned route `/forms/projects/<forms-project-id>`. The shared SiteOS shell uses the canonical host-only Auth session, while Forms retains its own Project authorization rules. Do not construct OAuth, PKCE, or Project handoff material, and never extract, print, or reconstruct a handoff URL.
 
 5. Add submit runtime.
@@ -66,14 +69,15 @@ Use SiteOS naming exclusively. When a touched target-project file still uses leg
    - Verify the SiteOS submission endpoint contract from local source, existing generated runtime, or SiteOS API docs before writing the proxy. Do not guess path shapes or payload shapes.
    - For static-only projects, prefer a SiteOS public submission endpoint only if the API supports it. Otherwise explain that a serverless route or public endpoint is required.
    - For account-linked feedback, accept only the visible message from the browser and attach email from the host's authenticated server session. Explain the account link before sending with a short accessible notice; keep identity out of client-controlled hidden fields.
+   - Send the generated definition's `sourceExportId` as `contractVersion` with every server submission. Never accept the version or destination from browser input. Full business validation uses the shared host schema before sending its parsed output; JSON export does not preserve arbitrary refinements/transforms.
    - The runtime credential is Environment-scoped `pfs_` authority only. Do not send an Auth grant, Project context, Project API key, or browser cookie, and do not expose the credential to browser bundles. The CLI defaults to the hosted SiteOS application origin; generated runtime must require the separately configured `SITEOS_FORMS_PUBLIC_URL` so it never submits to production accidentally.
 
 6. Verify.
    - Run stack-appropriate lint/typecheck/tests.
    - Scan changed target-project files for legacy product names and replace every match that belongs to the SiteOS integration.
-   - Smoke-test definition sync through `.siteos/forms/manifest.json` when present; use `npx @siteoshq/cli forms definition sync --environment <slug> --input <path> [--json]` only as the single-definition fallback.
+   - Smoke-test `forms deploy` from a clean release environment with no interactive Auth state. Change a field constraint and verify both old/new pinned versions; publishing an archived form must fail without partial writes.
    - Smoke-test upstream form submission with `npx @siteoshq/cli forms submit --input <path> [--json]` after loading the repository's runtime environment. `--install` writes `.env`, but `forms submit` reads its process environment and does not load that file automatically. With the shared CLI installed on a POSIX host, use `node --env-file=.env "$(command -v siteos)" forms submit --input <path> --json` from the repository root. A missing-credential message after installation requires loading the environment, not reauthentication or key rotation. Never print credentials or evaluate `.env` as shell code.
-   - Confirm successful sync output contains the permanent optional SiteOS form URL. Do not treat opening that URL as a prerequisite for completion.
+   - Confirm publication returned every expected form and fingerprint. Do not treat opening SiteOS UI as a prerequisite for completion.
    - In Zod projects, confirm the server submission boundary calls the shared Zod schema with `safeParse` or `safeParseAsync`, and confirm the definition artifact is generated from that schema.
    - Run the project-owned stale-artifact check and the CLI manifest check when present.
    - Read back the accepted receipt with `npx @siteoshq/cli forms submissions read --environment <slug> --form <form-id> --submission <submission-id> --json` on versions that list this command in `forms --help`. Confirm the complete payload and its saved version, not just a summary count. See `references/submission-inbox.md` for search, pagination and triage.
@@ -91,6 +95,7 @@ Load only the reference needed for the task:
 
 - `references/siteos-connection-onboarding.md`: Auth, common Project selection, explicit Forms attachment, environments and credentials.
 - `references/onboarding-report-template.md`: user-facing form onboarding checkpoint and blocker report shape.
+- `references/form-deployment.md`: automatic publication, release-only keys, version pinning and rollback.
 - `references/form-contract.md`: field contract rules, validation ownership, and metadata boundaries.
 - `references/api-onboarding.md`: Forms-owned same-origin routing, scoped credential installation, and security rules.
 - `references/framework-adapters.md`: implementation patterns for common stacks.
