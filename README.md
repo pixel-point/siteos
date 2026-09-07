@@ -1,6 +1,6 @@
 # <img src="assets/siteos-logo.svg" alt="SiteOS logo" height="42" align="absbottom"> SiteOS
 
-This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO, Integrations, and Search analytics.
+This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO, Analytics, and Integrations.
 
 Release: 1.9.0.
 
