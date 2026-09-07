@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@1.8.0`
+Package: `@siteoshq/cli@1.9.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -54,6 +54,8 @@ siteos project environment connect <pulse|cookie|forms|search|trace|seo|analytic
 ## Cookie
 
 ```text
+siteos cookie terms show [--json]
+siteos cookie terms accept --version <reviewed-version> --confirm [--json]
 siteos cookie status [--json]
 siteos cookie installation [--json]
 siteos cookie schema [--json]

@@ -10,9 +10,29 @@ Use the common SiteOS Project and the unified CLI. Cookie owns banner configurat
 ## Establish the website and current capabilities
 
 1. Run `npx @siteoshq/cli project status --json`. Use `$siteos` for missing account, Organization or Project selection. Select the intended environment with `npx @siteoshq/cli project environment use <slug> --json`. Its URL can be set with `npx @siteoshq/cli project environment update <slug> --url <website-url> --json`; never fall back to Production.
-2. If Cookie setup is requested and no resource is attached, run `npx @siteoshq/cli project connect cookie --json`. Attach an existing resource explicitly with `--resource <id>` to preserve its key and installation. Project owns name and hostname; preserve them in Cookie draft payloads. Changing the website address requires explicit banner republication.
+2. Before a new Cookie connection, check the Cookie service terms as described below. If Cookie setup is requested and no resource is attached, run `npx @siteoshq/cli project connect cookie --json`. Attach an existing resource explicitly with `--resource <id>` to preserve its key and installation. Project owns name and hostname; preserve them in Cookie draft payloads. Changing the website address requires explicit banner republication.
 3. Read `npx @siteoshq/cli cookie --help`, `npx @siteoshq/cli cookie status --json` and `npx @siteoshq/cli cookie draft get --json`. Keep the complete save payload: `name`, `hostname`, `expectedDraftVersion` and `draft`. Preserve fields outside the requested change. New appearance fields require a compatible deployed Cookie service; local source changes do not update the hosted API or installed plugin.
 4. Inspect the site's actual source and, when available, its rendered pages before selecting services or matching its design. Identify existing CMPs, GTM containers, scripts, pixels, embeds, cookies/storage and server-side integrations. Distinguish observed behavior from inferred purpose. Do not invent legal text, controller identity, policies, vendors or consent. Ask for missing business facts while continuing independent work.
+
+## Review service terms before setup
+
+Use a CLI version whose `cookie --help` includes `terms show` and `terms accept`, together with a
+compatible application. Run `npx @siteoshq/cli cookie terms show --json` in the selected Organization
+and Project; this works before Cookie is attached. Existing connections remain operational.
+
+If the current version has not been accepted, show the returned notice, full terms link, version
+and acknowledgement to the user. Obtain their explicit agreement on behalf of the Organization
+before running `npx @siteoshq/cli cookie terms accept --version <reviewed-version> --confirm --json`.
+A general request to configure or publish a banner is not agreement to service terms. Never accept
+terms autonomously, invent an acceptance, or reuse confirmation for a different version or
+Organization. Only an owner or admin can accept. Read back `cookie terms show` after success.
+If the server reports changed terms, show the new version and obtain a new explicit agreement.
+
+Acceptance records service responsibilities; it does not approve a banner configuration or
+provide legal advice. Keep `customerResponsibilityReviewed` and publication approval separate.
+The website operator still needs to review regional rules, disclosures and scripts with its legal
+adviser. Passing technical checks does not certify legal compliance.
+
 
 ## Match the site's design
 
