@@ -1,6 +1,6 @@
 {
   "name": "siteos",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO, Integrations and analytics.",
   "author": {
     "name": "Pixel Point",
@@ -47,7 +47,7 @@
       "$siteos-pulse configure and deploy Playwright monitoring",
       "$siteos-search inspect this external project and configure managed search",
       "$siteos-forms add a managed contact form to this project",
-      "$siteos-analytics inspect search health and usage for this linked project",
+      "$siteos-analytics configure website analytics and verify a custom event",
       "$siteos-cookie configure the consent banner for this Project",
       "$siteos-trace inspect analytics observation and installation",
       "$siteos-integrations inspect Organization connections and notification destinations"

@@ -1,7 +1,7 @@
 interface:
   display_name: "SiteOS Analytics"
-  short_description: "Managed search analytics and sidecar reports"
-  default_prompt: "Use $siteos-analytics to inspect this selected Search Project, fetch redacted analytics/diagnostics, and choose concise chat or a sidecar report."
+  short_description: "Website analytics setup, events and verification"
+  default_prompt: "Use $siteos-analytics to connect website Analytics in this Project environment, configure optional Cookie or external consent control, register useful events and verify actual collection."
 
 policy:
   allow_implicit_invocation: true

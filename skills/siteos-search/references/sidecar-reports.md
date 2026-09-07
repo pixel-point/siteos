@@ -1,6 +1,6 @@
 # SiteOS Search Sidecar Reports
 
-Use this reference when the `siteos-analytics` output selection rule chooses a richer visual artifact instead of concise chat.
+Use this reference when the `siteos-search` output selection rule chooses a richer visual artifact instead of concise chat.
 
 This step generates a standalone HTML report outside the target project. It does not change target-project files, open a browser, run Playwright, install SiteOS MCP, add CLI/MCP behavior, or change SiteOS APIs.
 

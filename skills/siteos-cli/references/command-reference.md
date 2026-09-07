@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@1.6.0`
+Package: `@siteoshq/cli@1.7.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -14,6 +14,7 @@ siteos auth --help
 siteos project --help
 siteos cookie --help
 siteos trace --help
+siteos analytics --help
 siteos seo --help
 siteos integrations --help
 siteos pulse --help
@@ -41,13 +42,13 @@ siteos project create --name <name> --slug <slug> [--url <url>] [--domain <domai
 siteos project use <id-or-slug> [--json]
 siteos project update [--name <name>] [--slug <slug>] [--url <production-url>] [--json]
 siteos project status [--json]
-siteos project connect <pulse|cookie|forms|search|trace|seo> [--resource <id>] [--json]
+siteos project connect <pulse|cookie|forms|search|trace|seo|analytics> [--resource <id>] [--json]
 siteos project environment list [--json]
 siteos project environment create --name <name> --slug <slug> [--url <url>] [--json]
 siteos project environment use <slug> [--json]
 siteos project environment update <slug> [--name <name>] [--url <url>] [--json]
-siteos project environment resources <pulse|cookie|forms|search|trace|seo> [--json]
-siteos project environment connect <pulse|cookie|forms|search|trace|seo> --environment <slug> [--resource <id>] [--json]
+siteos project environment resources <pulse|cookie|forms|search|trace|seo|analytics> [--json]
+siteos project environment connect <pulse|cookie|forms|search|trace|seo|analytics> --environment <slug> [--resource <id>] [--json]
 ```
 
 ## Cookie
@@ -103,6 +104,29 @@ siteos seo performance wait <id> [--timeout <seconds>] [--environment <slug>] [-
 siteos seo performance cancel <id> [--environment <slug>] [--json]
 siteos seo performance history --url <url> [--device <mobile|desktop>] [--environment <slug>] [--json]
 siteos seo performance export <id> --format <csv|json> --output <new-file> [--environment <slug>] [--json]
+```
+
+## Analytics
+
+```text
+siteos analytics status [--environment <slug>] [--json]
+siteos analytics installation [--environment <slug>] [--json]
+siteos analytics report [--days <1|7|28>] [--event <name>] [--country <ISO|unknown>] [--campaign <id>] [--environment <slug>] [--json]
+siteos analytics realtime [--country <ISO|unknown>] [--campaign <id>] [--environment <slug>] [--json]
+siteos analytics settings show [--environment <slug>] [--json]
+siteos analytics settings set --revision <number> [--enabled <true|false>] [--cookie-events <true|false>] [--minimal-realtime <true|false>] [--environment <slug>] [--json]
+siteos analytics events list [--environment <slug>] [--json]
+siteos analytics events create --file <event.json> [--environment <slug>] [--json]
+siteos analytics events snippet <name> [--environment <slug>] [--json]
+siteos analytics campaigns list [--environment <slug>] [--json]
+siteos analytics campaigns create --file <campaign.json> [--environment <slug>] [--json]
+siteos analytics goals list [--environment <slug>] [--json]
+siteos analytics goals create --file <goal.json> [--environment <slug>] [--json]
+siteos analytics goals archive <id> [--environment <slug>] [--json]
+siteos analytics funnels list [--environment <slug>] [--json]
+siteos analytics funnels create --file <funnel.json> [--environment <slug>] [--json]
+siteos analytics funnels archive <id> [--environment <slug>] [--json]
+siteos analytics monitoring prepare [--environment <slug>] [--json]
 ```
 
 ## Integrations

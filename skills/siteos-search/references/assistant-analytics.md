@@ -1,12 +1,12 @@
 # SiteOS Search Analytics
 
-Use this reference from the `siteos-analytics` skill when the user asks about search health, search usage, sync outcomes, job outcomes, source coverage, diagnostics, or reporting signals for an already linked project.
+Use this reference from the `siteos-search` skill when the user asks about search health, search usage, sync outcomes, job outcomes, source coverage, diagnostics, or reporting signals for an already linked project.
 
 This step fetches the API v1 analytics/diagnostics data and chooses the output channel before answering. It may return concise chat for simple questions or route complex report requests to [sidecar-reports.md](sidecar-reports.md). It does not generate browser artifacts, CLI wiring, MCP wiring, SiteOS API changes, sync/query behavior changes, or target-project mutations.
 
 ## Inputs
 
-Start from the linkage checks in `SKILL.md`:
+Start from the linkage checks in [analytics-workflow.md](analytics-workflow.md):
 
 - target project root
 - Auth readiness and Search Project status reported by safe CLI output

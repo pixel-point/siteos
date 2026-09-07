@@ -2,14 +2,14 @@
 
 This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO, Integrations, and Search analytics.
 
-Release: 1.8.0.
+Release: 1.9.0.
 
 ## Install
 
 ### Codex
 
 ```sh
-codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v1.8.0
+codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v1.9.0
 codex plugin add siteos@siteos
 ```
 
@@ -68,7 +68,7 @@ Runs technical HTML audits, explains saved page evidence, compares observations 
 
 ### Search (`$siteos-search`)
 
-Inspect an external project, configure managed search sources and synchronization, and deliver the supported search runtime and UI workflow.
+Inspect an external project, configure managed search sources and synchronization, deliver search UI, and report Search health, usage and diagnostics.
 
 ### Forms (`$siteos-forms`)
 
@@ -76,7 +76,7 @@ Add, migrate, connect, or debug SiteOS-managed forms, including definition regis
 
 ### Analytics (`$siteos-analytics`)
 
-Review health, usage, source coverage, synchronization jobs, diagnostics, and reports for an already linked SiteOS managed Search project.
+Connect website Analytics, configure optional Cookie or external consent control, register categorical events and verify real collection, conversions and realtime. Cookie and Trace are optional.
 
 ## Use
 
@@ -89,7 +89,7 @@ $siteos-auth authenticate and select my Organization
 $siteos-pulse configure Playwright monitoring for this project
 $siteos-search inspect this project and configure managed search
 $siteos-forms add a managed contact form to this project
-$siteos-analytics inspect search health and usage for this linked project
+$siteos-analytics configure website analytics and verify a custom event
 ```
 
 ### Claude Code
@@ -101,7 +101,7 @@ $siteos-analytics inspect search health and usage for this linked project
 /siteos:siteos-pulse configure Playwright monitoring for this project
 /siteos:siteos-search inspect this project and configure managed search
 /siteos:siteos-forms add a managed contact form to this project
-/siteos:siteos-analytics inspect search health and usage for this linked project
+/siteos:siteos-analytics configure website analytics and verify a custom event
 ```
 
 ## Architecture and contribution boundary

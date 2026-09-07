@@ -1,13 +1,13 @@
 ---
 name: siteos-search
-description: Use when creating, selecting, configuring, verifying, repairing, or operating SiteOS Search for a common website Project, including Environments, source discovery, scoped credentials, sync, query, and UI delivery through @siteoshq/cli.
+description: Use when creating, selecting, configuring, verifying, repairing, or operating SiteOS Search for a common website Project, including Environments, source discovery, scoped credentials, sync, query, UI delivery, search health, usage analytics and reports through @siteoshq/cli.
 ---
 
 # SiteOS Search
 
 Use this skill from the root of a target external project, or pass an explicit target project root when the user names one.
 
-This skill is the search implementation entrypoint only. It routes work across SiteOS connection, readiness, source discovery, scaffold/source handlers, sync/runtime repair, runtime-token tooling, and supported search UI delivery. Do not use this skill for analytics dashboards, search usage reporting, sidecar HTML reports, charts, or aggregate diagnostics reporting; use the sibling `siteos-analytics` skill for those tasks.
+This skill owns Search setup, operation and reporting. For search health, usage, diagnostics, charts or sidecar reports, go directly to [references/analytics-workflow.md](references/analytics-workflow.md); do not start onboarding, sync or UI changes for a reporting request. For implementation, use the connection, source, synchronization and UI workflows below. Website pageviews, custom events and conversions belong to `$siteos-analytics`.
 
 Run `npx @siteoshq/cli auth status --json` before remote Search operations and delegate missing authentication or Organization selection to `$siteos-auth`. Use the common `siteos project` workflow for discovery, creation and selection; use `siteos search project ...` only for legacy unbound repositories or explicit adoption. Never call Auth, Project, or credential-management endpoints directly, inspect CLI private state, or use legacy Organization tokens or Project API keys.
 
@@ -286,7 +286,7 @@ Stop before:
 - exposing project API keys, bearer tokens, or raw linkage data to browser/client files
 - overwriting existing UI/runtime files without explicit approval
 - running browser UI verification before the UI/runtime delivery and wiring checkpoint
-- answering analytics/reporting prompts from this search implementation skill instead of routing to `siteos-analytics`
+- starting onboarding or changing Search configuration for a reporting-only request instead of using `references/analytics-workflow.md`
 - installing SiteOS MCP
 - changing SiteOS API, DB schema, CLI behavior, or exported-project behavior
 - installing global browser automation packages for verification

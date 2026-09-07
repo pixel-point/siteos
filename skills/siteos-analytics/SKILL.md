@@ -1,44 +1,44 @@
 ---
 name: siteos-analytics
-description: Use when answering SiteOS managed search health, usage, sync/job, source coverage, diagnostics, or reporting questions for an already linked external project. Fetches SiteOS API v1 analytics/diagnostics, chooses concise chat or a served sidecar HTML report, and keeps all credentials and report artifacts outside the target project.
+description: Set up SiteOS website Analytics in a selected Project environment, configure optional Cookie or external consent control, install the browser script or GTM adapter, register custom events and conversions, and verify actual collection, countries and realtime. Use for website measurement; route managed Search health and usage reports to siteos-search.
 ---
 
 # SiteOS Analytics
 
-Use this skill from the root of a target external project, or pass an explicit target project root when the user names one.
+Complete the path from the site's business action to a saved Analytics report. Cookie and Trace are optional services; Analytics works independently without either service.
 
-This skill owns analytics and reporting for existing SiteOS managed Search Projects. It does not create/select a Search Project, configure sources, scaffold `siteos-search.config.ts`, author source handlers, deliver search UI, run `search:sync`, install SiteOS MCP, or change SiteOS APIs. For those tasks, use the sibling `$siteos-search` skill.
+## Establish the target
 
-Start by using safe CLI output to confirm Auth, the Search Project, and the selected environment:
+1. Run `npx @siteoshq/cli analytics --help` and confirm that the installed CLI and selected server support these commands. Source documentation does not prove a public release. Delegate missing CLI support to `$siteos-cli` and missing authentication to `$siteos-auth`; do not substitute private APIs.
+2. Use `npx @siteoshq/cli auth status --json` and `npx @siteoshq/cli project status --json` to confirm Organization, Project and environment. Use an explicit `--environment <slug>` on Analytics commands when needed. Never fall back to Production or infer a binding from a matching name/domain.
+3. If Analytics is absent, use `npx @siteoshq/cli project connect analytics` within the user's requested setup. This explicitly attaches Analytics only. Use `$siteos` for common Project or environment repair. Never inspect private binding or credential files.
+4. Read `npx @siteoshq/cli analytics status --json` and `npx @siteoshq/cli analytics installation --json`.
 
-1. Resolve the target project root.
-2. Run `npx @siteoshq/cli auth status --json`. Delegate missing Auth or Organization selection to `$siteos-auth`.
-3. Run `npx @siteoshq/cli project status --json`. Delegate missing Search Project selection or product repair to `$siteos-search`; never interpret private binding state or inspect credential-bearing files.
-4. Read `siteos-search.config.ts` only when needed to resolve an explicitly configured environment slug or explain source labels. Stop when no environment is selected; do not fall back to `prod`.
-5. Run `npx @siteoshq/cli search analytics --environment <slug> --json` as the primary source.
-6. Run `npx @siteoshq/cli search diagnostics --environment <slug> --json` only when supporting readiness context is needed.
-7. Choose concise chat or a sidecar HTML report from prompt complexity before answering.
+## Choose collection behavior
 
-Use [references/assistant-analytics.md](references/assistant-analytics.md) for API calls, classifications, concise answer shape, limitations, and secret handling. Use [references/sidecar-reports.md](references/sidecar-reports.md) and `scripts/render-analytics-report.mjs` when the prompt asks for charts, graphs, distributions, dashboards, architecture diagrams or schemes, source/environment/run comparisons, sync/index health reports, or multi-section diagnostics. Use `scripts/serve-report.mjs` only when the user wants a local report URL.
+Read [measurement-and-installation.md](references/measurement-and-installation.md) before changing consent behavior, using GTM or diagnosing missing traffic.
 
-## Output Selection
+- Analytics collects independently by default. Attaching Cookie does not change this behavior.
+- For native consent control, use `$siteos-cookie` to set `draft.integrations.siteosAnalytics: true` in the same Project environment, then explicitly publish the reviewed banner when authorized. The UI equivalent is Cookie → Installation → Integrations → SiteOS Analytics. Disabling it also requires publication. Never create a second Analytics consent policy or invent a `--consent-mode` flag.
+- With the published integration enabled, Analytics waits for the matching Cookie runtime and follows regional rules, choices and withdrawal. Strict opt-in waits for a grant; a reviewed opt-out/notice profile can permit collection without claiming consent. A draft save has no public effect.
+- External CMPs can opt into a gate before script initialization using `data-siteos-consent="required"`, or GTM's **Use external consent manager** option, then supply the actual consent state. No adapter or artificial grant is needed for independent collection.
+- GPC, DNT and full opt-out stop measurement. Detailed Cookie interaction events always require that banner's explicit Analytics grant. Optional minimal realtime remains a separate counter independent of consent.
+- Read current Analytics settings, then change only intended fields with `analytics settings set --revision <number>`. Refetch after a revision conflict; do not overwrite concurrent edits. Read back the published Cookie integration and reload the website after changes.
 
-- Use concise chat for simple health or status questions with only 2-4 values and no useful visual structure.
-- Use a served sidecar HTML report by default for complex visual or multi-section reporting prompts.
-- Sidecar reports must be written outside the target project unless the user explicitly asks to commit a report artifact.
-- Browser verification and screenshots are a separate checkpoint; do not open a browser automatically.
+## Instrument useful events
 
-## Hard Stops
+Read [events-and-reports.md](references/events-and-reports.md). Prefer a small catalog tied to meaningful outcomes: completed signup, successful form submission, plan selection. Register allowed categorical properties before writing instrumentation. Never collect email, account IDs, free text, complete URLs or arbitrary dataLayer objects.
 
-Stop before:
+Use `analytics events create --file <event.json>`, then `analytics events snippet <name>` for the installed API. Instrument the actual success callback; a click is not a completed signup or submission. Use one installation and one event adapter per action to avoid duplicates. Declare page/event goals and ordered funnels only after their underlying events exist.
 
-- creating or editing `siteos-search.config.ts`
-- adding source handlers or modifying `scripts/siteos-search/**`
-- running `pnpm search:sync`
-- changing search UI or server-side query files
-- printing raw `.siteos/search/project.json`, private bindings, broad credentials, authorization headers, environment query credentials, Meilisearch keys, raw query events, raw query text, or client identifiers
-- fabricating durable query history, top-query analytics, zero-result analytics, click tracking, auth-failure breakdowns, or per-user history outside the API contract
-- writing analytics HTML reports inside the target project without explicit user approval
-- installing SiteOS MCP
-- changing SiteOS API, DB schema, CLI behavior, or exported-project behavior
-- running Auth/Organization mutations instead of delegating to `$siteos-auth`, or Search Project mutations instead of delegating to `$siteos-search`
+## Verify the outcome
+
+1. Inspect the real website integration and run its applicable checks.
+2. In the browser, verify configuration loading, the published integration and any external CMP gate, opt-out behavior and a successful measurement request. Exercise the real business action; don't send synthetic production conversions to prove setup.
+3. Read `analytics realtime --json` and `analytics report --days 1 --event <name> --json` to confirm accepted data in the exact environment. Inspect registered categories, page/source/country breakdowns and last-received time as relevant. A saved definition or snippet alone is not collection proof.
+4. If native control is enabled, test unknown, grant, refusal, revoke and delayed Cookie loading. With control off or Cookie absent, verify independent collection without a Cookie global. Diagnose browser blocking, origin mismatch and stale configuration before changing settings.
+5. If Trace is attached, `analytics monitoring prepare` prepares a draft expectation only. Use `$siteos-trace` for the explicitly requested publication and observation workflow. Trace observes Analytics delivery; it never produces visits or sends duplicate events.
+
+Analytics is Unlimited during early access. Keep billing policy distinct from bounded admission and retention. Distinguish minimal realtime (active pages in memory) from detailed visitor estimates and accepted events; never add these populations together.
+
+Finish with the selected Project/environment, integration state, files changed, definitions registered and actual browser/report evidence. State any unverified step or required publication. Keep grants, sessions and private state out of outputs. For Search diagnostics and sidecar reports, use `$siteos-search`.
