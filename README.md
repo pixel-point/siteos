@@ -2,14 +2,14 @@
 
 This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO, Analytics, and Integrations.
 
-Release: 1.9.0.
+Release: 1.10.0.
 
 ## Install
 
 ### Codex
 
 ```sh
-codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v1.9.0
+codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v1.10.0
 codex plugin add siteos@siteos
 ```
 
@@ -56,7 +56,7 @@ Configures consent banner drafts, installs the loader, publishes reviewed config
 
 ### Trace (`$siteos-trace`)
 
-Configures analytics observation and tracking plans, installs the published snippet, and reports actual evidence.
+Investigates destinations, events, properties, tracking issues and Debugger evidence; configures installation and publishes reviewed tracking rules.
 
 ### Integrations (`$siteos-integrations`)
 

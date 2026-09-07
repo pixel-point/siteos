@@ -41,6 +41,16 @@ before authentication. This selects a separate SiteOS installation, not a Projec
 - Common Projects and the Cookie, Trace and Integrations commands require CLI 1.1.0 or newer and the matching SiteOS server. Check the installed help before using them; a source checkout does not prove the public package has been released.
 - If a command is absent from the generated reference, run the appropriate `--help`; do not invent it or call a private API as a substitute.
 
+## Trace explorer
+
+CLI 1.8.0 adds `trace destinations`, `events`, `properties`, `issues`, `observations`,
+`issue show` and `observation show`, plus `tracking-plan publish --expected-draft-version`.
+Use these only with the matching Trace server release. Read `$siteos-trace` for the investigation
+workflow and the distinction between a data layer source and observed analytics destinations.
+Lists return one page; preserve filters when using `nextCursor`. Commands do not poll or publish
+implicitly. An older CLI remains usable for its existing commands; upgrading it does not deploy
+the server or update a website's pinned Trace script.
+
 ## Forms releases
 
 Use `forms deploy --manifest <path>` for non-interactive publication with an explicit Forms origin

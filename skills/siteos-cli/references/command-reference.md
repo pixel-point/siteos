@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@1.7.0`
+Package: `@siteoshq/cli@1.8.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -73,8 +73,16 @@ siteos cookie analytics [--range-days <7|30|90>] [--json]
 siteos trace status [--json]
 siteos trace environments [--json]
 siteos trace report [--environment <slug>] [--json]
+siteos trace destinations [--environment <slug>] [--period <24h|7d>] [--cursor <cursor>] [--json]
+siteos trace events [--environment <slug>] [--provider <provider>] [--event <name>] [--search <text>] [--state <all|new|issues|tracked|ignored>] [--period <24h|7d>] [--cursor <cursor>] [--json]
+siteos trace properties [--environment <slug>] [--provider <provider>] [--event <name>] [--property <name>] [--search <text>] [--period <24h|7d>] [--cursor <cursor>] [--json]
+siteos trace issues [--environment <slug>] [--provider <provider>] [--event <name>] [--state <all|active|snoozed|resolved|new>] [--rule <rule>] [--search <text>] [--period <24h|7d>] [--cursor <cursor>] [--json]
+siteos trace observations [--environment <slug>] [--provider <provider>] [--event <name>] [--kind <kind>] [--page-view <uuid>] [--search <text>] [--period <24h|7d>] [--cursor <cursor>] [--json]
+siteos trace issue show --id <uuid> [--environment <slug>] [--cursor <finding-cursor>] [--json]
+siteos trace observation show --batch-id <uuid> --event-id <uuid> [--environment <slug>] [--json]
 siteos trace installation <show|ensure|save|publish> [--environment <slug>] [--input <draft.json>] [--json]
 siteos trace tracking-plan <show|ensure|save|publish> [--environment <slug>] [--input <plan.json>] [--json]
+siteos trace tracking-plan publish --expected-draft-version <number> [--environment <slug>] [--json]
 ```
 
 ## SEO

@@ -53,6 +53,33 @@ Region rules are technical policies chosen for the customer's requirements, not 
 
 Geography is estimated from the visitor's direct request to Cookie Edge using trusted Cloudflare country/subdivision metadata. Do not proxy this through an application server, replace it with browser geolocation permission, or spoof production geography with headers/query parameters. Test country/state/unknown-location resolution using an isolated simulator or trusted regional traffic. Preview simulation is not evidence of production geography. Use `npx @siteoshq/cli cookie regions resolve --country GB --source draft --json`, `--country US --subdivision CA`, and omit country for unknown location. Choose `--source published` to simulate the active policy. Every result is explicitly marked `simulation: true`; it never changes production geography.
 
+## Edit text for each experience
+
+Read `cookie schema` first: regional content requires a compatible deployed application. In Studio,
+use **Banner → Content & languages**, or **Rules → Edit text**. Scope, language and visitor screen
+are separate selections. First-banner fields differ for choice, notice-only and essential-only
+profiles. Preferences, privacy choices, reopen controls and service messages have their own groups;
+purpose names and vendor disclosures are in Services.
+
+For a draft with `content.version: 1`, edit `content.shared[profile][locale]` for shared text or
+`regionalPolicy.rules[].content[profile][locale]` for an individual rule. These are partial copies
+using the existing translation field names. A regional field overrides the shared field; deleting
+it restores inheritance. Keep variants for other profiles and languages. Every locale must exist
+in `translations`. Do not substitute a country-specific language code for a regional override.
+
+For an older draft without `content`, first preserve its current effective text: create
+`content: { version: 1, shared: {} }` and copy the complete existing `translations` into each profile
+already used by its rules, then apply the requested override. This avoids changing unrelated
+wording. With content enabled, editing legacy `translations` alone may be shadowed by shared text.
+Behavior suggestions are English and need review/translation; do not overwrite existing authored
+translations or imply automatic legal approval. Adding a language also needs its shared and rule
+variants copied or translated. Do not remove a default or rule-fixed language.
+
+`title` is an accessible name in a choice banner and a visible notice heading. `preferences` names
+both the first settings link and preferences heading. `dismissNotice` closes a notice without
+recording consent. `necessaryLabel` has no current runtime consumer. Edit the actual supported
+field, and verify the compiled result with `cookie regions resolve` for each affected audience.
+
 ## Save, review and publish
 
 Read the supported save schema with `npx @siteoshq/cli cookie schema --json`. Validate the edited payload without saving using `npx @siteoshq/cli cookie validate --input <draft.json> --json`; inspect both `valid` and `draftVersionMatches`. Invalid configuration or a stale version returns a nonzero exit code. Validation does not acknowledge customer responsibility.
@@ -71,7 +98,7 @@ Install one loader through the site's chosen direct/framework/GTM channel. Remov
 
 The current service catalog has `google-analytics`, `google-ads`, `meta-pixel` and `hubspot-tracking`. Selecting a service describes its policy; it does not provision its tracking IDs, install its vendor code, or block every independently loaded script. Inventory and gate each optional resource before execution. Runtime cleanup covers managed resources and reviewed adapters; code that has already run can require a controlled reload on withdrawal. Preserve necessary forms, authentication and explicitly requested support actions separately from optional tracking.
 
-For native **SiteOS Analytics**, set `draft.integrations.siteosAnalytics: true` while preserving `googleConsentMode` and all other draft fields. This is the **Cookie → Installation → Integrations → SiteOS Analytics** switch. Publish the reviewed change only when authorized; read back the active revision. Both services must be explicitly attached to the same Project environment. The switch controls detailed pageviews/custom events according to the resolved regional policy and visitor choice, including withdrawal. It does not install Analytics or enable it merely by attaching Cookie. With the switch off (the default), Analytics collects independently. Its separately enabled minimal page counter remains independent of consent; detailed Cookie interaction events always require an explicit Analytics grant. Use `$siteos-analytics` for installation, custom events and reports, and verify both script load orders.
+For native **SiteOS Analytics**, set `draft.integrations.siteosAnalytics: true` while preserving `googleConsentMode` and all other draft fields. This is the **Cookie → Services → SiteOS Analytics → Control with Cookie** switch. Publish the reviewed change only when authorized; read back the active revision. Both services must be explicitly attached to the same Project environment. The switch controls detailed pageviews/custom events according to the resolved regional policy and visitor choice, including withdrawal. It does not install Analytics or enable it merely by attaching Cookie. With the switch off (the default), Analytics collects independently. Its separately enabled minimal page counter remains independent of consent; detailed Cookie interaction events always require an explicit Analytics grant. Use `$siteos-analytics` for installation, custom events and reports, and verify both script load orders.
 
 Prefer Basic Consent Mode for the initial pilot. Advanced Consent Mode permits cookieless Google requests before consent and needs an explicit decision and verification. Do not use a timeout as permission to run consent-required tags.
 

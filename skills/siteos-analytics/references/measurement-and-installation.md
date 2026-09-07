@@ -7,7 +7,7 @@ npx @siteoshq/cli analytics settings show --environment <slug> --json
 npx @siteoshq/cli analytics installation --environment <slug> --json
 ```
 
-Analytics starts independently. There is no Analytics consent-mode setting. Native blocking belongs to the published Cookie banner in the same Project environment. Use `$siteos-cookie` to preserve the current draft, set `integrations.siteosAnalytics` and save it with the current draft version. Review and publish only within the user's authorization, then read back active publication and Analytics configuration. The interface is **Cookie → Installation → Integrations → SiteOS Analytics**. A draft save or service attachment alone has no effect.
+Analytics starts independently. There is no Analytics consent-mode setting. Native blocking belongs to the published Cookie banner in the same Project environment. Use `$siteos-cookie` to preserve the current draft, set `integrations.siteosAnalytics` and save it with the current draft version. Review and publish only within the user's authorization, then read back active publication and Analytics configuration. The interface is **Cookie → Services → SiteOS Analytics → Control with Cookie**. A draft save or service attachment alone has no effect.
 
 | Published integration and visitor state | Detailed collection |
 | --- | --- |
