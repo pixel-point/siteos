@@ -17,7 +17,7 @@ One plugin, one CLI, one Project for the website or product. Load only the focus
    - `$siteos-forms`: form definitions, submission runtime and inbox verification.
    - `$siteos-search`: content sources, indexing, queries, search UI, health and usage reports.
    - `$siteos-trace`: analytics observation, installation and tracking plans.
-   - `$siteos-seo`: technical HTML audits, page evidence, audit changes and verified SEO fixes.
+   - `$siteos-seo`: technical audits and verified fixes, keyword and competitor research, backlinks, GSC Insights and AI visibility analysis from saved reports.
    - `$siteos-integrations`: shared provider connections and notification destinations.
    - `$siteos-analytics`: website measurement, installation, optional Cookie/external consent control, events, conversions and realtime.
 6. For environment work, load [references/projects-and-environments.md](references/projects-and-environments.md). Report which Project, environments and services were changed and distinguish configuration, publication and verified runtime behavior.

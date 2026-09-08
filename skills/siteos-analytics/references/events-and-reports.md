@@ -66,3 +66,24 @@ npx @siteoshq/cli analytics realtime --json
 ```
 
 Reads use a separate read scope; event definitions, report definitions, settings and monitoring preparation each use their own write scope. These are management operations, not event-ingestion credentials. Report against the same Project/environment and explain active filters. Distinguish accepted measurements from configuration readiness and distinguish synthetic test-environment events from real customer conversions.
+
+## AI sources and report segments
+
+If `analytics --help` lists `--filters`, reports and realtime accept a bounded JSON array:
+
+```sh
+npx @siteoshq/cli analytics report --days 7 --filters '[{"dimension":"channel","operator":"is","values":["AI Assistants"]},{"dimension":"page","operator":"is","values":["/pricing"]}]' --json
+```
+
+Dimensions are channel, source, page (visited page), entryPage, exitPage, country, campaign, event,
+goal, funnel (completed) and property (include its `property` key). Use exact catalog IDs for campaign,
+goal and funnel values, exact event names, and canonical source labels such as ChatGPT. Up to 10
+filters and 10 values per filter; values within a filter use OR, filters use AND. `is_not` excludes
+matching visits. The same measured visit population supplies all reports; page/event filters select
+visits containing that activity. Legacy `--country`, `--campaign` and event inspection remain usable.
+
+Recognizable AI referrers are grouped under AI Assistants. Known UTM aliases such as
+`utm_source=chatgpt.com` are converted locally to categorical AI source IDs; arbitrary UTM data is
+not collected. Registered campaigns take precedence. Source is fixed at visit entry; unknown Direct
+traffic cannot be reconstructed. Anonymous facts and minimal realtime have no source and are
+excluded from filtered reports. Referral counts do not measure mentions or citations without a click.

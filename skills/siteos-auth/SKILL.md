@@ -22,11 +22,13 @@ Use `npx @siteoshq/cli auth logout --json` only when the user asks to end the lo
 ## Organization selection
 
 1. Run `npx @siteoshq/cli auth organizations --json`.
-2. With zero Organizations, require an explicit display name before:
+2. A personal Organization is provisioned automatically on first verified sign-in. With zero Organizations, ask the user to sign in again or accept a team invitation; do not suggest manual creation. Only verified `@pixelpoint.io` team accounts may explicitly create additional Organizations with a supplied display name:
 
    ```sh
    npx @siteoshq/cli auth organizations create --display-name <display-name> --json
    ```
+
+   The server decides eligibility. Never retry a denied creation through another endpoint or identity.
 
 3. With one Organization, use it only when the user's request or confirmation establishes that choice.
 4. With multiple Organizations, present only immutable IDs and display names and ask for one choice.

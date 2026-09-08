@@ -2,14 +2,14 @@
 
 This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO, Analytics, and Integrations.
 
-Release: 1.11.0.
+Release: 1.12.0.
 
 ## Install
 
 ### Codex
 
 ```sh
-codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v1.11.0
+codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v1.12.0
 codex plugin add siteos@siteos
 ```
 
@@ -64,7 +64,7 @@ Connects Organization providers and configures explicit notification destination
 
 ### SEO (`$siteos-seo`)
 
-Runs technical HTML audits, explains saved page evidence, compares observations and verifies fixes with scoped rechecks and reasoned issue decisions.
+Runs audits, verifies fixes and reads research or GSC reports through the CLI. Plans authorized keyword, competitor, backlink and AI checks, manages saved inputs and exports evidence while preserving environment scope, coverage and research credits.
 
 ### Search (`$siteos-search`)
 
