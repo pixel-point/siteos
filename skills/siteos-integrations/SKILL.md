@@ -5,6 +5,8 @@ description: Use when inspecting or connecting SiteOS Organization providers, di
 
 # SiteOS Integrations
 
+For supported hosted reads, prefer the available `siteos_integrations_get_connection` MCP tools after checking `siteos_get_context` and the exact Organization. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require repository setup or CLI login. Use the existing CLI workflow for local work, mutations and operations outside the MCP catalog.
+
 Integrations manages Organization provider connections and destinations. The first supported provider is Slack. The common plugin includes this workflow; do not install a separate SiteOS provider plugin.
 
 1. Run `npx @siteoshq/cli auth status --json` and use `$siteos-auth` when the intended Organization is not selected. A connection belongs to that Organization, not to an individual Project.

@@ -5,7 +5,13 @@ description: Use for SiteOS setup, common Project and environment selection, an 
 
 # SiteOS
 
-One plugin, one CLI, one Project for the website or product. Load only the focused skills required by the user's outcome.
+One plugin, one remote MCP, one CLI, one Project for the website or product. Load only the focused skills required by the user's outcome.
+
+For hosted reads, first check whether the SiteOS MCP tools are available. Read
+`siteos_get_context`, select the intended Project and explicit Environment, and prefer supported
+MCP reads. A local repository and CLI login are not prerequisites for these reads. Follow
+[Choosing MCP or CLI](references/mcp-and-cli.md). For local work, writes and reads outside the MCP
+catalog, use the CLI workflow below. Missing MCP tools do not prove the server is unavailable.
 
 1. Resolve the target repository. Use `$siteos-cli` if installation, version or supported commands need attention.
 2. Authenticate once with `$siteos-auth` and select the intended Organization.

@@ -1,6 +1,6 @@
 {
   "name": "siteos",
-  "version": "1.12.0",
+  "version": "1.13.0",
   "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO, Integrations and analytics.",
   "author": {
     "name": "Pixel Point",
@@ -14,6 +14,7 @@
     "codex",
     "skills",
     "siteos",
+    "mcp",
     "cli",
     "pulse",
     "search",
@@ -25,5 +26,6 @@
     "seo",
     "integrations"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
 }

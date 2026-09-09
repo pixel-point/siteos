@@ -5,6 +5,8 @@ description: Set up SiteOS website Analytics in a selected Project environment, 
 
 # SiteOS Analytics
 
+For supported hosted reads, prefer the available `siteos_analytics_get_report` and `siteos_analytics_get_realtime` MCP tools after checking `siteos_get_context` and the exact Organization, Project and Environment. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require repository setup or CLI login. Use the existing CLI workflow for local work, mutations and operations outside the MCP catalog.
+
 Complete the path from the site's business action to a saved Analytics report. Cookie and Trace are optional services; Analytics works independently without either service.
 
 ## Establish the target

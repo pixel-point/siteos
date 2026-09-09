@@ -9,6 +9,12 @@ Turn observed SEO and AI-search evidence into a short, prioritized action plan. 
 for search-engine visibility; use `$siteos-search` for search inside a website, `$siteos-pulse`
 for availability checks and `$siteos-analytics` for measured visits and conversions.
 
+For saved technical audit history and findings, prefer the available `siteos_seo_get_audit` MCP
+tool after `siteos_get_context` and explicit Project/Environment selection. Follow
+[MCP and CLI context](../siteos/references/mcp-and-cli.md). This read does not require a repository
+or CLI login and never starts an audit. Use the CLI paths below for new measurements, configuration,
+research, GSC and operations outside the MCP catalog.
+
 ## Establish the task
 
 Use the user's existing Project, environment, website and business context. Identify the important

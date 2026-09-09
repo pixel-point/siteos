@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "siteos": {
+      "type": "http",
+      "url": "https://app.siteos.sh/mcp"
+    }
+  }
+}

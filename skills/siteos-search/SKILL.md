@@ -5,6 +5,8 @@ description: Use when creating, selecting, configuring, verifying, repairing, or
 
 # SiteOS Search
 
+For supported hosted reads, prefer the available `siteos_search_get_diagnostics` and `siteos_search_get_analytics` MCP tools after checking `siteos_get_context` and the exact Organization, Project and Environment. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require repository setup or CLI login. Use the existing CLI workflow for local work, mutations and operations outside the MCP catalog.
+
 Use this skill from the root of a target external project, or pass an explicit target project root when the user names one.
 
 This skill owns Search setup, operation and reporting. For search health, usage, diagnostics, charts or sidecar reports, go directly to [references/analytics-workflow.md](references/analytics-workflow.md); do not start onboarding, sync or UI changes for a reporting request. For implementation, use the connection, source, synchronization and UI workflows below. Website pageviews, custom events and conversions belong to `$siteos-analytics`.

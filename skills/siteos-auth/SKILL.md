@@ -5,6 +5,8 @@ description: Use when authenticating the unified SiteOS CLI, checking or ending 
 
 # SiteOS Auth
 
+For remote MCP access, use the host OAuth flow and verify the authorized Organization with `siteos_get_context`. MCP and CLI login are independent. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md); MCP does not expose account mutations or credentials.
+
 Auth owns user identity, Organizations, memberships, CLI sessions, and short-lived service grants. It does not own Projects or service resources.
 
 Use only the unified CLI `auth` command group and safe structured output. Never call Auth endpoints directly, inspect private CLI state, read credential-bearing files, expose tokens or grants, or create product resources from this skill.

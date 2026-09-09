@@ -5,7 +5,13 @@ description: Use when creating, selecting, configuring, validating, testing, syn
 
 # SiteOS Pulse
 
-Operate Pulse only through `@siteoshq/cli` and the target repository. Pulse owns its Projects, Checks, schedules, deployment bundles, credentials, and runtime data.
+Pulse owns its Projects, Checks, schedules, deployment bundles, credentials, and runtime data.
+
+For hosted run history and failure details, prefer the available `siteos_pulse_list_runs` and
+`siteos_pulse_get_run` MCP tools after `siteos_get_context` and explicit Project/Environment
+selection. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md); a repository and CLI
+login are not prerequisites for these reads. Use the CLI workflow below for authoring, validation,
+configuration, deployments and operations outside the MCP catalog.
 
 ## Workflow
 

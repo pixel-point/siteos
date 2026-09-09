@@ -5,6 +5,8 @@ description: Use when configuring, styling, installing, publishing or diagnosing
 
 # SiteOS Cookie
 
+For supported hosted reads, prefer the available `siteos_cookie_get_site` and `siteos_cookie_get_analytics` MCP tools after checking `siteos_get_context` and the exact Organization, Project and Environment. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require repository setup or CLI login. Use the existing CLI workflow for local work, mutations and operations outside the MCP catalog.
+
 Use the common SiteOS Project and the unified CLI. Cookie owns banner configuration, public delivery, consent observations and receipts; it never owns the user's account or another service's configuration. Complete routine configuration through chat and CLI when the commands support it; do not send the user to the web editor merely to edit a JSON field.
 
 ## Establish the website and current capabilities

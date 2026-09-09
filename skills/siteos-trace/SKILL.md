@@ -5,6 +5,12 @@ description: Use when investigating SiteOS Trace destinations, events, propertie
 
 # SiteOS Trace
 
+For hosted evidence, prefer the available `siteos_trace_get_report` and `siteos_trace_list_issues`
+MCP tools after `siteos_get_context` and explicit Project/Environment selection. Follow
+[MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require a local
+repository or CLI login. Use the CLI workflow below for setup, edits, publication and reads outside
+the MCP catalog; loading this skill does not imply authorization to configure or publish anything.
+
 Trace observes analytics requests and reports evidence. Use its Health Summary, Destinations and
 Debugger to understand where an event was observed and why a rule raised an issue. It is separate
 from website Analytics reports, Search analytics and Pulse availability monitoring.
