@@ -110,6 +110,28 @@ and page opportunities. Ranking keywords include available CPC in USD and SEO di
 Filtering, sorting and exporting a saved report do not start another check. Compare report dates,
 market and target before drawing conclusions; editing a search draft does not change saved evidence.
 
+## Inspect one keyword's SERP
+
+Use installed CLI help to check support for `seo research serp`. Read the Keyword Research report
+first and choose an exact returned word. These commands share the interface's report/word cache:
+
+```sh
+npx @siteoshq/cli seo research serp show <run-id> --keyword "website analytics" --json
+npx @siteoshq/cli seo research serp ensure <run-id> --keyword "website analytics" --json
+npx @siteoshq/cli seo research serp wait <run-id> --keyword "website analytics" --json
+npx @siteoshq/cli seo research serp export <run-id> --keyword "website analytics" --format json --output ./keyword-serp.json --json
+```
+
+`show`, `wait` and `export` never spend credits. Use `ensure` only within the user's authorized
+paid-research scope: it consumes Organization research credits if no snapshot exists. Repeating
+it for the same report/word returns the saved job, including failures; do not start a new report
+merely to retry an uncertain charge. Market and device come from the parent report. Members can
+read saved snapshots but cannot ensure a new one; a CLI run grant does not override that policy.
+
+Compare the organic pages, titles, intent and useful content in the saved results (up to 20).
+Keep observation time and market in the report. Monthly volume is estimated demand, not actual
+site visits; missing months are unknown. A low difficulty score is not a guarantee of ranking.
+
 ## Compare competitors
 
 Use named business competitors when supplied and distinguish them from observed search competitors.

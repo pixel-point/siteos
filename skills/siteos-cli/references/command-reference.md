@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@1.12.0`
+Package: `@siteoshq/cli@1.13.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -123,6 +123,10 @@ siteos seo research run --input <request.json> [--idempotency-key <key>] [--envi
 siteos seo research wait <run-id> [--timeout <seconds>] [--environment <slug>] [--json]
 siteos seo research cancel <run-id> [--environment <slug>] [--json]
 siteos seo research export <run-id> --format <json|csv> --output <new-file> [--environment <slug>] [--json]
+siteos seo research serp show <run-id> --keyword <word> [--environment <slug>] [--json]
+siteos seo research serp ensure <run-id> --keyword <word> [--environment <slug>] [--json]
+siteos seo research serp wait <run-id> --keyword <word> [--timeout <seconds>] [--environment <slug>] [--json]
+siteos seo research serp export <run-id> --keyword <word> --format <json|csv> --output <new-file> [--environment <slug>] [--json]
 siteos seo research saved list --kind <kind> [--environment <slug>] [--json]
 siteos seo research saved save --input <request.json> --name <name> [--id <saved-id>] [--environment <slug>] [--json]
 siteos seo research saved remove <saved-id> [--environment <slug>] [--json]

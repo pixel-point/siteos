@@ -38,7 +38,7 @@ matching a website name. Repository code and public CLI/server releases can diff
 | Public HTML audit, canonical/robots/sitemap, technical GEO, verify fixes | SEO CLI and Site Audit | [Technical audit](references/technical-audit.md) |
 | Ignore/restore, weekly audits, notifications, export | SEO CLI and Site Audit/settings | [Audit operations](references/audit-operations.md) |
 | Selected-page Lighthouse checks | SEO CLI and Site Audit / Performance | [Performance](references/performance.md) |
-| Keyword research, Domain Overview (keywords/pages/competitors), rank tracking, backlinks, GSC Insights | SEO research/GSC CLI, interface or exports | [Search research](references/search-research.md) |
+| Keyword research with trends and saved SERPs, Domain Overview (keywords/pages/competitors), rank tracking, backlinks, GSC Insights | SEO research/GSC CLI, interface or exports | [Search research](references/search-research.md) |
 | GEO: brand mentions and citations in AI answers | SEO research CLI, Brand lookup / Prompt checks or exports | [AI visibility](references/ai-visibility.md) |
 
 For an "agent-ready website" request, start with the technical evidence but explain its scope.
