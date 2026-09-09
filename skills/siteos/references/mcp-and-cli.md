@@ -7,8 +7,8 @@ still define the workflow and evidence required for the user's outcome.
 ## Hosted reads
 
 1. Discover the available SiteOS tools. Do not infer availability from a cached plugin manifest.
-2. Call `siteos_get_context`. Check the application origin and authorized Organization.
-3. For Project service reads, call `siteos_list_projects` with that Organization ID and `siteos_get_project` with the selected
+2. Call `siteos_get_context`. Check the application origin and `organizations`, the currently authorized Organization list.
+3. For Project service reads, call `siteos_list_projects` with the intended Organization ID and `siteos_get_project` with the selected
    Project ID. Choose an explicit Environment from its catalog; no Production fallback is allowed.
 4. Use `siteos_get_overview` for the configured services and observed state. Use Pulse run reads,
    Trace reports/issues, SEO audits, Cookie configuration/aggregates, Forms definitions/inbox,
@@ -30,8 +30,18 @@ observations never stand in for Analytics counts or verified business conversion
 
 ## Context and authorization
 
-The host's OAuth flow authorizes one Organization. To access another Organization, authorize again
-and check `siteos_get_context`. Arguments do not expand permissions. Invalid credentials never
+The host's OAuth flow can authorize several Organizations, with an explicit Select all action.
+Each call still supplies exactly one Organization ID. If a website's Organization is unknown, list
+Projects within the authorized Organizations and match the requested website before proceeding;
+ask when the match is ambiguous. Never assume the first Organization or change shared browser state.
+
+The connection's owner can add or remove Organizations in **Account settings → AI & MCP**
+(`/settings/account/mcp`, also linked from AI & MCP). Newly joined Organizations require explicit
+selection there. These edits apply on the next request without reinstalling the plugin or repeating
+OAuth for a live connection. Re-read `siteos_get_context` after an access change. Expired or revoked
+connections still require the host's sign-in flow; disconnect revokes the connection's authority.
+Existing single-Organization credentials retain their selection and can be edited in the same UI.
+ Arguments do not expand permissions. Invalid credentials never
 fall back to browser cookies, CLI sessions or a different Organization.
 
 MCP does not write or read the private CLI binding files. Before continuing the same task through
