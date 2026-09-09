@@ -1,15 +1,15 @@
 # <img src="assets/siteos-logo.svg" alt="SiteOS logo" height="42" align="absbottom"> SiteOS
 
-This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO, Analytics, and Integrations.
+This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Analytics, and Integrations.
 
-Release: 1.13.0.
+Release: 1.14.0.
 
 ## Install
 
 ### Codex
 
 ```sh
-codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v1.13.0
+codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v1.14.0
 codex plugin add siteos@siteos
 ```
 
@@ -68,9 +68,9 @@ Investigates destinations, events, properties, tracking issues and Debugger evid
 
 Connects Organization providers and configures explicit notification destinations without sending messages implicitly.
 
-### SEO (`$siteos-seo`)
+### SEO/GEO (`$siteos-seo`)
 
-Runs audits, verifies fixes and reads research or GSC reports through the CLI. Plans authorized keyword, competitor, backlink and AI checks, manages saved inputs and exports evidence while preserving environment scope, coverage and research credits.
+Audits technical SEO/GEO and verifies fixes; reads saved audit evidence with MCP and research or GSC reports through the CLI. Plans authorized keyword, competitor, backlink and AI checks, manages saved inputs and exports evidence while preserving environment scope, coverage and research credits.
 
 ### Search (`$siteos-search`)
 
@@ -96,6 +96,7 @@ $siteos-pulse configure Playwright monitoring for this project
 $siteos-search inspect this project and configure managed search
 $siteos-forms add a managed contact form to this project
 $siteos-analytics configure website analytics and verify a custom event
+$siteos-seo review SEO/GEO audit findings, brand mentions and AI citations
 ```
 
 ### Claude Code

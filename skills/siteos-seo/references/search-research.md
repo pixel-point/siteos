@@ -15,7 +15,7 @@ npx @siteoshq/cli seo research show <run-id> --json
 npx @siteoshq/cli seo research export <run-id> --format json --output ./research-report.json --json
 ```
 
-Kinds: `keywords`, `rankings`, `competitors`, `backlinks`, `brand`, `ai-visibility`. History shows the
+Kinds: `keywords`, `domain`, `rankings`, `backlinks`, `brand`, `ai-visibility`. History shows the
 latest 30 per kind; retained older report IDs still support show/export. CSV exports use one row per
 dataset entry with JSON cells for the request, dataset metadata and entry; failed parts remain in
 the file. Prefer JSON for analysis. Both formats preserve zero versus missing metrics. Choose new
@@ -25,7 +25,7 @@ output filenames; exports refuse to overwrite files.
 | --- | --- | --- |
 | What should we write or improve? | Keyword research; GSC queries if connected | Volume and difficulty are provider estimates; relevance needs website context |
 | Where do we and our competitors rank? | Rank tracking with query, country, language, device and time | Not found in returned results does not mean not indexed |
-| Which domains compete for search demand? | Competitors report and overlapping queries | Search competitors can differ from business rivals |
+| Which domains compete for search demand? | Domain Overview → Competitors and overlapping queries | Search competitors can differ from business rivals |
 | Who links to a website? | Backlinks, source/target URLs, anchors and available summary | Returned rows are a sample; provider totals and sample counts are distinct |
 | What actually brings Google search clicks? | Connected GSC Insights, property and date range | Clicks, impressions, CTR and average position are first-party search metrics, not revenue |
 
@@ -46,7 +46,7 @@ request examples, not an instruction to run all of them:
 {"kind":"rankings","target":"example.com","keywords":["website analytics"],"competitors":["rival.example"],"country":"US","language":"en","device":"desktop"}
 ```
 ```json
-{"kind":"competitors","target":"example.com","country":"US","language":"en"}
+{"kind":"domain","target":"example.com","country":"US","language":"en"}
 ```
 ```json
 {"kind":"backlinks","target":"example.com"}
@@ -94,6 +94,21 @@ request may still finish and cost credits. Do not start background schedules or 
 5. Return a compact shortlist: topic, representative queries, intent, available demand/difficulty,
    target page, business reason, recommended change and evidence. Propose a meaningful validation
    window; do not promise a ranking or calculate traffic/revenue from volume without assumptions.
+
+## Explore a domain
+
+Domain Overview accepts any public domain without GSC. Use `kind: "domain"` to collect the domain
+summary, ranking keywords, top pages and search competitors for one country and language. Read its
+history with `seo research history --kind domain --json`; report/show/export use the same run IDs.
+The stored kind remains `competitors` for compatibility. Old `competitors` request files still
+collect only keywords and competitors; do not silently change an already authorized retry payload.
+
+Domain summary metrics are independent of the first 100 keywords, pages and competitors returned.
+Do not sum those samples into a domain total. A missing summary or page dataset in an older or partial
+report remains unavailable, not zero. Use `domain-summary` and `domain-pages` datasets for totals
+and page opportunities. Ranking keywords include available CPC in USD and SEO difficulty (0–100).
+Filtering, sorting and exporting a saved report do not start another check. Compare report dates,
+market and target before drawing conclusions; editing a search draft does not change saved evidence.
 
 ## Compare competitors
 

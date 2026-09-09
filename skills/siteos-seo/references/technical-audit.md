@@ -1,4 +1,4 @@
-# Technical audit and fix verification
+# Technical SEO/GEO audit and fix verification
 
 ## Select the context
 
@@ -59,6 +59,13 @@ The version also reads HTTP Link canonicals, reviews limited response text and s
 and evaluates search-crawler robots policies separately from training opt-outs. Internal links take
 priority over sitemap-only URLs in bounded crawls; compare the same observed URLs when investigating
 another audit tool's results. Technical GEO and AI referral counts do not measure actual AI citations.
+
+The evaluated search-crawler policies are Googlebot, Bingbot, OAI-SearchBot and PerplexityBot.
+These are robots.txt evaluations, not requests from those providers' IP addresses or proof that
+their crawlers pass a WAF. Structured-data checks validate JSON syntax/basic shape, not every
+schema requirement. Response HTML is not rendered HTML; use Performance for selected-page
+comparisons after JavaScript. No autonomous agent journey, soft-404 recovery probe or API/MCP
+discovery audit is performed by the HTML crawl. State an untested capability as untested.
 
 V3 page evidence may include `canonicalCheck`: `verified` means the extracted response text matches
 a successful, non-noindex, self-canonical target; it does not establish Google's selected canonical.

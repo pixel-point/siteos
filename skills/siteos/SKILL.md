@@ -1,6 +1,6 @@
 ---
 name: siteos
-description: Use for SiteOS setup, common Project and environment selection, an unspecified SiteOS request, or work spanning multiple services. Routes one repository and website Project to focused CLI, Auth, Pulse, Cookie, Forms, Search, Trace, SEO, Integrations and analytics workflows.
+description: Use for SiteOS setup, common Project and environment selection, an unspecified SiteOS request, or work spanning multiple services. Routes one repository and website Project to focused CLI, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations and analytics workflows.
 ---
 
 # SiteOS
@@ -23,7 +23,7 @@ catalog, use the CLI workflow below. Missing MCP tools do not prove the server i
    - `$siteos-forms`: form definitions, submission runtime and inbox verification.
    - `$siteos-search`: content sources, indexing, queries, search UI, health and usage reports.
    - `$siteos-trace`: analytics observation, installation and tracking plans.
-   - `$siteos-seo`: technical audits and verified fixes, keyword and competitor research, backlinks, GSC Insights and AI visibility analysis from saved reports.
+   - `$siteos-seo`: SEO/GEO technical audits, AI search-crawler policies and verified fixes, keyword and competitor research, backlinks, GSC Insights and AI visibility analysis from saved reports.
    - `$siteos-integrations`: shared provider connections and notification destinations.
    - `$siteos-analytics`: website measurement, installation, optional Cookie/external consent control, events, conversions and realtime.
 6. For environment work, load [references/projects-and-environments.md](references/projects-and-environments.md). Report which Project, environments and services were changed and distinguish configuration, publication and verified runtime behavior.

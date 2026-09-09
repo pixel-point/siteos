@@ -1,13 +1,17 @@
 ---
 name: siteos-seo
-description: Audit technical SEO and AI crawler access, verify fixes with rechecks, analyze keyword opportunities, competitors, backlinks, GSC Insights and AI visibility from SiteOS reports, and manage audit schedules, notifications and exports for an exact Project environment.
+description: Use for SiteOS SEO/GEO (generative engine optimization), technical SEO and AI search-crawler access, verified fixes, keywords, Domain Overview, competitors, backlinks, GSC Insights, brand mentions and AI citations. Read and export reports or run authorized checks for an exact Project environment; distinguish these from autonomous agent-readiness tests.
 ---
 
-# SiteOS SEO
+# SiteOS SEO/GEO
 
 Turn observed SEO and AI-search evidence into a short, prioritized action plan. Use this skill
-for search-engine visibility; use `$siteos-search` for search inside a website, `$siteos-pulse`
+for search-engine and AI-answer visibility; use `$siteos-search` for search inside a website, `$siteos-pulse`
 for availability checks and `$siteos-analytics` for measured visits and conversions.
+
+The application calls this service **SEO/GEO**. GEO means generative engine optimization here,
+not geographic targeting. The command remains `siteos seo`, the service key is `seo`, and this
+skill remains `$siteos-seo`; do not invent a `siteos geo` command or a second service binding.
 
 For saved technical audit history and findings, prefer the available `siteos_seo_get_audit` MCP
 tool after `siteos_get_context` and explicit Project/Environment selection. Follow
@@ -34,8 +38,13 @@ matching a website name. Repository code and public CLI/server releases can diff
 | Public HTML audit, canonical/robots/sitemap, technical GEO, verify fixes | SEO CLI and Site Audit | [Technical audit](references/technical-audit.md) |
 | Ignore/restore, weekly audits, notifications, export | SEO CLI and Site Audit/settings | [Audit operations](references/audit-operations.md) |
 | Selected-page Lighthouse checks | SEO CLI and Site Audit / Performance | [Performance](references/performance.md) |
-| Keyword research, rank tracking, competitors, backlinks, GSC Insights | SEO research/GSC CLI, interface or exports | [Search research](references/search-research.md) |
-| Brand lookup and prompt checks | SEO research/GSC CLI, interface or exports | [AI visibility](references/ai-visibility.md) |
+| Keyword research, Domain Overview (keywords/pages/competitors), rank tracking, backlinks, GSC Insights | SEO research/GSC CLI, interface or exports | [Search research](references/search-research.md) |
+| GEO: brand mentions and citations in AI answers | SEO research CLI, Brand lookup / Prompt checks or exports | [AI visibility](references/ai-visibility.md) |
+
+For an "agent-ready website" request, start with the technical evidence but explain its scope.
+Site Audit evaluates public HTML and robots policies; it does not test actual crawler-provider
+IP access, autonomous navigation/form completion, or the target site's API/OAuth/MCP interfaces.
+SiteOS's own MCP gives access to saved evidence; it does not certify the target site for agents.
 
 Load only the reference needed for the current task. Read installed CLI help before using research
 or GSC commands: they require matching CLI and server releases. If commands are absent, use

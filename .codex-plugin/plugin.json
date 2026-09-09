@@ -1,7 +1,7 @@
 {
   "name": "siteos",
-  "version": "1.13.0",
-  "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO, Integrations and analytics.",
+  "version": "1.14.0",
+  "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations and analytics.",
   "author": {
     "name": "Pixel Point",
     "email": "info@pixelpoint.io",
@@ -24,6 +24,7 @@
     "cookie",
     "trace",
     "seo",
+    "geo",
     "integrations"
   ],
   "skills": "./skills/",
@@ -51,6 +52,7 @@
       "$siteos-analytics configure website analytics and verify a custom event",
       "$siteos-cookie configure the consent banner for this Project",
       "$siteos-trace inspect analytics observation and installation",
+      "$siteos-seo review SEO/GEO audit evidence, search reports and AI mentions or citations",
       "$siteos-integrations inspect Organization connections and notification destinations"
     ]
   },

@@ -1,4 +1,9 @@
-# AI search visibility
+# GEO: AI search visibility
+
+Use GEO for generative engine optimization: how AI answers describe, mention and cite a website.
+It is separate from geographic targeting and from testing whether an agent can complete a task
+on that website. In the application, open SEO/GEO → Brand lookup or Prompt checks; the CLI uses
+`seo research` with `brand` or `ai-visibility` respectively.
 
 ## Keep the observations distinct
 
