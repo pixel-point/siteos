@@ -124,6 +124,8 @@ For native **SiteOS Analytics**, set `draft.integrations.siteosAnalytics: true` 
 
 Prefer Basic Consent Mode for the initial pilot. Advanced Consent Mode permits cookieless Google requests before consent and needs an explicit decision and verification. Do not use a timeout as permission to run consent-required tags.
 
+For a GA4 Google tag, follow [GA4 with GTM](references/ga4-gtm.md): grant-triggered initialization, explicit withdrawal disable, and actual network verification. Consent checks alone do not unload an already running Google library. CLI 2.3.1+ distinguishes the GTM container bootstrap from Google collection and recognizes regional GA4 endpoints.
+
 For GTM:
 
 1. Prefer the importable SiteOS custom template from the application origin's `/integrations/gtm/siteos-cookie.tpl`. Copy its public key, runtime, config, analytics and receipts URLs from `cookie installation`. Do not claim a Community Template Gallery listing unless it has been verified.
