@@ -41,6 +41,15 @@ before authentication. This selects a separate SiteOS installation, not a Projec
 - Common Projects and the Cookie, Trace and Integrations commands require CLI 1.1.0 or newer and the matching SiteOS server. Check the installed help before using them; a source checkout does not prove the public package has been released.
 - If a command is absent from the generated reference, run the appropriate `--help`; do not invent it or call a private API as a substitute.
 
+## SEO repair workflow
+
+CLI 2.1.0 adds `seo repair`, repeated `seo recheck --url` targets (up to 20), and the
+`--resource` guard used by Copy for agent. Older CLI versions cannot run those copied commands.
+Check the version and `seo --help`; upgrade with `npm install --global @siteoshq/cli@latest`
+or use `npx @siteoshq/cli@latest`. Read the SEO technical-audit workflow and verify the selected
+Organization, Project and environment before repair or recheck work. The 500-page full-audit
+maximum is server policy; upgrading the CLI does not change a saved 100-page setting.
+
 ## Trace explorer
 
 CLI 1.8.0 adds `trace destinations`, `events`, `properties`, `issues`, `observations`,

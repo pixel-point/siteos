@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.0.0`
+Package: `@siteoshq/cli@2.1.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -98,7 +98,8 @@ siteos seo audit cancel <id> [--environment <slug>] [--json]
 siteos seo pages [--audit <id>] [--query <text>] [--url <url>] [--page <number>] [--environment <slug>] [--json]
 siteos seo issues [--audit <id>] [--rule <id>] [--page <number>] [--environment <slug>] [--json]
 siteos seo changes [--audit <id>] [--state <new|reopened|still_present|resolved|not_rechecked>] [--page <number>] [--environment <slug>] [--json]
-siteos seo recheck --audit <id> --url <url> [--environment <slug>] [--json]
+siteos seo repair --audit <id> --url <url> [--url <url>...] [--rule <id>] [--resource <expected-id>] [--environment <slug>] [--json]
+siteos seo recheck --audit <id> --url <url> [--url <url>...] [--resource <expected-id>] [--environment <slug>] [--json]
 siteos seo issue <ignore|restore> --audit <id> --url <url> --rule <id> --reason <text> --revision <number> [--environment <slug>] [--json]
 siteos seo schedule show [--environment <slug>] [--json]
 siteos seo schedule set --enabled <true|false> --weekday <1-7> --time <HH:mm> --timezone <IANA> --revision <number> [--environment <slug>] [--json]
