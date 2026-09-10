@@ -11,7 +11,7 @@ still define the workflow and evidence required for the user's outcome.
 3. For Project service reads, call `siteos_list_projects` with the intended Organization ID and `siteos_get_project` with the selected
    Project ID. Choose an explicit Environment from its catalog; no Production fallback is allowed.
 4. Use `siteos_get_overview` for the configured services and observed state. Use Pulse run reads,
-   Trace coverage/events/issues, incident details, observations, GTM summaries and notification history, SEO audits, Cookie configuration/aggregates, Forms definitions/inbox,
+   Trace coverage/events/issues, incident details, observations, GTM summaries, GA4 configuration/report reconciliation and notification history, SEO audits, Cookie configuration/aggregates, Forms definitions/inbox,
    Search diagnostics/usage or Analytics reports/realtime when the outcome needs their evidence.
    Preserve filters
    and context while following cursors. Missing data does not establish health or successful setup.

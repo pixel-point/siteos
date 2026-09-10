@@ -17,8 +17,8 @@ expressions enabled, All Custom Events and Once per event. The common monitor ob
 metadata for fired tags; it does not load Trace or forward business events. Keep the normal Trace
 script installed once. Preview before an authorized GTM publication and read back the live version.
 A configured tag is not proof of an execution; a tag that never fired is absent from this callback.
-Google API synchronization imports configuration and changes read-only. It does not execute tags,
-and GA4 Admin/Data report reconciliation is not implemented.
+Google API synchronization imports configuration and changes read-only. It does not execute tags.
+GA4 Admin/Data report reconciliation is available with CLI 2.3.0+; follow [GA4 reconciliation](ga4-reconciliation.md).
 
 Verify with:
 

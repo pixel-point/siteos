@@ -7,7 +7,7 @@ description: Use when investigating SiteOS Trace destinations, events, propertie
 
 For hosted evidence, prefer `siteos_trace_get_coverage`, `siteos_trace_get_report`,
 `siteos_trace_list_events`, `siteos_trace_list_issues`, `siteos_trace_get_issue`,
-`siteos_trace_list_observations`, `siteos_trace_get_gtm_summary` and `siteos_trace_get_notifications`
+`siteos_trace_list_observations`, `siteos_trace_get_gtm_summary`, `siteos_trace_get_ga4` and `siteos_trace_get_notifications`
 MCP tools after `siteos_get_context` and explicit Project/Environment selection. Follow
 [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require a local
 repository or CLI login. Use the CLI workflow below for setup, edits, publication and reads outside
@@ -21,8 +21,7 @@ The monitoring, notification and schema workflow requires CLI 2.2.0 or newer and
 Trace server. Earlier CLI releases support the older explorer commands. Check the installed
 `npx @siteoshq/cli trace --help` before using it; source availability does not establish publication.
 Read [references/investigating-tracking.md](references/investigating-tracking.md) for filters,
-pagination, issue history, evidence limits and verification of a fix. AI explanations and GA4
-Admin/Data API reconciliation are deferred. Read [actionable monitoring](references/actionable-monitoring.md)
+pagination, issue history, evidence limits and verification of a fix. AI explanations remain deferred. GA4 Admin/Data API reconciliation requires CLI 2.3.0+ and the matching server; use [GA4 reconciliation](references/ga4-reconciliation.md). Read [actionable monitoring](references/actionable-monitoring.md)
 for GTM installation, technical incidents, learned schemas, coverage and notification configuration.
 
 1. Run `npx @siteoshq/cli project status --json`. Use `$siteos` for missing common selection. When requested and not attached, run `npx @siteoshq/cli project connect trace --json`. This prepares the selected common environment without publishing or installing a script. Manage its name and website URL in Project settings; an address change marks an existing installation as requiring explicit republication.
@@ -50,7 +49,7 @@ events. Check enabled providers and sampling before interpreting absent traffic.
 not affect the live runtime until publication. Runtime 0.2.1 adds bounded GA4 single-event POST
 observation; a previously installed version-pinned snippet continues using its archived runtime.
 After an authorized upgrade, use the returned snippet and verify its actual version on the site.
-Runtime 0.3.0 observes native anonymous pageviews and GTM execution callbacks. For GTM execution
+Runtime 0.3.1 also retains the public GA4 Measurement ID for exact stream comparison; older unscoped observations cannot be assigned retroactively. Runtime 0.3.0 observes native anonymous pageviews and GTM execution callbacks. For GTM execution
 monitoring, use the `gtmExecutionMonitor` metadata returned by `installation show` and the linked
 installation workflow. This is one common monitor; individual event names and tags need no setup.
 
