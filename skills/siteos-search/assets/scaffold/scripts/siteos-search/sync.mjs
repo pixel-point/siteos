@@ -6,7 +6,6 @@ import process from "node:process";
 import { pathToFileURL } from "node:url";
 
 const projectRoot = process.cwd();
-const projectConfigPath = path.join(projectRoot, ".siteos", "search", "project.json");
 const searchConfigPath = path.join(projectRoot, "siteos-search.config.ts");
 const sourceIdPattern = /^[a-z0-9][a-z0-9-]{0,62}$/;
 const environmentSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -472,7 +471,6 @@ async function submitPayload(params) {
 
 async function main() {
   const options = readSyncOptions();
-  await readJsonFile(projectConfigPath, ".siteos/search/project.json");
   const config = await loadSearchConfig(searchConfigPath);
   const apiBaseUrl = await resolveApiBaseUrl(config);
   const payload = await buildSyncPayload(config);

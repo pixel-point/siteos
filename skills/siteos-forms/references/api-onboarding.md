@@ -14,7 +14,7 @@ generated project runtime -> SiteOS API -> SiteOS domain use cases -> database
 A repository uses the common Project selection and its Forms attachment, reported by `siteos project status --json`. The CLI keeps immutable resource IDs private. New setup prepares the Project environments; existing resources require explicit environment binding. Load `siteos-connection-onboarding.md` for setup.
 
 ```sh
-npx @siteoshq/cli forms environment list --json
+npx @siteoshq/cli project environment list --json
 npx @siteoshq/cli project environment create --slug <slug> --name <name> --json
 ```
 

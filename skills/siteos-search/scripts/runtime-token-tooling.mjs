@@ -80,35 +80,12 @@ function readOptionalString(value) {
   return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 }
 
-function ensureObject(value, label) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
-    throw new Error(`${label} must be an object.`);
-  }
-
-  return value;
-}
-
 async function fileExists(filePath) {
   try {
     await access(filePath);
     return true;
   } catch {
     return false;
-  }
-}
-
-async function readJsonFile(filePath, label) {
-  let raw;
-  try {
-    raw = await readFile(filePath, "utf8");
-  } catch {
-    throw new Error(`${label} cannot be read.`);
-  }
-
-  try {
-    return JSON.parse(raw);
-  } catch {
-    throw new Error(`${label} is not valid JSON.`);
   }
 }
 
@@ -186,16 +163,6 @@ function readIntegerOption(value, fallback, label) {
 
 async function loadToolContext(params = {}) {
   const projectRoot = path.resolve(readOptionalString(params.projectRoot) ?? process.cwd());
-  const linkagePath = path.join(projectRoot, ".siteos", "search", "project.json");
-  if (!(await fileExists(linkagePath))) {
-    throw new Error(".siteos/search/project.json is missing.");
-  }
-
-  ensureObject(
-    await readJsonFile(linkagePath, ".siteos/search/project.json"),
-    ".siteos/search/project.json",
-  );
-
   const environmentSlug = readOptionalString(params.environmentSlug);
   if (
     !environmentSlug ||

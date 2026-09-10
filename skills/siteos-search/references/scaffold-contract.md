@@ -69,7 +69,7 @@ The committed `scripts/siteos-search/sync.mjs` template is a deterministic sync 
 
 It must:
 
-- read `.siteos/search/project.json`, the project `.env`, and `siteos-search.config.ts`
+- read the project `.env` and `siteos-search.config.ts`; no service Project reference is required
 - require the Search origin from `SITEOS_SEARCH_PUBLIC_URL`; never use a Project field, another service, or a hardcoded production fallback
 - resolve only the CLI-installed `SITEOS_SEARCH_INDEXING_CREDENTIAL` from the process environment, then the project `.env`
 - require the strict `psi_` credential format and send it only as `x-siteos-project-search-indexing-credential`

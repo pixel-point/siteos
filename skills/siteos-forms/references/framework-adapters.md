@@ -48,7 +48,7 @@ Inspect before editing:
 - Preserve existing generated helper patterns, but establish Forms repository selection only
   through safe `siteos project status --json` output and its Forms attachment
   plus the private CLI binding.
-- Select or explicitly create the Forms-owned Environment through `siteos forms environment
+- Select or explicitly create the shared Project Environment through `siteos project environment
   list/create`; mutable Organization, Project, or Environment names/slugs are never canonical
   Project authority.
 - Add forms using the same `/api/forms/:formKey` local proxy shape.

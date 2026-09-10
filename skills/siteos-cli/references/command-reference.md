@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@1.13.0`
+Package: `@siteoshq/cli@2.0.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -39,7 +39,7 @@ siteos auth logout [--json]
 ```text
 siteos project list [--json]
 siteos project create --name <name> --slug <slug> [--url <url>] [--domain <domain>] [--json]
-siteos project use <id-or-slug> [--json]
+siteos project use <id-or-slug> [--environment <slug>] [--json]
 siteos project update [--name <name>] [--slug <slug>] [--url <production-url>] [--json]
 siteos project status [--json]
 siteos project connect <pulse|cookie|forms|search|trace|seo|analytics> [--resource <id>] [--json]
@@ -173,10 +173,6 @@ siteos integrations destination create --channel <provider-channel-id> [--json]
 ## Pulse
 
 ```text
-siteos pulse project list [--json]
-siteos pulse project create --slug <slug> --name <name> [--json]
-siteos pulse project use <slug> [--replace] [--json]
-siteos pulse project status [--json]
 siteos pulse init [--project <slug>] [--suite <slug>] [--tests-dir <path>] [--base-url <url>]
 siteos pulse validate [--json]
 siteos pulse sync [--check] [--json]
@@ -187,12 +183,6 @@ siteos pulse deploy [--dry-run] [--output <path>] [--json]
 ## Forms
 
 ```text
-siteos forms project list [--json]
-siteos forms project create --slug <slug> --name <name> [--json]
-siteos forms project use <slug> [--replace] [--json]
-siteos forms project status [--json]
-siteos forms environment list [--json]
-siteos forms environment create --slug <slug> --name <name> [--json]
 siteos forms definition sync --environment <slug> --input <path> [--json]
 siteos forms definition sync --environment <slug> --manifest <path> [--json]
 siteos forms definition list --environment <slug> [--status <active|inactive|all>] [--json]
@@ -206,7 +196,6 @@ siteos forms credential list --environment <slug> [--json]
 siteos forms credential issue --environment <slug> --install [--name <name>] [--json]
 siteos forms credential rotate --environment <slug> --install [--name <name>] [--json]
 siteos forms credential revoke --environment <slug> --credential <credential-id> [--json]
-siteos forms credentials issue --environment <slug> [--name <name>] [--json]
 siteos forms submissions list --environment <slug> --form <form-id> [--query <text>] [--status <status>] [--from <ISO>] [--to <ISO>] [--limit <1-100>] [--cursor <cursor>] [--json]
 siteos forms submissions read --environment <slug> --form <form-id> --submission <id> [--json]
 siteos forms submissions status --environment <slug> --form <form-id> --submission <id> --status <new|read|archived|spam> --expected-status <status> [--json]
@@ -220,15 +209,6 @@ siteos forms submit --input <path> [--json]
 ## Search
 
 ```text
-siteos search project list [--json]
-siteos search project create --slug <slug> --name <name> [--json]
-siteos search project use <slug> [--replace] [--json]
-siteos search project status [--json]
-siteos search environment list [--json]
-siteos search environment create --slug <slug> --name <name> [--json]
-siteos search environment update --environment <slug> --name <name> [--json]
-siteos search environment fork --source <slug> --slug <slug> --name <name> [--json]
-siteos search environment delete --environment <slug> [--json]
 siteos search analytics --environment <slug> [--json]
 siteos search diagnostics --environment <slug> [--json]
 siteos search doctor --environment <slug> [--json]
@@ -245,9 +225,9 @@ siteos search indexing-credential revoke --environment <slug> --credential <cred
 
 ## State and overrides
 
-- Private: `~/.siteos/auth.json`, `~/.siteos/project-bindings.json`
+- Private: `~/.siteos/auth.json`, `~/.siteos/projects.json`
 - Common selection: `siteos project use`; private and repository/origin specific
 - Tracked Pulse: `siteos.config.json`
 - Legacy tracked Forms: `.siteos/forms/project.json`
 - Legacy tracked Search: `.siteos/search/project.json`
-- Overrides: `SITEOS_HOME`, `SITEOS_AUTH_BASE_URL`, `SITEOS_PULSE_API_URL`, `SITEOS_FORMS_PUBLIC_URL`, `SITEOS_SEARCH_PUBLIC_URL`
+- Overrides: `SITEOS_HOME`, `SITEOS_AUTH_BASE_URL`, `SITEOS_FORMS_PUBLIC_URL`, `SITEOS_SEARCH_PUBLIC_URL`
