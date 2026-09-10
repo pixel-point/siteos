@@ -22,7 +22,7 @@ can keep an expected but unobserved destination visible; inspect `expected`, cou
 Use `--search <text>` for literal name search, `--event <name>` and `--property <name>` for exact
 filters, and `--period 24h|7d` for the traffic window. Event states are `all`, `new`, `issues`,
 `tracked` and `ignored`; issue states include `all`, `active`, `snoozed`, `resolved` and `new`.
-`--rule <rule>` uses the rule identifier returned by an issue. `--rule consent` groups all four consent checks.
+`--rule <rule>` uses the rule identifier returned by an issue. `--rule consent` groups the consent checks.
 
 Every list returns `{items, total, nextCursor, from, to}`. Read further pages only as needed using
 `--cursor <nextCursor>` and exactly the same environment, view and filters. Cursors preserve a
@@ -37,7 +37,7 @@ nor healthy tracking. Check installation, last signal, published rules and analy
 ## Inspect the issue and evidence
 
 ```sh
-npx @siteoshq/cli trace issue show --id <issue-uuid> --environment production --json
+npx @siteoshq/cli trace issue show --id <issue-id> --environment production --json
 npx @siteoshq/cli trace observations --environment production --provider ga4 --event purchase --json
 npx @siteoshq/cli trace observations --environment production --page-view <page-view-uuid> --json
 npx @siteoshq/cli trace observation show --batch-id <batch-uuid> --event-id <event-uuid> --environment production --json
@@ -46,11 +46,11 @@ npx @siteoshq/cli trace observation show --batch-id <batch-uuid> --event-id <eve
 Use IDs returned by these reads. An issue includes severity, confidence, lifecycle and retained
 findings. Each finding identifies its analysis window and published plan version. Compare the
 observed event/property against the expectation used at detection. The issue's `nextCursor`
-paginates finding history and is valid only for `issue show --id <same-uuid> --cursor <cursor>`.
+paginates finding history and is valid only for `issue show --id <same-id> --cursor <cursor>`.
 
 Debugger observations expose safe names/types, consent, evidence kind, technical stage, route
 template and runtime/release context. `--kind` accepts `data_layer`, `fetch`, `xhr`, `beacon`,
-`resource`, `consent`, `heartbeat` and `runtime_diagnostic`. A page-view ID groups activity for that
+`resource`, `consent`, `heartbeat`, `runtime_diagnostic` and `tag_execution`. A page-view ID groups activity for that
 page; it does not identify a visitor or prove a causal link between two observations.
 
 Fetch/XHR initiation and a browser accepting a beacon are not vendor receipt. Script loading is
@@ -71,8 +71,8 @@ parsed. Missing evidence for an unsupported path is not evidence of failed deliv
    Marking an issue resolved in the UI is a workflow action, not proof that the tracking is fixed.
 
 Do not add payload values, full request URLs, account IDs, DOM text, cookies, persistent visitor
-IDs or other private values to Trace to simplify diagnosis. Do not propose notifications or AI
-explanations as an existing capability of this workflow.
+IDs or other private values to Trace to simplify diagnosis. AI explanations remain deferred.
+Use [actionable monitoring](actionable-monitoring.md) for the implemented notification lifecycle.
 
 
 ## Consent checks

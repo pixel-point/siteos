@@ -5,7 +5,9 @@ description: Use when investigating SiteOS Trace destinations, events, propertie
 
 # SiteOS Trace
 
-For hosted evidence, prefer the available `siteos_trace_get_report` and `siteos_trace_list_issues`
+For hosted evidence, prefer `siteos_trace_get_coverage`, `siteos_trace_get_report`,
+`siteos_trace_list_events`, `siteos_trace_list_issues`, `siteos_trace_get_issue`,
+`siteos_trace_list_observations`, `siteos_trace_get_gtm_summary` and `siteos_trace_get_notifications`
 MCP tools after `siteos_get_context` and explicit Project/Environment selection. Follow
 [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require a local
 repository or CLI login. Use the CLI workflow below for setup, edits, publication and reads outside
@@ -15,11 +17,13 @@ Trace observes analytics requests and reports evidence. Use its Health Summary, 
 Debugger to understand where an event was observed and why a rule raised an issue. It is separate
 from website Analytics reports, Search analytics and Pulse availability monitoring.
 
-The explorer workflow requires CLI 1.8.0 or newer and the matching Trace server. Check the installed
+The monitoring, notification and schema workflow requires CLI 2.2.0 or newer and the matching
+Trace server. Earlier CLI releases support the older explorer commands. Check the installed
 `npx @siteoshq/cli trace --help` before using it; source availability does not establish publication.
 Read [references/investigating-tracking.md](references/investigating-tracking.md) for filters,
-pagination, issue history, evidence limits and verification of a fix. AI explanations and
-notifications are outside the current Trace workflow.
+pagination, issue history, evidence limits and verification of a fix. AI explanations and GA4
+Admin/Data API reconciliation are deferred. Read [actionable monitoring](references/actionable-monitoring.md)
+for GTM installation, technical incidents, learned schemas, coverage and notification configuration.
 
 1. Run `npx @siteoshq/cli project status --json`. Use `$siteos` for missing common selection. When requested and not attached, run `npx @siteoshq/cli project connect trace --json`. This prepares the selected common environment without publishing or installing a script. Manage its name and website URL in Project settings; an address change marks an existing installation as requiring explicit republication.
 2. Run `npx @siteoshq/cli project environment list --json` and `npx @siteoshq/cli trace environments --json`. Select it with `npx @siteoshq/cli project environment use <slug> --json`; Trace resolves its explicit binding. Existing environments require the [common environment connection workflow](../siteos/references/projects-and-environments.md), not a name match.
@@ -46,10 +50,14 @@ events. Check enabled providers and sampling before interpreting absent traffic.
 not affect the live runtime until publication. Runtime 0.2.1 adds bounded GA4 single-event POST
 observation; a previously installed version-pinned snippet continues using its archived runtime.
 After an authorized upgrade, use the returned snippet and verify its actual version on the site.
+Runtime 0.3.0 observes native anonymous pageviews and GTM execution callbacks. For GTM execution
+monitoring, use the `gtmExecutionMonitor` metadata returned by `installation show` and the linked
+installation workflow. This is one common monitor; individual event names and tags need no setup.
 
 For `tracking-plan save`, write `{ "expectedDraftVersion": <current version>, "expectations": [...] }`.
 Each expectation contains `provider`, `eventName`, `required`, nullable `consentPurpose` (`analytics`
-or `advertising`), nullable `maximumSilenceMinutes`, optional nullable `afterConsentSeconds` (5–300), and `properties`. Each property contains
+or `advertising`), nullable `maximumSilenceMinutes`, optional nullable `afterConsentSeconds` (5–300), optional nullable
+`afterSourceEvent: {eventName, withinSeconds}` (5–300), and `properties`. Each property contains
 `name`, `type` (`string`, `number`, `boolean`, `null`, `array` or `object`) and `required`. Derive
 expectations from reviewed application events or actual discoveries; do not invent required events.
 A draft-version conflict requires rereading and reconciling the current draft.
