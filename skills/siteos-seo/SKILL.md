@@ -124,6 +124,8 @@ For category AI Visibility, lead with text-based Mentions and its readable-answe
 First choice are optional annotation-based measures with a separate denominator;
 see [AI visibility](references/ai-visibility.md).
 
-For stopped research, follow [measurement recovery](references/search-research.md#recover-a-stopped-measurement).
+For an active queued check with `error` and `nextAttemptAt`, read/wait on the same run: it is waiting
+for admission and will continue only unsent requests. Do not start a duplicate or call retry.
+For terminal stopped research, follow [measurement recovery](references/search-research.md#recover-a-stopped-measurement).
 Prefer an authorized retry of missing parts over repeating successful answers. Provider reconciliation
 pauses are independent of available credits; incomplete AEO annotations are independent of answer collection.

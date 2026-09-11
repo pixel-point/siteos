@@ -90,6 +90,15 @@ request may still finish and cost credits. Do not start background schedules or 
 
 ## Recover a stopped measurement
 
+First distinguish waiting from stopped. `state: queued` with an admission `error` and
+`nextAttemptAt` is an active waiting check. Read or wait on that same run; do not create a retry or
+new run to make it progress. Only requests never sent will continue when capacity returns, within
+the original authorized scope. The timestamp is the next availability check, not completion ETA.
+Saved successes and paid failed attempts are never automatically repeated. Cancellation remains
+available through the CLI. A provider reconciliation pause still needs operator resolution; more
+customer credits do not clear it. Missing Organization credits remain a separate terminal stop.
+
+
 Read the exact source report and current availability before proposing a repeat. Separate an
 unavailable answer, a request that was never started, and a readable answer without AEO annotations.
 AEO annotation gaps do not require another paid run. Raising credits does not clear a provider
