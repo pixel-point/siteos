@@ -80,8 +80,10 @@ request may still finish and cost credits. Do not start background schedules or 
 
 ## Build a keyword plan
 
-1. Establish the product, audience, market, important conversion and existing pages from the task or
-   website context. Use the user's seed topic; expand it only when it serves that goal.
+1. Follow [Project research](project-research.md) to establish the product, audience, market,
+   important conversion and existing pages from the target website and matching repository when
+   available. Use the user's seed topic; derive a relevant seed when none was supplied and explain
+   its source and business fit. `research plan` validates the input; it does not discover a seed.
 2. Inspect available queries and URLs. Preserve the source report and its measurement context.
    Prioritize business relevance, intent and a plausible target page alongside measured demand.
    Do not discard a relevant long-tail query merely because measured volume is low or unavailable.

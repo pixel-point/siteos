@@ -17,7 +17,9 @@ with a versioned `category` input, as described below.
 | AI Visibility | Product comparisons across the same sampled questions and platforms, with AEO score, recommendation roles, first choices, objections and citations | A universal AI rank or evidence that an agent installed and used a product |
 | Analytics AI Assistants channel | Recorded visits with a recognized AI referrer or campaign signal | Total mentions, all AI visits, or which prompt caused an untagged visit |
 
-Start with the requested question. Read saved Brand lookup, Prompt checks or AI Visibility reports in the exact
+Start with the requested question. When selecting new questions or comparison products, use
+[Project research](project-research.md) to study the target and explain their relevance first.
+Read saved Brand lookup, Prompt checks or AI Visibility reports in the exact
 Project/environment through `npx @siteoshq/cli seo research history --kind brand --json`,
 `npx @siteoshq/cli seo research history --kind ai-visibility --json` or
 `npx @siteoshq/cli seo research history --kind ai-rankings --json`, then read a returned ID with
@@ -36,7 +38,8 @@ set of comparison questions. Brand lookup searches the provider's corpus:
 {"kind":"brand","target":"example.com","brand":"Acme","brandPlatform":"chat_gpt","brandMatch":"domain","country":"US","language":"en"}
 ```
 
-A prompt check samples the selected platforms; choose only those the user needs:
+A prompt check samples the selected platforms; use the user's scope. An all-platform request means
+every currently supported platform, not just the defaults in this example:
 
 ```json
 {"kind":"ai-visibility","target":"example.com","brand":"Acme","prompt":"Which website analytics tools suit a small SaaS team?","platforms":["chat_gpt","perplexity"],"country":"US","language":"en"}
@@ -47,6 +50,10 @@ reading existing reports are free. Request fields, planned parts and availabilit
 actual provider/model availability is rechecked at dispatch. Launch only the authorized request
 using the shared research workflow. Keep competitor websites out of prompts unless relevant to
 the question, and preserve wording across comparable observations.
+
+When history is empty or unsuitable, prepare grounded inputs rather than only reporting missing
+data. Planning does not generate those inputs. Report each selected platform's coverage, actual
+model and search settings independently; an aggregate score must not hide an unavailable platform.
 
 ## Review the sample
 

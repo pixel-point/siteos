@@ -25,6 +25,14 @@ Use the user's existing Project, environment, website and business context. Iden
 pages, audience and intended conversion before ranking recommendations. Ask only for missing context
 that changes the work; do not turn a focused technical check into a marketing questionnaire.
 
+When choosing keywords, competitors or AI questions, first follow
+[Project research](references/project-research.md). Inspect the target website and its repository
+when available, verify that the checkout belongs to that target, and connect proposed inputs to
+product facts, customer intent and relevant pages. Use sufficient existing context without repeating
+discovery. Missing reports are a reason to prepare grounded inputs, not to stop at an empty history.
+`research plan` validates those inputs and reports availability; it does not study the website or
+generate keywords, competitors or questions.
+
 For account access, use `$siteos-auth`; for installation and version support, use `$siteos-cli`.
 Read `npx @siteoshq/cli project status --json`,
 `npx @siteoshq/cli project environment list --json` and `npx @siteoshq/cli seo --help` before CLI work.
