@@ -127,5 +127,7 @@ see [AI visibility](references/ai-visibility.md).
 For an active queued check with `error` and `nextAttemptAt`, read/wait on the same run: it is waiting
 for admission and will continue only unsent requests. Do not start a duplicate or call retry.
 For terminal stopped research, follow [measurement recovery](references/search-research.md#recover-a-stopped-measurement).
-Prefer an authorized retry of missing parts over repeating successful answers. Provider reconciliation
-pauses are independent of available credits; incomplete AEO annotations are independent of answer collection.
+Prefer an authorized retry of missing parts over repeating successful answers, unless the user asks
+for a fresh full comparison. A reserved unknown charge alone does not block new work: read current
+availability. A risk-limit or operator pause is independent of customer credits; incomplete AEO
+annotations are independent of answer collection.

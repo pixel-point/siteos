@@ -95,8 +95,12 @@ First distinguish waiting from stopped. `state: queued` with an admission `error
 new run to make it progress. Only requests never sent will continue when capacity returns, within
 the original authorized scope. The timestamp is the next availability check, not completion ETA.
 Saved successes and paid failed attempts are never automatically repeated. Cancellation remains
-available through the CLI. A provider reconciliation pause still needs operator resolution; more
-customer credits do not clear it. Missing Organization credits remain a separate terminal stop.
+available through the CLI. Unknown charges retain their reserve while other answers and authorized
+new checks can continue within the platform risk allowance. Read current availability; a reserved
+amount alone does not mean research is paused. If the allowance fills, only unsent requests wait
+until room is available. Confirmed overruns or an existing operator pause need explicit operator
+resolution; more customer credits do not clear them. Missing Organization credits remain a separate
+terminal stop.
 
 
 Read the exact source report and current availability before proposing a repeat. Separate an
@@ -105,7 +109,9 @@ AEO annotation gaps do not require another paid run. Raising credits does not cl
 reconciliation pause; report that blocker and retain the available evidence. Supplier reconciliation
 and budget controls are operator-only and are not customer browser/MCP actions.
 
-When the user authorizes the missing scope, prefer the CLI continuation over a fresh full run:
+When the user authorizes the missing scope, prefer the CLI continuation over a fresh full run.
+An explicit request to repeat the whole comparison authorizes a new run with the same scoped input;
+retain the previous report and its reservations. Never mark an unknown charge as zero to unblock it.
 
 ```sh
 npx @siteoshq/cli seo research retry <run-id> --idempotency-key <new-operation-key> --json
