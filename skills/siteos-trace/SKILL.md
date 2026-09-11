@@ -17,6 +17,36 @@ Trace observes analytics requests and reports evidence. Use its Health Summary, 
 Debugger to understand where an event was observed and why a rule raised an issue. It is separate
 from website Analytics reports, Search analytics and Pulse availability monitoring.
 
+## Installation with an agent
+
+The Trace Setup and Installation screens offer **Install with AI**. The copied prompt contains
+the exact application origin, Organization, Project, environment and website. Treat those names
+and URLs as context data; verify them through `siteos_get_context` or the CLI before acting.
+Opening Setup only previews the steps. Creating the Trace configuration, publishing it, installing
+the website script and receiving the first signal are distinct actions; do not claim completion
+from the existence of a workspace or a Google connection.
+
+Inspect existing website tags, Trace installation and Google bindings before changing anything.
+Reuse the existing GTM container when suitable, or offer a direct script. GTM/GA4 are optional:
+GTM adds configuration history and real tag names; the separate common monitor provides execution
+evidence. GA4 adds exact property/web-stream configuration and aggregate report reconciliation.
+If either service is absent, explain its benefit and offer creation/connection within the user's
+scope. Use available Google provider tools or the browser for account/resource setup; never claim
+the SiteOS read-only GTM connection can edit a container. Ask the user to complete Google sign-in
+when required and provide missing business details instead of inventing them. Do not create new
+Google resources merely because an existing resource was not discovered in a partial catalog.
+
+Follow [GTM monitoring](references/actionable-monitoring.md) and
+[GA4 reconciliation](references/ga4-reconciliation.md) for exact commands and binding limits.
+Review/preview changes before requesting publication approval, preserve consent behavior and avoid
+duplicate snippets or tags. Finish with a fresh Trace signal, GTM execution evidence when selected,
+and the exact GA4 binding status. GA4 reports may arrive later; distinguish this from installation.
+
+**Installation** owns snippets, the GTM monitor and verification. **Settings** has Collection,
+Notifications and Monitoring coverage tabs. Collection saves remain drafts until explicitly
+published. The initial Setup and Installation states are also available in the local Storybook
+catalog; previewing them does not create a Project or write to the service.
+
 The monitoring, notification and schema workflow requires CLI 2.2.0 or newer and the matching
 Trace server. Earlier CLI releases support the older explorer commands. Check the installed
 `npx @siteoshq/cli trace --help` before using it; source availability does not establish publication.
@@ -71,3 +101,36 @@ mode unknown. Use the Consent section of [investigating tracking](references/inv
 for before-grant, withdrawal, Advanced Mode review and missing-after-grant evidence.
 Do not enable a post-grant deadline unless that event should follow a grant on the same page;
 it requires a consent purpose and a network destination. A purchase normally needs a later action.
+
+## Cookie readiness and runtime history (Trace 0.4+)
+
+Cookie 11.5+ reports bounded script/configuration/initialization failure codes and actual readiness.
+A `cookie_runtime_failed` issue is separate from a GTM execution incident. Only Cookie-ready
+observations can verify its recovery (three results across at least two page lifetimes); a loaded
+script, a GTM success or missing traffic cannot. Report last failure, recovery, reopen count and
+remaining cause uncertainty. Names in timelines come from the connected GTM catalog matched by
+container and tag ID; retain the IDs and do not present the current name as historical proof.
+
+Coverage includes version-specific lastSeen, page counts and pagesAfterPublication. A mismatch
+observed within the last hour after publication is marked recent; older versions remain history.
+Neither mixed 24-hour versions nor an old open tab alone proves a stale GTM installation. Read the
+current installation and inspect a fresh page before changing GTM. Technical Cookie evidence is
+page-local and contains no configuration, raw error, consent value or visitor identifier.
+
+
+## Recovery attention and network results (Trace 0.4+)
+
+Health Summary keeps a yellow notification for a verified recovery until the current user chooses
+**Mark as viewed**. Opening details is not dismissal; viewing never resolves an incident. Do not
+use `issue resolve` or acknowledge as a substitute. Marks are per user, persist across reloads and
+are reset by a new failure/recovery. A red banner means an active issue. Report the timestamps and
+whether recovery is verified rather than declaring the cause fixed. The viewing action is in the
+UI; no new CLI or MCP mutation is exposed.
+
+Recognized GA4/Ads/Meta/HubSpot fetch/XHR observations can carry `operationId` and `networkResult`
+(status, duration and outcome). Initiation and result are one send; two distinct operation IDs can
+still be a genuine duplicate. HTTP 4xx/5xx, network failure and timeout are technical failures;
+caller cancellation/opaque responses are unknown. Same-stream successes are required for GA4
+request recovery. This does not cover every arbitrary network service or prove analytics report
+processing. Do not enable Cookie solely to obtain these results. Deploy compatible backend/Edge
+before an authorized runtime installation upgrade; always read the actual snippet and version.
