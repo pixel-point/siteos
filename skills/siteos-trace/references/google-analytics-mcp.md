@@ -3,6 +3,8 @@
 Use this workflow for questions about existing GA4 data, visual reports and the impact of a
 tracking problem. Google Analytics MCP is an optional tool for the external agent. SiteOS's
 scheduled GA4 reconciliation continues through its own Google API connection without an agent.
+Reading GA4 reports requires neither the Trace observer nor SiteOS Analytics installation. Offer
+browser monitoring only when the investigation needs evidence of what the website sends.
 
 ## Choose the available evidence
 

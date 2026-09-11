@@ -3,6 +3,11 @@
 Requires CLI 2.3.0+ and the matching Trace server. Verify installed help and live deployment before
 using these commands. This feature does not use AI and does not install a GA4 collection tag.
 
+GA4 reports and configuration history do not require the Trace observer. For Google-only setup,
+connect the Trace workspace to the selected Project environment, then bind the Google stream.
+Do not ensure/publish an installation or change GTM just to read reports. Sending-versus-receipt
+comparisons become available only with sufficient matching observer evidence.
+
 Select the explicit common Project and environment first. In Trace → Google Analytics, connect
 Google with Analytics read access and select one property/web stream. The existing Organization
 Google identity and Search Console/GTM permissions are preserved. OAuth approval is a browser
@@ -46,3 +51,25 @@ Use common Issues for `ga4_report_discrepancy`, `ga4_key_event_removed` and `ga4
 Notifications use the configured Trace route and existing delivery history. Manual resolution does
 not verify a fix; a subsequent supported Google check does. Saved results remain historical when
 Google access or synchronization is unavailable. AI explanations remain outside this workflow.
+
+## Report-only event monitoring
+
+On a server that supports these rules, `ga4_reported_event_drop` and `ga4_reported_traffic_drop`
+operate without the observer. Read `trace issues --environment <slug> --provider ga4 --state active
+--json`, then the selected issue's detail through the installed CLI/MCP. These use existing issue
+commands; do not assume that an older deployment implements new automatic checks.
+
+Inspect the exact property/stream, affected dates, `reportEvidence` and `reportBaseline`. Individual
+events are compared per session; the traffic rule requires both sessions and events to fall. Two
+consecutive mature days must be below 25% of their usual levels. Each day must have ended 72 hours
+before collection, with three stable same-weekday samples from the preceding four weeks and enough
+traffic. These conservative checks skip limited reports and new/small/unstable events.
+
+Investigate campaigns, visitor behavior, availability, consent and GTM changes as hypotheses.
+Use optional Google MCP for matching dates/stream and traffic breakdowns; offer the observer for
+browser causes. Do not install it just to read these report issues. Never infer an exact count of
+lost requests or a broken GTM tag from an aggregate decline alone.
+
+Recovery needs two new mature days at least 60% of the frozen original expected level. Inspect
+`recoveryEvidence` and `recoveryVerifiedAt`; repeated syncs, a manual resolution, a stream change
+or missing data are not verified recovery. Unread recovered issues remain visible until reviewed.

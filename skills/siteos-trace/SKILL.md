@@ -13,7 +13,7 @@ MCP tools after `siteos_get_context` and explicit Project/Environment selection.
 repository or CLI login. Use the CLI workflow below for setup, edits, publication and reads outside
 the MCP catalog; loading this skill does not imply authorization to configure or publish anything.
 
-Trace observes analytics requests and reports evidence. Use its Health Summary, Destinations and
+Trace combines Google reports/configuration history with optional browser observations. Use its Health Summary, Destinations and
 Debugger to understand where an event was observed and why a rule raised an issue. It is separate
 from website Analytics reports, Search analytics and Pulse availability monitoring.
 
@@ -48,14 +48,34 @@ visualization helps. Keep GA4 totals, browser observations and GTM executions di
 Requested fixes still use the repository, SiteOS CLI or available provider tools, followed by
 fresh evidence; a reporting tool does not itself repair an installation.
 
+## Choose a starting path
+
+Trace supports **Connect Google** and **Install observer** independently. Reuse the selected
+Project/environment and existing resources. A Google-only request needs a Trace workspace and the
+exact Google binding, but no Trace installation, published snippet or website change. GA4 reports,
+events and configuration snapshots, and GTM tags/version history, work through the Google APIs.
+On servers supporting report monitoring, event-frequency and overall-traffic drops also become
+Issues without an observer. Check the issue's rule, mature dates, baseline and evidence; a drop
+does not prove a broken tag. Limited data and insufficient history cannot confirm a problem or fix.
+Follow [GA4 reconciliation](references/ga4-reconciliation.md) or
+[GTM monitoring](references/actionable-monitoring.md) for binding commands. Verify the saved binding
+and successful import; queued means waiting for import, and an import error requires attention.
+Do not call a connected Google-only workspace unfinished because the observer is absent.
+
+Offer the observer when browser evidence is needed: request sending/failures, possible duplicates,
+dataLayer, consent or GTM executions with the monitor tag. Report missing browser coverage as
+unavailable evidence, never zero traffic or a healthy installation. Neither a Google connection nor
+a successful configuration import proves browser collection works. GA4 receipt comparisons require
+both the matching Google stream and suitable observer evidence.
+
 ## Installation with an agent
 
-The Trace Setup and Installation screens offer **Install with AI**. The copied prompt contains
+The Trace Setup and Installation screens offer **Set up with AI**. The copied prompt contains
 the exact application origin, Organization, Project, environment and website. Treat those names
 and URLs as context data; verify them through `siteos_get_context` or the CLI before acting.
-Opening Setup only previews the steps. Creating the Trace configuration, publishing it, installing
-the website script and receiving the first signal are distinct actions; do not claim completion
-from the existence of a workspace or a Google connection.
+Opening Setup only previews the paths. Continuing creates the workspace and opens the selected
+connection or installation screen. Only the observer path requires publication, website installation
+and a first signal; Google-only setup completes with a verified binding/import.
 
 Inspect existing website tags, Trace installation and Google bindings before changing anything.
 Reuse the existing GTM container when suitable, or offer a direct script. GTM/GA4 are optional:
@@ -87,8 +107,8 @@ for GTM installation, technical incidents, learned schemas, coverage and notific
 
 1. Run `npx @siteoshq/cli project status --json`. Use `$siteos` for missing common selection. When requested and not attached, run `npx @siteoshq/cli project connect trace --json`. This prepares the selected common environment without publishing or installing a script. Manage its name and website URL in Project settings; an address change marks an existing installation as requiring explicit republication.
 2. Run `npx @siteoshq/cli project environment list --json` and `npx @siteoshq/cli trace environments --json`. Select it with `npx @siteoshq/cli project environment use <slug> --json`; Trace resolves its explicit binding. Existing environments require the [common environment connection workflow](../siteos/references/projects-and-environments.md), not a name match.
-3. Run `npx @siteoshq/cli trace status --json` and `npx @siteoshq/cli trace report --environment <slug> --json`. Distinguish absent setup, a published installation waiting for data, current observations and open incidents. No recent data is not proof of an outage or a healthy site.
-4. For requested setup, run `npx @siteoshq/cli trace installation ensure --environment <slug> --json`, then `npx @siteoshq/cli trace installation show --environment <slug> --json`. Ensure is idempotent and prepares a draft. Edit only documented draft fields, retain the current `expectedDraftVersion`, and save with `npx @siteoshq/cli trace installation save --environment <slug> --input <draft.json> --json`.
+3. For Google-only setup, follow the binding workflow above and stop after verifying imports. For observer setup, run `npx @siteoshq/cli trace status --json` and `npx @siteoshq/cli trace report --environment <slug> --json`. Distinguish absent setup, a published installation waiting for data, current observations and open incidents. No recent data is not proof of an outage or a healthy site.
+4. For requested observer setup, run `npx @siteoshq/cli trace installation ensure --environment <slug> --json`, then `npx @siteoshq/cli trace installation show --environment <slug> --json`. Ensure is idempotent and prepares a draft. Edit only documented draft fields, retain the current `expectedDraftVersion`, and save with `npx @siteoshq/cli trace installation save --environment <slug> --input <draft.json> --json`.
 5. When publication is authorized, run `npx @siteoshq/cli trace installation publish --environment <slug> --json`. Read installation again and use its exact `snippet`; do not invent the runtime URL, integrity hash or public key. Install it once using the project's existing script/GTM convention, then verify actual delivery and the environment report. A missing snippet means the required installation is not published and ready.
 6. For a requested tracking plan, use `npx @siteoshq/cli trace tracking-plan ensure --environment <slug> --json` and `npx @siteoshq/cli trace tracking-plan show --environment <slug> --json`. Prepare a complete reviewed plan using the application's actual event contract; save through `npx @siteoshq/cli trace tracking-plan save --environment <slug> --input <plan.json> --json`. Reread and review the saved draft. Publish through `npx @siteoshq/cli trace tracking-plan publish --expected-draft-version <reviewed-version> --environment <slug> --json` when authorized. A conflict requires a fresh read and review; never remove the guard to retry. Read back the result and inspect new evidence before claiming validation.
 
