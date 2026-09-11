@@ -13,7 +13,21 @@ This fires both for an allowed returning visit and for consent granted on the cu
 Configure the Google tag with the stream's Measurement ID, this trigger, **Once per page**, and
 additional required consent `analytics_storage`. Do not leave its default Initialization trigger.
 
-## Stop an initialized Google library on withdrawal
+## Native Cookie control (11.5+)
+
+Prefer `draft.integrations.ga4MeasurementIds: ["G-EXAMPLE1"]` with the actual reviewed IDs,
+retaining all other draft fields, and publish the configuration when authorized. In Cookie Studio,
+use Services → GA4 Measurement IDs → Apply IDs to draft, then publish. Include every stream;
+keep the grant trigger and initial consent requirement on the Google tag. Verify Cookie readiness
+with `getRuntimeStatus()` and real requests. Cookie does not install GA4.
+
+Basic mode disables listed streams before consent. Explicitly selected Advanced mode allows
+cookieless signals before a choice; refusal/withdrawal disables sending, and a later allowed
+choice re-enables it. A pre-existing true opt-out is respected. Migrate the old custom guard in
+an isolated GTM workspace after testing; leaving two flag owners can prevent reconsent or
+allow the wrong state. Never infer complete coverage of unlisted streams or other Google tags.
+
+## Legacy runtime fallback: stop an initialized Google library on withdrawal
 
 An already loaded Google library may emit `user_engagement` on the controlled reload after
 withdrawal. Google documents `window['ga-disable-MEASUREMENT_ID']` as the explicit measurement
