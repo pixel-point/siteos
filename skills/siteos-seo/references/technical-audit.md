@@ -1,5 +1,10 @@
 # Technical SEO/GEO audit and fix verification
 
+Use this workflow for a requested technical audit or repair. Saved research or Analytics evidence
+can help prioritize affected pages; their absence does not block the audit or require new research.
+When this reference is used only to interpret supporting evidence for another workflow, read the
+relevant saved finding without turning that task into a new crawl or repair pass.
+
 ## Select the context
 
 Run `npx @siteoshq/cli seo --help` before this workflow. Use a CLI and server that implement these

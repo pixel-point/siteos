@@ -5,6 +5,11 @@ area below, choose useful measurements for this website and finish the authorize
 request stays focused. A complete review does not mean executing every available check, choosing
 maximum limits or making every result green.
 
+This is the combined workflow, not the default expansion of a named audit, keyword or AI
+Visibility task. Reuse relevant saved evidence across its areas and propose missing measurements
+only when they address useful gaps. Execute through supported MCP reads and the SEO CLI; the
+workflow does not require computer-use or clicking through the SiteOS application.
+
 ## Establish the project and current coverage
 
 Follow [Project research](project-research.md) to establish the exact Project/environment, product,

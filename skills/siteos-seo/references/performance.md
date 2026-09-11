@@ -1,5 +1,11 @@
 # Selected-page performance
 
+Keep the task on the selected pages and devices. Relevant saved traffic, search or audit evidence
+can help choose pages; do not launch other research to obtain that optional context. The source
+audit below is an actual measurement prerequisite. If it is missing, explain and prepare that
+specific audit step within the user's scope. Launch and read measurements through the CLI; the
+Lighthouse browser runs on the server, not in the user's browser or through computer-use.
+
 ## Measure selected pages with Lighthouse
 
 Use a completed or partial full HTML audit and 1–10 successful HTML URLs from that audit.

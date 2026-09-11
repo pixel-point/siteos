@@ -7,6 +7,13 @@ new measurement. Dashboard and the research pages expose the same records. Check
 `npx @siteoshq/cli seo --help` for matching CLI/server support; use `$siteos-cli` when an update is
 needed. Reports and JSON exports retain immutable measurement inputs and observation timestamps.
 
+Follow the selected research question. This reference covers several independent workflows; its
+commands and examples are not a batch to run. Start with that workflow's history/saved inputs, and
+reuse relevant reports from other areas to choose seeds, competitors, pages or interpretation.
+Missing supporting reports should lead to a useful optional suggestion, not another request batch
+or a blocker. A combined competitors/backlinks request can use several kinds when each answers a
+specific part of the comparison. Use CLI/MCP, not computer-use or clicks in the SiteOS application.
+
 ```sh
 npx @siteoshq/cli seo research summary --json
 npx @siteoshq/cli seo research history --kind keywords --json
@@ -15,7 +22,9 @@ npx @siteoshq/cli seo research show <run-id> --json
 npx @siteoshq/cli seo research export <run-id> --format json --output ./research-report.json --json
 ```
 
-Kinds: `keywords`, `domain`, `rankings`, `backlinks`, `brand`, `ai-visibility`. History shows the
+Request kinds: `keywords`, `domain`, `rankings`, `backlinks`, `brand`, `ai-visibility`.
+History and saved-input reads also accept `ai-rankings` for category AI Visibility;
+`ai-visibility` reads standalone Prompt checks. History shows the
 latest 30 per kind; retained older report IDs still support show/export. CSV exports use one row per
 dataset entry with JSON cells for the request, dataset metadata and entry; failed parts remain in
 the file. Prefer JSON for analysis. Both formats preserve zero versus missing metrics. Choose new
@@ -63,7 +72,8 @@ credits. It neither enqueues work nor calls a paid endpoint. Saving inputs also 
 use `--id <saved-id>` to update a saved check. Remove one only when requested with
 `npx @siteoshq/cli seo research saved remove <saved-id> --json`.
 
-After the user authorizes a measurement and the plan fits the available balance:
+When the measurement is covered by existing user authorization and the plan fits the available
+balance, continue through execution and readback; do not stop at planning or ask again:
 
 ```sh
 npx @siteoshq/cli seo research run --input ./research-request.json --idempotency-key <retry-key> --json

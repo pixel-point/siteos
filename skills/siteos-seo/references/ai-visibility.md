@@ -2,24 +2,43 @@
 
 Use GEO for generative engine optimization: how AI answers describe, mention and cite a website.
 It is separate from geographic targeting and from testing whether an agent can complete a task
-on that website. In the application, open SEO/GEO → Brand lookup, Prompt checks or AI Visibility.
+on that website. The corresponding application sections are Brand lookup, Prompt checks and
+AI Visibility.
 The CLI reads these sections with `seo research` and `--kind brand`, `--kind ai-visibility` or
 `--kind ai-rankings` respectively. Category run/plan requests use the shared `ai-visibility` kind
 with a versioned `category` input, as described below.
 
+## Select the requested measurement
+
+An **AI Visibility** request targets the [product comparison](#ai-visibility) below. Start with
+category history and saved inputs (`--kind ai-rankings`), prepare one coherent category request
+when needed, validate with `research plan`, then run/wait/show within the user's authorization.
+For **Prompt checks**, use the standalone prompt request. For **Brand lookup**, use the corpus
+request. A general GEO question can use the relevant evidence; it does not request all three
+measurements. All AI Platforms means all supported platforms for the selected measurement.
+
+Relevant saved Brand lookup, Prompt checks, keyword, audit or Analytics data can help choose
+questions and interpret a comparison. Missing supporting data is not a prerequisite: continue the
+selected measurement and suggest an additional check only with a concrete reason. Do not prepare
+extra requests, run those checks or start technical repairs unless included in the task. Multiple
+measurement kinds belong in an explicitly combined or [Complete SEO/GEO](complete-seo-geo.md)
+scope. Use CLI/MCP as described in the skill; these checks do not require operating the SiteOS UI.
+
 ## Keep the observations distinct
+
+This table explains evidence boundaries; it is not a checklist of reports to fetch for every task.
 
 | Evidence | What it can establish | What it cannot establish |
 | --- | --- | --- |
 | Site Audit: robots, public HTML, canonical and snippet policies | Technical accessibility and observable restrictions | Inclusion or a citation in an AI answer |
 | Brand lookup | Mentions in the provider's returned corpus and context | Every answer shown to every user |
 | Prompt checks | Mentions, citation URLs and answer evidence for a particular sampled prompt/platform | A permanent or universal AI rank |
-| AI Visibility | Product comparisons across the same sampled questions and platforms, with AEO score, recommendation roles, first choices, objections and citations | A universal AI rank or evidence that an agent installed and used a product |
+| AI Visibility | Product comparisons across the same sampled questions and platforms, with text Mentions and optional AEO, recommendation roles, first choices, objections and citations | A universal AI rank or evidence that an agent installed and used a product |
 | Analytics AI Assistants channel | Recorded visits with a recognized AI referrer or campaign signal | Total mentions, all AI visits, or which prompt caused an untagged visit |
 
 Start with the requested question. When selecting new questions or comparison products, use
 [Project research](project-research.md) to study the target and explain their relevance first.
-Read saved Brand lookup, Prompt checks or AI Visibility reports in the exact
+Read the selected workflow's saved Brand lookup, Prompt checks or AI Visibility reports in the exact
 Project/environment through `npx @siteoshq/cli seo research history --kind brand --json`,
 `npx @siteoshq/cli seo research history --kind ai-visibility --json` or
 `npx @siteoshq/cli seo research history --kind ai-rankings --json`, then read a returned ID with
@@ -31,8 +50,9 @@ observation. Failed or incomplete reports must retain their coverage limitations
 
 ## Prepare an AI request
 
-Use separate JSON files for independent prompt checks; use the category request below for a shared
-set of comparison questions. Brand lookup searches the provider's corpus:
+These are alternative request forms, not a batch to prepare by default. Use the category request
+below for AI Visibility, or separate JSON files when independent Prompt checks are requested.
+Brand lookup searches the provider's corpus:
 
 ```json
 {"kind":"brand","target":"example.com","brand":"Acme","brandPlatform":"chat_gpt","brandMatch":"domain","country":"US","language":"en"}
@@ -50,6 +70,9 @@ reading existing reports are free. Request fields, planned parts and availabilit
 actual provider/model availability is rechecked at dispatch. Launch only the authorized request
 using the shared research workflow. Keep competitor websites out of prompts unless relevant to
 the question, and preserve wording across comparable observations.
+
+When execution is already authorized, continue through run/wait/show rather than ending at a plan.
+Otherwise present the selected measurement's exact scope and available cost/credit information.
 
 When history is empty or unsuitable, prepare grounded inputs rather than only reporting missing
 data. Planning does not generate those inputs. Report each selected platform's coverage, actual
@@ -71,8 +94,11 @@ model and search settings independently; an aggregate score must not hide an una
 
 ## Recommend and verify changes
 
-Use [technical audit](technical-audit.md) for canonical, robots, sitemap and snippet evidence. Treat
-search-crawler accessibility separately from training opt-outs. Do not remove a deliberate training
+Use relevant saved canonical, robots, sitemap or snippet evidence as supporting context when it
+explains a sampled page's accessibility. A technical review or repair is a separate task: follow
+[technical audit](technical-audit.md) when the user includes it, rather than auditing the site as a
+prerequisite for an AI comparison. Treat search-crawler accessibility separately from training
+opt-outs. Do not remove a deliberate training
 restriction or publish an llms.txt file on the assumption that it guarantees AI visibility.
 
 For content changes, favor clear product facts, useful answers, demonstrable expertise, consistent
@@ -80,10 +106,11 @@ brand identity and attributable sources. Each recommendation needs a page and a 
 helps answer. Do not fabricate reviews, citations or structured data, and do not recommend a new
 schema type solely to chase a speculative AI score.
 
-Verify a deployed technical change with SiteOS rechecks. Evaluate visibility changes only through
-subsequent authorized, comparable prompt observations; model variation means one changed answer is
-not proof of causation. Report Analytics referrals separately, including loss of referrer information
-in apps and untagged links. Successful crawling, a brand mention and a human visit are different outcomes.
+For requested repairs, verify a deployed technical change with SiteOS rechecks. Evaluate visibility
+changes only through subsequent authorized, comparable prompt observations; model variation means
+one changed answer is not proof of causation. When available and relevant, report saved Analytics
+referrals separately, including loss of referrer information in apps and untagged links.
+Successful crawling, a brand mention and a human visit are different outcomes.
 
 ## AI Visibility
 

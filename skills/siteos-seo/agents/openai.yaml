@@ -1,4 +1,4 @@
 interface:
   display_name: "SiteOS SEO/GEO"
   short_description: "Complete SEO/GEO setup, research and verified fixes"
-  default_prompt: "Use $siteos-seo for a complete SEO/GEO review and improvement pass: study this Project, cover the applicable evidence paths, run authorized checks and verify fixes."
+  default_prompt: "Use $siteos-seo for the requested SEO/GEO workflow in this Project: reuse relevant evidence, prepare useful inputs and complete authorized checks; use Complete SEO/GEO when I request a full review."

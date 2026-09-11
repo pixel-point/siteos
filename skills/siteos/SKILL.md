@@ -23,7 +23,7 @@ catalog, use the CLI workflow below. Missing MCP tools do not prove the server i
    - `$siteos-forms`: form definitions, submission runtime and inbox verification.
    - `$siteos-search`: content sources, indexing, queries, search UI, health and usage reports.
    - `$siteos-trace`: website tracking investigation, evidence-backed event checks, diagnosis and installation; existing GA4 reports and visual investigations through optional Google Analytics MCP.
-   - `$siteos-seo`: SEO/GEO technical audits, AI search-crawler policies and verified fixes, keyword and competitor research, backlinks, GSC Insights and AI visibility analysis from saved reports.
+   - `$siteos-seo`: the requested SEO/GEO audit, research or AI Visibility comparison, using saved evidence and authorized CLI checks. Other saved reports can support the selected workflow; a full SEO/GEO pass applies only when requested.
    - `$siteos-integrations`: shared provider connections and notification destinations.
    - `$siteos-analytics`: website measurement, installation, optional Cookie/external consent control, events, conversions and realtime.
 6. For environment work, load [references/projects-and-environments.md](references/projects-and-environments.md). Report which Project, environments and services were changed and distinguish configuration, publication and verified runtime behavior.
