@@ -120,14 +120,15 @@ the user's publication scope. A local edit is not evidence of a repair on the co
 use a completed recheck to confirm it and report anything not rechecked. Finish with the next action
 supported by the evidence, rather than a generic SEO checklist.
 
-For category AI Visibility, lead with text-based Mentions and its readable-answer coverage. AEO and
-First choice are optional annotation-based measures with a separate denominator;
+For new category AI Visibility, use `category-mentions-v3`: ordinary text Mentions and cited sources
+with readable-answer coverage. AEO and First choice are historical annotation-based measures only;
+do not request them or a separate extraction API for new checks.
 see [AI visibility](references/ai-visibility.md).
 
 For an active queued check with `error` and `nextAttemptAt`, read/wait on the same run: it is waiting
 for admission and will continue only unsent requests. Do not start a duplicate or call retry.
 For terminal stopped research, follow [measurement recovery](references/search-research.md#recover-a-stopped-measurement).
 Prefer an authorized retry of missing parts over repeating successful answers, unless the user asks
-for a fresh full comparison. A reserved unknown charge alone does not block new work: read current
-availability. A risk-limit or operator pause is independent of customer credits; incomplete AEO
+for a fresh full comparison. Terminal failed requests release customer reservations; unknown supplier costs stay in internal
+accounting. Read current availability. A risk-limit or operator pause is independent of customer credits; incomplete AEO
 annotations are independent of answer collection.

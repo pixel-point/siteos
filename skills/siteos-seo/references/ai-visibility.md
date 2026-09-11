@@ -33,7 +33,7 @@ This table explains evidence boundaries; it is not a checklist of reports to fet
 | Site Audit: robots, public HTML, canonical and snippet policies | Technical accessibility and observable restrictions | Inclusion or a citation in an AI answer |
 | Brand lookup | Mentions in the provider's returned corpus and context | Every answer shown to every user |
 | Prompt checks | Mentions, citation URLs and answer evidence for a particular sampled prompt/platform | A permanent or universal AI rank |
-| AI Visibility | Product comparisons across the same sampled questions and platforms, with text Mentions and optional AEO, recommendation roles, first choices, objections and citations | A universal AI rank or evidence that an agent installed and used a product |
+| AI Visibility | Product comparisons across the same sampled questions and platforms, with text Mentions and citations; historical reports may also contain AEO annotations | A universal AI rank or evidence that an agent installed and used a product |
 | Analytics AI Assistants channel | Recorded visits with a recognized AI referrer or campaign signal | Total mentions, all AI visits, or which prompt caused an untagged visit |
 
 Start with the requested question. When selecting new questions or comparison products, use
@@ -133,7 +133,7 @@ product names and aliases must identify one product. Product and question IDs mu
   "language": "en",
   "platforms": ["chat_gpt", "perplexity"],
   "category": {
-    "version": "category-aeo-v2",
+    "version": "category-mentions-v3",
     "name": "Website analytics",
     "products": [
       { "id": "own", "name": "Acme", "domain": "example.com", "aliases": [] },
@@ -147,8 +147,8 @@ product names and aliases must identify one product. Product and question IDs mu
 ```
 
 Use the existing `research plan --input`, authorized `run --input`, `wait`, `show`, `export`, and
-`saved` commands. No paid scorer or automatic paid retry is added. A malformed answer can still
-consume credits when the provider charged for it. Saving or launching queues free favicon discovery;
+`saved` commands. No paid scorer or automatic paid retry is added. Terminal provider failures release customer reservations; unknown supplier costs remain internal.
+A collected readable answer can still vary in quality. Saving or launching queues free favicon discovery;
 reading reports and cached images never fetches competitor sites.
 
 Read `run.categoryReport` from the server. **Mentions is the primary metric**:
@@ -162,6 +162,15 @@ JSON annotations, provider source metadata or the input prompt is not a text men
 empty, truncated and damaged structured responses are unavailable, never negative evidence.
 Plain prose and a readable JSON `answer` field can still support Mentions when AEO annotations fail.
 
+New v3 reports show **Citations** as `citations / citationDenominator`: readable answers citing the
+product's official domain, counted once per answer. Shared-domain citations do not establish which
+product was discussed. Follow `citedProductIds` and original source URLs. Mentions and citations
+can differ; names in citation metadata alone do not count as Mentions. New reports show Rankings,
+Queries & answers and Research lenses for products, models, questions and sources, without AEO or
+Why they win. Full reruns and missing-part continuations use v3; original historical reports remain
+available. Earlier readable answers copied into a continuation retain their dates and source IDs.
+
+The remaining scoring guidance applies only to historical annotated reports.
 `aeoScore` is already a percentage. `scorePoints` and raw `visibility`, `firstChoice`,
 `alternatives`, `objections`, `citations`, `uncertain` retain their annotation-based `denominator`.
 Do not use that denominator for Mentions. `visibility` is the legacy **Annotated mentions** metric;
@@ -179,7 +188,7 @@ paths require matching question/model/market/search/instruction/output settings.
 these additive fields retain only their recorded annotation metrics; do not relabel `visibility`
 as text Mentions or infer AEO roles.
 
-New `category-aeo-v2` follows [Frontier AEO Tracker's methodology](https://aeo.latent.space/methodology):
+Historical `category-aeo-v2` follows [Frontier AEO Tracker's methodology](https://aeo.latent.space/methodology):
 primary/co-primary 60 points, direct alternative 25, conditional/supporting/substantive incidental 15,
 illustrative/neutral 0. Positive non-primary products receive 12.5/10/7.5/5/2.5 prominence points
 for positions one to five in the actual supporting text. Explicit aliases are grouped first;
@@ -190,7 +199,7 @@ negative evidence contributes zero directional points and is marked uncertain. N
 and average valid question/platform observations. Negative scores are valid; product scores need
 not sum to 100%. Text Mentions remains a separate observation.
 
-The four tabs are **Rankings**, **Why they win**, **Queries & answers**, and **Research lenses**.
+Historical annotated reports have four tabs: **Rankings**, **Why they win**, **Queries & answers**, and **Research lenses**.
 Rankings defaults to Mentions; AEO is an additional column when valid annotations exist.
 More options exposes First choice and other annotation measures. Why they win groups recorded criteria and objections with source queries;
 these are model claims, not verified product facts. Queries & answers exposes exact prompts,
@@ -205,7 +214,7 @@ questions creates a different comparison; filters never create new paid observat
 
 Historical `category-visibility-v1` reports remain readable without inferred roles or AEO scores.
 Do not merge their visibility percentage with v2 scores. Changes use only common successful
-questions with matching methodology, actual model and search settings. SiteOS uses annotations
+questions with matching methodology, actual model and search settings. Historical v2 SiteOS reports used annotations
 from the same model API answer and verifies exact quote presence; it does not reproduce the
 reference's separate extraction/review process or establish native-agent product usage.
 
