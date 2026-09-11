@@ -22,7 +22,7 @@ catalog, use the CLI workflow below. Missing MCP tools do not prove the server i
    - `$siteos-cookie`: consent banner drafts, installation, publication and consent analytics.
    - `$siteos-forms`: form definitions, submission runtime and inbox verification.
    - `$siteos-search`: content sources, indexing, queries, search UI, health and usage reports.
-   - `$siteos-trace`: analytics observation, installation and tracking plans.
+   - `$siteos-trace`: website tracking investigation, evidence-backed event checks, diagnosis and installation; existing GA4 reports and visual investigations through optional Google Analytics MCP.
    - `$siteos-seo`: SEO/GEO technical audits, AI search-crawler policies and verified fixes, keyword and competitor research, backlinks, GSC Insights and AI visibility analysis from saved reports.
    - `$siteos-integrations`: shared provider connections and notification destinations.
    - `$siteos-analytics`: website measurement, installation, optional Cookie/external consent control, events, conversions and realtime.

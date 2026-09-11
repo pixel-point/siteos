@@ -1,6 +1,6 @@
 ---
 name: siteos-trace
-description: Use when investigating SiteOS Trace destinations, events, properties, issues, Consent checks and Debugger evidence, or configuring installation and tracking rules for a website Project environment.
+description: Investigate website tracking and configure evidence-backed event checks in SiteOS Trace, diagnose issues and GTM changes, compare Google Analytics reports through optional Google Analytics MCP, and verify requested fixes for a Project environment.
 ---
 
 # SiteOS Trace
@@ -16,6 +16,37 @@ the MCP catalog; loading this skill does not imply authorization to configure or
 Trace observes analytics requests and reports evidence. Use its Health Summary, Destinations and
 Debugger to understand where an event was observed and why a rule raised an issue. It is separate
 from website Analytics reports, Search analytics and Pulse availability monitoring.
+
+When available in the selected release, Trace → SiteOS Analytics → Overview displays accepted
+Analytics visits, page views and events alongside Trace issues. Use Tracking for observed events,
+properties and rule evidence. Read accepted metrics through the Analytics MCP/CLI with its own
+authority; the Overview does not turn Trace observations into Analytics counts. Native reports use
+UTC windows including today, while GA4 reports use completed property-local days. Compare matching
+populations and periods before describing a discrepancy. A missing Analytics environment attachment
+does not require reinstalling Trace.
+
+## Website investigation and event checks
+
+When asked to study a website's tracking, find coverage gaps or configure useful checks, read
+[Website investigation and event checks](references/site-event-checks.md). Follow the site's actual
+success actions through dataLayer, any GTM mapping, the destination request and its report. Use
+automatic discovery first and add explicit rules only for confirmed expectations. Identify what
+needs instrumentation or cannot be verified; do not infer mandatory events from a button label.
+The workflow supports SiteOS Analytics and other supported destinations, with or without GTM/GA4.
+
+## Google Analytics investigations
+
+For GA4 report questions, charts or the impact of a tracking change, read
+[Google Analytics MCP investigations](references/google-analytics-mcp.md). Use the existing SiteOS
+binding and saved reconciliation first; use an available official Google Analytics MCP for deeper
+reports. Its connection is optional and independently authorized. The SiteOS MCP does not expose
+arbitrary Google reports or Google configuration writes. A request about existing GA4 data does
+not require installing SiteOS Analytics or changing the site's tags.
+
+Return a concise finding with an appropriate chart and its source, scope and time window when
+visualization helps. Keep GA4 totals, browser observations and GTM executions distinguishable.
+Requested fixes still use the repository, SiteOS CLI or available provider tools, followed by
+fresh evidence; a reporting tool does not itself repair an installation.
 
 ## Installation with an agent
 

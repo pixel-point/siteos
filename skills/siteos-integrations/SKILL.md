@@ -9,6 +9,11 @@ For supported hosted reads, prefer the available `siteos_integrations_get_connec
 
 Integrations manages Organization provider connections and destinations. The first supported provider is Slack. The common plugin includes this workflow; do not install a separate SiteOS provider plugin.
 
+For Google Analytics connection, exact property/web-stream selection and reconciliation, use
+`$siteos-trace`. For optional Google Analytics MCP access from the agent, read its
+[Google MCP workflow](../siteos-trace/references/google-analytics-mcp.md). The Organization's
+Google connection inside SiteOS does not authorize a separate MCP server in the agent's host.
+
 1. Run `npx @siteoshq/cli auth status --json` and use `$siteos-auth` when the intended Organization is not selected. A connection belongs to that Organization, not to an individual Project.
 2. Run `npx @siteoshq/cli integrations status --json`. Inspect safe connection and destination metadata. Do not treat a configured connection as proof of a successfully delivered notification.
 3. If connecting Slack is requested, run `npx @siteoshq/cli integrations connect --json`. Open its SiteOS URL and let the user complete provider authorization. Browser OAuth is a required user interaction; never fabricate a grant, extract browser credentials or request the user to paste a Slack token into chat. Continue independent service configuration while authorization is pending.

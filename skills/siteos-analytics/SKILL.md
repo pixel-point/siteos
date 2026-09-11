@@ -5,6 +5,10 @@ description: Set up SiteOS website Analytics in a selected Project environment, 
 
 # SiteOS Analytics
 
+For an existing Google Analytics property, GA4 report charts or Google tracking investigation,
+use `$siteos-trace` and its optional Google Analytics MCP workflow. Those requests do not require
+installing SiteOS Analytics. Keep Google-reported metrics separate from SiteOS collection counts.
+
 For supported hosted reads, prefer the available `siteos_analytics_get_report` and `siteos_analytics_get_realtime` MCP tools after checking `siteos_get_context` and the exact Organization, Project and Environment. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require repository setup or CLI login. Use the existing CLI workflow for local work, mutations and operations outside the MCP catalog.
 
 Complete the path from the site's business action to a saved Analytics report. Cookie and Trace are optional services; Analytics works independently without either service.
@@ -39,7 +43,7 @@ Use `analytics events create --file <event.json>`, then `analytics events snippe
 2. In the browser, verify configuration loading, the published integration and any external CMP gate, opt-out behavior and a successful measurement request. Exercise the real business action; don't send synthetic production conversions to prove setup.
 3. Read `analytics realtime --json` and `analytics report --days 1 --event <name> --json` to confirm accepted data in the exact environment. Inspect registered categories, page/source/country breakdowns and last-received time as relevant. A saved definition or snippet alone is not collection proof.
 4. If native control is enabled, test unknown, grant, refusal, revoke and delayed Cookie loading. With control off or Cookie absent, verify independent collection without a Cookie global. Diagnose browser blocking, origin mismatch and stale configuration before changing settings.
-5. If Trace is attached, `analytics monitoring prepare` prepares a draft expectation only. Use `$siteos-trace` for the explicitly requested publication and observation workflow. Trace observes Analytics delivery; it never produces visits or sends duplicate events.
+5. If Trace is attached and monitoring setup is requested, `analytics monitoring prepare` prepares its collection draft with the `siteos_analytics` provider. It does not create event expectations or publish/install Trace. Use `$siteos-trace` and [website event checks](../siteos-trace/references/site-event-checks.md) to derive any requested rules from the actual action/event contract, then publish within the user's authorization and verify fresh evidence. Trace observes Analytics delivery; it never produces visits or sends duplicate events.
 
 Analytics is Unlimited during early access. Keep billing policy distinct from bounded admission and retention. Distinguish minimal realtime (active pages in memory) from detailed visitor estimates and accepted events; never add these populations together.
 

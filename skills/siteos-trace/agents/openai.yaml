@@ -1,7 +1,7 @@
 interface:
   display_name: "SiteOS Trace"
-  short_description: "Inspect destinations, tracking issues and safe evidence"
-  default_prompt: "Use $siteos-trace to investigate destinations, events and tracking issues in the selected Project environment, then verify any requested fix using fresh evidence."
+  short_description: "Investigate tracking and configure useful event checks"
+  default_prompt: "Use $siteos-trace to study the selected website's tracking, derive requested event checks from observed behavior, use Google Analytics MCP reports when relevant, and verify changes with fresh evidence."
 
 policy:
   allow_implicit_invocation: true
