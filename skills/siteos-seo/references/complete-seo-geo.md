@@ -39,7 +39,7 @@ or a pending crawl does not block independent work in other areas.
 Analytics referrals and conversions can inform priorities when already available through
 `$siteos-analytics`; do not turn their absence into a requirement to install another service.
 Technical AI access, recorded mentions, citations, recommendation scores and referral visits are
-separate observations. AEO and First choice need valid supporting evidence and a disclosed
+separate observations. Use text-based Mentions as the primary category metric with its own readable-answer denominator and ambiguous-name exclusions. AEO and First choice need valid supporting evidence and a disclosed
 denominator; report them as unavailable when absent. Do not discard useful textual evidence merely
 because it cannot supply an AEO score, or present a manual observation as a saved calculated metric.
 

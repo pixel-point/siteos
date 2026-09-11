@@ -93,3 +93,5 @@ If repository changes are requested, make the smallest coherent fix and run rele
 the user's publication scope. A local edit is not evidence of a repair on the configured public site:
 use a completed recheck to confirm it and report anything not rechecked. Finish with the next action
 supported by the evidence, rather than a generic SEO checklist.
+
+For category AI Visibility, lead with text-based Mentions and its readable-answer coverage. AEO and First choice are optional annotation-based measures with a separate denominator; see [AI visibility](references/ai-visibility.md).

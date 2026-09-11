@@ -124,12 +124,33 @@ Use the existing `research plan --input`, authorized `run --input`, `wait`, `sho
 consume credits when the provider charged for it. Saving or launching queues free favicon discovery;
 reading reports and cached images never fetches competitor sites.
 
-Read `run.categoryReport` from the server. Each row exposes `aeoScore` (already a percentage),
-`scorePoints` and raw `visibility`, `firstChoice`, `alternatives`, `objections`, `citations`,
-`uncertain` counts with a common `denominator`. Divide counts only when the denominator is positive;
-otherwise report unavailable. First choice includes explicit co-primary choices, never list order.
-Valid no-choice answers stay in the denominator; invalid or truncated answers remain inspectable
-but unscored. Shared-domain citations do not prove which product was mentioned.
+Read `run.categoryReport` from the server. **Mentions is the primary metric**:
+`mentions / mentionDenominator`, with `mentionAmbiguous` excluded separately and `textAnswers`
+showing readable-text coverage. `mentionEvidence.method: answer-text-v1` counts whole names and
+explicit aliases in the natural answer, independently of annotation validity. It uses Unicode
+normalization and longest-name precedence; shared names remain ambiguous unless a unique tracked
+name or alias also occurs. This is deterministic name matching, not semantic verification of every
+possible homonym. Inspect the full answer when identity is uncertain. A name appearing only in
+JSON annotations, provider source metadata or the input prompt is not a text mention. Missing,
+empty, truncated and damaged structured responses are unavailable, never negative evidence.
+Plain prose and a readable JSON `answer` field can still support Mentions when AEO annotations fail.
+
+`aeoScore` is already a percentage. `scorePoints` and raw `visibility`, `firstChoice`,
+`alternatives`, `objections`, `citations`, `uncertain` retain their annotation-based `denominator`.
+Do not use that denominator for Mentions. `visibility` is the legacy **Annotated mentions** metric;
+it is not the new text-based rate. Show AEO only when present, with coverage such as `5 of 12 scored`;
+First choice is optional and must retain annotation coverage too. No minimum statistical reliability
+is implied by one valid annotation. Zero readable answers means unavailable, not 0%.
+First choice includes explicit co-primary choices, never list order. Valid no-choice answers stay
+in the annotation denominator. Shared-domain citations do not prove a product mention.
+
+Follow `samples[].mentionEvidence.matches` and its source answer for mention evidence. The Mentions
+inspector includes readable absences and ambiguities as well as positive matches, so its contents
+explain the denominator. `groups[].mentionComparison` carries a separate percentage-point `delta`
+and matched-text denominator per product; never reuse the AEO comparison denominator. Both comparison
+paths require matching question/model/market/search/instruction/output settings. Old exports without
+these additive fields retain only their recorded annotation metrics; do not relabel `visibility`
+as text Mentions or infer AEO roles.
 
 New `category-aeo-v2` follows [Frontier AEO Tracker's methodology](https://aeo.latent.space/methodology):
 primary/co-primary 60 points, direct alternative 25, conditional/supporting/substantive incidental 15,
@@ -140,11 +161,11 @@ Scenario rejection deducts 25; broad opposition 60. Edition/module/standalone/ch
 objections remain visible without automatic deductions. Conflicting positive and directional
 negative evidence contributes zero directional points and is marked uncertain. Normalize by 60
 and average valid question/platform observations. Negative scores are valid; product scores need
-not sum to 100%. Visibility remains the separate mention rate.
+not sum to 100%. Text Mentions remains a separate observation.
 
 The four tabs are **Rankings**, **Why they win**, **Queries & answers**, and **Research lenses**.
-Rankings defaults to AEO score and First choice; More options exposes the other measures and
-context-only mentions. Why they win groups recorded criteria and objections with source queries;
+Rankings defaults to Mentions; AEO is an additional column when valid annotations exist.
+More options exposes First choice and other annotation measures. Why they win groups recorded criteria and objections with source queries;
 these are model claims, not verified product facts. Queries & answers exposes exact prompts,
 complete answers, actual model/search settings, instructions, roles, score components and citations.
 Research lenses compares considered versus chosen, models, questions, two products and sources.
