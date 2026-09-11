@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.4.0`
+Package: `@siteoshq/cli@2.5.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -132,6 +132,7 @@ siteos seo research history --kind <kind> [--environment <slug>] [--json]
 siteos seo research show <run-id> [--environment <slug>] [--json]
 siteos seo research plan --input <request.json> [--environment <slug>] [--json]
 siteos seo research run --input <request.json> [--idempotency-key <key>] [--environment <slug>] [--json]
+siteos seo research retry <run-id> [--idempotency-key <key>] [--environment <slug>] [--json]
 siteos seo research wait <run-id> [--timeout <seconds>] [--environment <slug>] [--json]
 siteos seo research cancel <run-id> [--environment <slug>] [--json]
 siteos seo research export <run-id> --format <json|csv> --output <new-file> [--environment <slug>] [--json]

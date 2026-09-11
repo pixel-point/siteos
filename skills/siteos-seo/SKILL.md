@@ -123,3 +123,7 @@ supported by the evidence, rather than a generic SEO checklist.
 For category AI Visibility, lead with text-based Mentions and its readable-answer coverage. AEO and
 First choice are optional annotation-based measures with a separate denominator;
 see [AI visibility](references/ai-visibility.md).
+
+For stopped research, follow [measurement recovery](references/search-research.md#recover-a-stopped-measurement).
+Prefer an authorized retry of missing parts over repeating successful answers. Provider reconciliation
+pauses are independent of available credits; incomplete AEO annotations are independent of answer collection.

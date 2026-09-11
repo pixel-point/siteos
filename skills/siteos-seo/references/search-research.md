@@ -88,6 +88,28 @@ still contain useful evidence. Read each part before interpreting missing result
 or subsequent parts, use `npx @siteoshq/cli seo research cancel <run-id> --json`; an in-flight provider
 request may still finish and cost credits. Do not start background schedules or batches implicitly.
 
+## Recover a stopped measurement
+
+Read the exact source report and current availability before proposing a repeat. Separate an
+unavailable answer, a request that was never started, and a readable answer without AEO annotations.
+AEO annotation gaps do not require another paid run. Raising credits does not clear a provider
+reconciliation pause; report that blocker and retain the available evidence. Supplier reconciliation
+and budget controls are operator-only and are not customer browser/MCP actions.
+
+When the user authorizes the missing scope, prefer the CLI continuation over a fresh full run:
+
+```sh
+npx @siteoshq/cli seo research retry <run-id> --idempotency-key <new-operation-key> --json
+npx @siteoshq/cli seo research wait <continued-run-id> --timeout 120 --json
+```
+
+Check installed CLI help for `research retry` before using it. It creates a new report with the
+original settings and usable answers, requests only missing parts, and spends credits through the
+worker. Keep its key for an uncertain admission response; do not generate another key to recover a
+lost response. Explain `retryOf`, retained `sourceRunId` evidence and original dates: a continuation
+mixes saved and new observations and is not an independent fresh sample. If the installed CLI lacks
+the command, follow the CLI upgrade workflow; never substitute a full paid run without authorization.
+
 ## Build a keyword plan
 
 1. Follow [Project research](project-research.md) to establish the product, audience, market,
