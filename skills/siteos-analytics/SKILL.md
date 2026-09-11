@@ -19,6 +19,7 @@ Complete the path from the site's business action to a saved Analytics report. C
 2. Use `npx @siteoshq/cli auth status --json` and `npx @siteoshq/cli project status --json` to confirm Organization, Project and environment. Use an explicit `--environment <slug>` on Analytics commands when needed. Never fall back to Production or infer a binding from a matching name/domain.
 3. If Analytics is absent, use `npx @siteoshq/cli project connect analytics` within the user's requested setup. This explicitly attaches Analytics only. Use `$siteos` for common Project or environment repair. Never inspect private binding or credential files.
 4. Read `npx @siteoshq/cli analytics status --json` and `npx @siteoshq/cli analytics installation --json`.
+5. A newly attached Analytics workspace may have no native source enabled. For the requested SiteOS installation, read `analytics settings show --environment <slug> --json` and explicitly enable collection with `analytics settings set --revision <current-revision> --enabled true --environment <slug>`. Read it back before installing. Connecting GA4 through Analytics Setup is independent and does not enable the SiteOS collector; do not install a native script for a GA4-only request.
 
 ## Choose collection behavior
 
