@@ -1,4 +1,4 @@
 interface:
   display_name: "SiteOS SEO/GEO"
-  short_description: "Audit SEO/GEO and review AI mentions and citations"
-  default_prompt: "Use $siteos-seo to review this Project environment's SEO/GEO evidence, prioritize technical fixes and search or AI visibility opportunities, and verify any fixes."
+  short_description: "Complete SEO/GEO setup, research and verified fixes"
+  default_prompt: "Use $siteos-seo for a complete SEO/GEO review and improvement pass: study this Project, cover the applicable evidence paths, run authorized checks and verify fixes."

@@ -1,12 +1,13 @@
 ---
 name: siteos-seo
-description: Use for SiteOS SEO/GEO (generative engine optimization), technical SEO and AI search-crawler access, verified fixes, keywords, Domain Overview, competitors, backlinks, GSC Insights, brand mentions and AI citations. Read and export reports or run authorized checks for an exact Project environment; distinguish these from autonomous agent-readiness tests.
+description: Use for complete SiteOS SEO/GEO setup and improvement, or focused technical audits, verified fixes, keywords, competitors, backlinks, GSC Insights and AI visibility. Study the website, read evidence and run authorized checks for an exact Project environment; distinguish these from autonomous agent-readiness tests.
 ---
 
 # SiteOS SEO/GEO
 
-Turn observed SEO and AI-search evidence into a short, prioritized action plan. Use this skill
-for search-engine and AI-answer visibility; use `$siteos-search` for search inside a website, `$siteos-pulse`
+Study the website, turn SEO and AI-search evidence into prioritized improvements, and carry
+authorized setup, checks and fixes through verification. Use this skill for search-engine and
+AI-answer visibility; use `$siteos-search` for search inside a website, `$siteos-pulse`
 for availability checks and `$siteos-analytics` for measured visits and conversions.
 
 The application calls this service **SEO/GEO**. GEO means generative engine optimization here,
@@ -41,8 +42,14 @@ matching a website name. Repository code and public CLI/server releases can diff
 
 ## Choose the evidence path
 
+For a broad request such as "set up all SEO/GEO", "complete SEO/GEO" or "сделай полностью SEO/GEO",
+follow [Complete SEO/GEO](references/complete-seo-geo.md). Cover the applicable areas and carry
+authorized checks and fixes through verification; do not ask the user to choose one narrow mode
+or stop after reading a technical audit. Keep focused requests on their selected path.
+
 | Task | Supported path | Workflow |
 | --- | --- | --- |
+| Complete SEO/GEO setup, review and improvements | Coordinate the supported paths below for one Project environment | [Complete SEO/GEO](references/complete-seo-geo.md) |
 | Public HTML audit, canonical/robots/sitemap, technical GEO, verify fixes | SEO CLI and Site Audit | [Technical audit](references/technical-audit.md) |
 | Ignore/restore, weekly audits, notifications, export | SEO CLI and Site Audit/settings | [Audit operations](references/audit-operations.md) |
 | Selected-page Lighthouse checks | SEO CLI and Site Audit / Performance | [Performance](references/performance.md) |
@@ -54,7 +61,7 @@ Site Audit evaluates public HTML and robots policies; it does not test actual cr
 IP access, autonomous navigation/form completion, or the target site's API/OAuth/MCP interfaces.
 SiteOS's own MCP gives access to saved evidence; it does not certify the target site for agents.
 
-Load only the reference needed for the current task. Read installed CLI help before using research
+Load references as their stage becomes relevant. Read installed CLI help before using research
 or GSC commands: they require matching CLI and server releases. If commands are absent, use
 `$siteos-cli` to update the installation or build the authorized local source; do not silently narrow
 the task. Use a supplied export when the matching release is unavailable. Never request supplier
