@@ -111,8 +111,11 @@ script, a GTM success or missing traffic cannot. Report last failure, recovery, 
 remaining cause uncertainty. Names in timelines come from the connected GTM catalog matched by
 container and tag ID; retain the IDs and do not present the current name as historical proof.
 
-Coverage includes version-specific lastSeen, page counts and pagesAfterPublication. A mismatch
-observed within the last hour after publication is marked recent; older versions remain history.
+Coverage includes version-specific lastSeen, page counts and pagesAfterPublication. Prefer its
+runtime summary: publication alone does not confirm installation. Trace allows a 15-minute
+transition from the first observed published runtime (or publication until it is first observed).
+Another version is marked recent only when it sends after that transition and within the last
+hour. History is collapsed in the UI; missing recent evidence never confirms recovery or adoption.
 Neither mixed 24-hour versions nor an old open tab alone proves a stale GTM installation. Read the
 current installation and inspect a fresh page before changing GTM. Technical Cookie evidence is
 page-local and contains no configuration, raw error, consent value or visitor identifier.
