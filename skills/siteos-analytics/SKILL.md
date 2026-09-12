@@ -21,6 +21,13 @@ Complete the path from the site's business action to a saved Analytics report. C
 4. Read `npx @siteoshq/cli analytics status --json` and `npx @siteoshq/cli analytics installation --json`.
 5. A newly attached Analytics workspace may have no native source enabled. For the requested SiteOS installation, read `analytics settings show --environment <slug> --json` and explicitly enable collection with `analytics settings set --revision <current-revision> --enabled true --environment <slug>`. Read it back before installing. Connecting GA4 through Analytics Setup is independent and does not enable the SiteOS collector; do not install a native script for a GA4-only request.
 
+## Read connected Google Analytics
+
+For GA4 reports, funnels, cohorts, saved selections or CSV, read [ga4-reports.md](references/ga4-reports.md).
+Use the GA commands/tools for this source; native event registration, collection settings and native
+funnels have different semantics. A cached response, queued refresh and live provider response are
+different states. Preserve Google limitations and exact Project/environment/binding context.
+
 ## Choose collection behavior
 
 Read [measurement-and-installation.md](references/measurement-and-installation.md) before changing consent behavior, using GTM or diagnosing missing traffic.
