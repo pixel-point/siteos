@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.5.1`
+Package: `@siteoshq/cli@2.6.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -172,6 +172,13 @@ siteos analytics funnels list [--environment <slug>] [--json]
 siteos analytics funnels create --file <funnel.json> [--environment <slug>] [--json]
 siteos analytics funnels archive <id> [--environment <slug>] [--json]
 siteos analytics monitoring prepare [--environment <slug>] [--json]
+siteos analytics ga4 report [--period <today|yesterday|24h|7d|28d|month|last-month|custom>] [--from <date>] [--to <date>] [--compare <previous|year|none>] [--filters <json>] [--section <totals|trend|events|channels|sources|pages|countries|devices|quality>] [--offset <number>] [--limit <1..100>] [--refresh] [--environment <slug>] [--json]
+siteos analytics ga4 realtime [--filters <json>] [--environment <slug>] [--json]
+siteos analytics ga4 explore --file <selection.json> [--refresh] [--environment <slug>] [--json]
+siteos analytics ga4 export --file <selection.json> [--environment <slug>]
+siteos analytics ga4 saved list [--environment <slug>] [--json]
+siteos analytics ga4 saved save --file <saved-report.json> [--environment <slug>] [--json]
+siteos analytics ga4 saved remove <id> --revision <number> [--environment <slug>] [--json]
 ```
 
 ## Integrations
