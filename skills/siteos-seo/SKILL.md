@@ -132,3 +132,7 @@ Prefer an authorized retry of missing parts over repeating successful answers, u
 for a fresh full comparison. Terminal failed requests release customer reservations; unknown supplier costs stay in internal
 accounting. Read current availability. A risk-limit or operator pause is independent of customer credits; incomplete AEO
 annotations are independent of answer collection.
+
+For recurring audits, use `siteos_seo_get_automation` for hosted schedule/notification reads and
+CLI 2.7.0 `seo schedule set --days daily|weekdays|1,3,5` for authorized writes. Follow
+[audit operations](references/audit-operations.md); preserve revisions and the exact environment.
