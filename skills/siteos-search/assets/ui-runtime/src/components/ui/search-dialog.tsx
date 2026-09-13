@@ -3,12 +3,9 @@
 import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { recentSearches, suggestions } from "@/data/search";
-import { BookOpen, FileText } from "lucide-react";
+import { BookOpen, FileText, X } from "lucide-react";
 
-import {
-  searchSiteOSProject,
-  type SiteOSProjectSearchHit,
-} from "@/lib/siteos-project-search";
+import { searchSiteOSProject, type SiteOSProjectSearchHit } from "@/lib/siteos-project-search";
 import {
   buildSiteOSProjectSearchDialogSections,
   isSiteOSProjectSuggestionsState,
@@ -25,20 +22,12 @@ import {
 } from "@/lib/siteos-search-analytics";
 import { useTouchDevice } from "@/hooks/use-touch-device";
 import { Button } from "@/components/ui/button";
-import {
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 type SearchItem = SiteOSProjectSearchDialogItem;
 
-function mapRemoteSearchHitToItem(
-  hit: SiteOSProjectSearchHit,
-  index: number,
-): SearchItem {
+function mapRemoteSearchHitToItem(hit: SiteOSProjectSearchHit, index: number): SearchItem {
   return {
     id: index + 1,
     documentId: hit.id,
@@ -53,6 +42,7 @@ function mapRemoteSearchHitToItem(
 }
 
 function useSearch(query: string, open: boolean) {
+  const search = searchSiteOSProject;
   const [data, setData] = useState<{
     query: string;
     results: SearchItem[];
@@ -66,10 +56,7 @@ function useSearch(query: string, open: boolean) {
   const controller = useRef<AbortController | null>(null);
   const interaction = useRef<string | undefined>(undefined);
   const receipts = useRef(new Map<string, string>());
-  useEffect(
-    () => subscribeSiteOSSearchConsent(() => setConsentVersion((v) => v + 1)),
-    [],
-  );
+  useEffect(() => subscribeSiteOSSearchConsent(() => setConsentVersion((v) => v + 1)), []);
   useEffect(() => {
     const abort = new AbortController();
     controller.current = abort;
@@ -99,7 +86,7 @@ function useSearch(query: string, open: boolean) {
     });
     const timer = setTimeout(async () => {
       try {
-        const response = await searchSiteOSProject(normalized, {
+        const response = await search(normalized, {
           limit: 20,
           signal: abort.signal,
           interactionId: interaction.current,
@@ -116,8 +103,7 @@ function useSearch(query: string, open: boolean) {
           return;
         }
         if (response.analyticsReceipt)
-          for (const hit of response.hits)
-            receipts.current.set(hit.id, response.analyticsReceipt);
+          for (const hit of response.hits) receipts.current.set(hit.id, response.analyticsReceipt);
         setData({
           query: normalized,
           results: response.hits.map(mapRemoteSearchHitToItem),
@@ -126,8 +112,7 @@ function useSearch(query: string, open: boolean) {
           total: response.total,
         });
         settle = setTimeout(() => {
-          if (!abort.signal.aborted)
-            recordSiteOSSearch(response.analyticsReceipt);
+          if (!abort.signal.aborted) recordSiteOSSearch(response.analyticsReceipt);
         }, 500);
       } catch {
         if (!abort.signal.aborted)
@@ -145,19 +130,13 @@ function useSearch(query: string, open: boolean) {
       clearTimeout(timer);
       clearTimeout(settle);
     };
-  }, [query, open, consentVersion, retryVersion]);
+  }, [query, open, consentVersion, retryVersion, search]);
   async function loadMore() {
     const abort = controller.current;
-    if (
-      !abort ||
-      abort.signal.aborted ||
-      more ||
-      data.results.length >= data.total
-    )
-      return;
+    if (!abort || abort.signal.aborted || more || data.results.length >= data.total) return;
     setMore(true);
     try {
-      const response = await searchSiteOSProject(query, {
+      const response = await search(query, {
         limit: 20,
         offset: data.results.length,
         signal: abort.signal,
@@ -169,8 +148,7 @@ function useSearch(query: string, open: boolean) {
         return;
       }
       if (response.analyticsReceipt)
-        for (const hit of response.hits)
-          receipts.current.set(hit.id, response.analyticsReceipt);
+        for (const hit of response.hits) receipts.current.set(hit.id, response.analyticsReceipt);
       setData((previous) => ({
         ...previous,
         error: false,
@@ -183,16 +161,14 @@ function useSearch(query: string, open: boolean) {
         ],
       }));
     } catch {
-      if (!abort.signal.aborted)
-        setData((previous) => ({ ...previous, error: true }));
+      if (!abort.signal.aborted) setData((previous) => ({ ...previous, error: true }));
     } finally {
       if (!abort.signal.aborted) setMore(false);
     }
   }
   return {
     results: data.query === query.trim() ? data.results : [],
-    isLoading:
-      data.loading || (Boolean(query.trim()) && data.query !== query.trim()),
+    isLoading: data.loading || (Boolean(query.trim()) && data.query !== query.trim()),
     error: data.error && data.query === query.trim(),
     total: data.total,
     more,
@@ -200,10 +176,7 @@ function useSearch(query: string, open: boolean) {
     retry: () => setRetryVersion((v) => v + 1),
     select: (item: SearchItem) => {
       if (item.documentId && data.query === query.trim())
-        recordSiteOSSearch(
-          receipts.current.get(item.documentId),
-          item.documentId,
-        );
+        recordSiteOSSearch(receipts.current.get(item.documentId), item.documentId);
     },
   };
 }
@@ -218,7 +191,7 @@ const SearchInput = ({ query, setQuery, className }: SearchInputProps) => {
   return (
     <input
       className={cn(
-        "w-full border-0 bg-transparent py-3.5 pr-16 pl-4 leading-snug tracking-tight remove-autocomplete-styles placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0",
+        "w-full border-0 bg-transparent py-3.5 pr-16 pl-4 leading-snug tracking-tight outline-hidden remove-autocomplete-styles placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0",
         className,
       )}
       type="text"
@@ -274,7 +247,7 @@ function SearchHint({
   return (
     <Link
       className={cn(
-        "group flex w-full cursor-pointer items-start gap-x-3 rounded-lg py-2.5 text-left outline-hidden transition-colors duration-150 focus-within:bg-muted/50 sm:pr-6 sm:pl-3",
+        "group flex w-full cursor-pointer items-start gap-x-3 rounded-lg py-3 text-left outline-hidden transition-colors duration-150 focus-within:bg-muted/50 sm:pr-6 sm:pl-3",
         isSelected && "sm:bg-muted/50",
         isFirst && "scroll-mt-12",
         !isFirst && !isLast && "scroll-my-2",
@@ -288,21 +261,21 @@ function SearchHint({
     >
       <IconComponent
         className={cn(
-          "hidden size-5 shrink-0 text-muted-foreground transition-colors duration-150 group-hover:text-foreground sm:inline-block",
+          "hidden mt-0.5 size-4 shrink-0 text-muted-foreground transition-colors duration-150 group-hover:text-foreground sm:inline-block",
           isSelected && "sm:text-foreground",
         )}
       />
-      <div className="flex min-w-0 flex-col gap-y-0.5">
-        <p className="line-clamp-1 max-w-full text-sm leading-tight font-medium tracking-tight text-popover-foreground transition-colors duration-150">
+      <div className="flex min-w-0 flex-col">
+        <p className="line-clamp-2 max-w-full text-sm leading-5 font-semibold text-popover-foreground">
           <HighlightedText parts={titleParts} />
         </p>
         {sectionLabel ? (
-          <span className="text-[0.6875rem] leading-none font-medium tracking-wide text-muted-foreground uppercase">
+          <span className="mt-1 text-xs leading-4 font-normal text-muted-foreground">
             {sectionLabel}
           </span>
         ) : null}
         {description ? (
-          <p className="max-w-full break-words text-[0.8125rem] leading-snug font-normal tracking-tight text-muted-foreground transition-colors duration-150">
+          <p className="mt-2 max-w-full text-[0.8125rem] leading-5 font-normal break-words text-popover-foreground/80">
             <HighlightedText parts={descriptionParts} />
           </p>
         ) : null}
@@ -321,16 +294,21 @@ interface SearchGroupProps<T extends SearchHintItem> {
   onSelectItem: (item: T) => void;
 }
 
-function HighlightedText(props: {
-  parts: SiteOSProjectSearchDialogHighlightPart[];
-}) {
+function HighlightedText(props: { parts: SiteOSProjectSearchDialogHighlightPart[] }) {
   return (
     <>
-      {props.parts.map((part, index) => part.matched ? (
-        <mark key={index} className="rounded-sm bg-primary/20 px-0.5 font-semibold text-foreground">
-          {part.text}
-        </mark>
-      ) : <span key={index}>{part.text}</span>)}
+      {props.parts.map((part, index) =>
+        part.matched ? (
+          <mark
+            key={index}
+            className="rounded-sm bg-primary/20 px-0.5 font-semibold text-foreground"
+          >
+            {part.text}
+          </mark>
+        ) : (
+          <span key={index}>{part.text}</span>
+        ),
+      )}
     </>
   );
 }
@@ -361,13 +339,7 @@ function SearchGroup<T extends SearchHintItem>({
           const isSearchItem = "category" in item;
 
           return (
-            <li
-              key={
-                isSearchItem
-                  ? `${(item as SearchItem).category}-${index}`
-                  : `item-${index}`
-              }
-            >
+            <li key={isSearchItem ? `${(item as SearchItem).category}-${index}` : `item-${index}`}>
               <SearchHint
                 {...item}
                 isSelected={selectedIndex === itemIndex}
@@ -395,13 +367,60 @@ interface SearchDialogProps {
   onSelectResult: () => void;
 }
 
-export default function SearchDialog({
+export default function SearchDialog({ open, onSelectResult }: SearchDialogProps) {
+  const [query, setQuery] = useState("");
+  const state = useSearch(query, open);
+  useEffect(() => {
+    if (!open) setQuery("");
+  }, [open]);
+
+  return (
+    <SearchDialogView
+      {...state}
+      open={open}
+      query={query}
+      setQuery={setQuery}
+      recentSearches={recentSearches}
+      suggestions={suggestions}
+      onSelectResult={onSelectResult}
+    />
+  );
+}
+
+// This controlled view is also the visual catalog surface. Fetching and analytics
+// stay in the wrapper so previews and host customizations use the same markup.
+export interface SearchDialogViewProps extends SearchDialogProps {
+  query: string;
+  setQuery: (query: string) => void;
+  results: SearchItem[];
+  recentSearches: SearchItem[];
+  suggestions: SearchItem[];
+  isLoading: boolean;
+  error: boolean;
+  total: number;
+  more: boolean;
+  loadMore: () => void;
+  retry: () => void;
+  select: (item: SearchItem) => void;
+}
+
+export function SearchDialogView({
   open,
   onSelectResult,
-}: SearchDialogProps) {
-  const [query, setQuery] = useState("");
-  const { results, isLoading, error, total, more, loadMore, retry, select } =
-    useSearch(query, open);
+  query,
+  setQuery,
+  results,
+  recentSearches,
+  suggestions,
+  isLoading,
+  error,
+  total,
+  more,
+  loadMore,
+  retry,
+  select,
+}: SearchDialogViewProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const isTouchDevice = useTouchDevice();
 
@@ -419,18 +438,16 @@ export default function SearchDialog({
         index:
           sections
             .slice(0, sectionIndex)
-            .reduce((sum, candidate) => sum + candidate.items.length, 0) +
-          index,
+            .reduce((sum, candidate) => sum + candidate.items.length, 0) + index,
       })),
     );
-  }, [query, results]);
+  }, [query, results, recentSearches, suggestions]);
 
   const items = allItems();
   const totalItems = items.length;
 
   useEffect(() => {
     if (!open) {
-      setQuery("");
       setSelectedIndex(0);
     }
   }, [open]);
@@ -444,19 +461,13 @@ export default function SearchDialog({
       return;
     }
 
-    const selectedElement = document.querySelector(
-      `[data-index="${selectedIndex}"]`,
-    );
+    const selectedElement = dialogRef.current?.querySelector(`[data-index="${selectedIndex}"]`);
     if (!selectedElement) {
       return;
     }
 
     const blockOption: ScrollLogicalPosition =
-      selectedIndex === 0
-        ? "start"
-        : selectedIndex === totalItems - 1
-          ? "end"
-          : "nearest";
+      selectedIndex === 0 ? "start" : selectedIndex === totalItems - 1 ? "end" : "nearest";
     selectedElement.scrollIntoView({
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
         ? "instant"
@@ -491,7 +502,7 @@ export default function SearchDialog({
 
     if (event.key === "Enter" && selectedIndex !== null) {
       event.preventDefault();
-      const selectedElement = document.querySelector(
+      const selectedElement = dialogRef.current?.querySelector(
         `[data-index="${selectedIndex}"]`,
       ) as HTMLElement | null;
       selectedElement?.click();
@@ -543,32 +554,31 @@ export default function SearchDialog({
 
   return (
     <DialogContent
+      ref={dialogRef}
       className="top-auto bottom-0 h-[75dvh] w-full max-w-(--breakpoint-sm) translate-y-0 rounded-t-xl p-0 shadow-none outline-hidden data-[state=closed]:zoom-out-100 data-[state=closed]:slide-out-to-bottom-1/2 data-[state=open]:zoom-in-100 data-[state=open]:slide-in-from-bottom-1/2 sm:top-[20dvh] sm:bottom-auto sm:h-auto sm:rounded-lg sm:data-[state=closed]:zoom-out-95 sm:data-[state=closed]:slide-out-to-bottom-1 sm:data-[state=open]:zoom-in-95 sm:data-[state=open]:slide-in-from-bottom-1"
       onOpenAutoFocus={handleOpenAutoFocus}
     >
       <DialogTitle className="sr-only">Search</DialogTitle>
-      <DialogDescription className="sr-only">
-        Search site content.
-      </DialogDescription>
+      <DialogDescription className="sr-only">Search site content.</DialogDescription>
       <div className="relative flex flex-col" onKeyDown={handleKeyDown}>
-        <SearchInput
-          className={cn(isTouchDevice && "pr-4")}
-          query={query}
-          setQuery={setQuery}
-        />
+        <SearchInput query={query} setQuery={setQuery} />
         <DialogClose asChild>
           <Button
             className={cn(
               "absolute top-3.5 right-4 rounded border border-muted outline-hidden",
-              isTouchDevice && "hidden",
+              isTouchDevice && "top-2",
             )}
             variant="outline"
-            size="xs"
+            size={isTouchDevice ? "icon" : "xs"}
           >
             <span className="sr-only">Close search</span>
-            <span className="text-xs leading-none tracking-tight" aria-hidden>
-              Esc
-            </span>
+            {isTouchDevice ? (
+              <X aria-hidden />
+            ) : (
+              <span className="text-xs leading-none tracking-tight" aria-hidden>
+                Esc
+              </span>
+            )}
           </Button>
         </DialogClose>
 
@@ -613,35 +623,21 @@ export default function SearchDialog({
             ) : null}
 
             {!isLoading && error && (
-              <div
-                role="alert"
-                className="flex flex-col items-center gap-3 py-3 text-sm"
-              >
+              <div role="alert" className="flex flex-col items-center gap-3 py-3 text-sm">
                 <p>Search is temporarily unavailable.</p>
-                <Button
-                  variant="outline"
-                  onClick={results.length ? () => void loadMore() : retry}
-                >
+                <Button variant="outline" onClick={results.length ? () => void loadMore() : retry}>
                   Try again
                 </Button>
               </div>
             )}
-            {!isLoading && query && (!error || results.length > 0)
-              ? renderSearchResults()
-              : null}
+            {!isLoading && query && (!error || results.length > 0) ? renderSearchResults() : null}
             {!isLoading &&
               query &&
               results.length > 0 &&
               results.length < total &&
               results.length < 10_000 && (
-                <Button
-                  variant="outline"
-                  disabled={more}
-                  onClick={() => void loadMore()}
-                >
-                  {more
-                    ? "Loading…"
-                    : `More results (${results.length} of ${total})`}
+                <Button variant="outline" disabled={more} onClick={() => void loadMore()}>
+                  {more ? "Loading…" : `More results (${results.length} of ${total})`}
                 </Button>
               )}
           </div>

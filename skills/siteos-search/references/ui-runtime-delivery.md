@@ -149,6 +149,34 @@ These assets represent the canonical search interaction model:
 - matched title and excerpt segments render as escaped text inside semantic highlights, including typo and synonym matches returned by the engine
 - keyboard navigation and highlight behavior stay canonical
 
+## Design ownership and customization
+
+The asset pack is editable source in the customer's project. SiteOS returns result data; it does
+not remotely inject a theme or overwrite these components. Updating the CLI or plugin alone does
+not update an already delivered UI. Compare the new assets with the host's customized files and
+apply the requested changes without replacing unrelated design decisions.
+
+| What to change | Owner |
+| --- | --- |
+| Colors, light/dark theme, font family | Host theme and semantic `popover`, `popover-foreground`, `muted-foreground`, `primary` tokens |
+| Result spacing, type size, section caption, icons and highlights | `SearchHint` and `HighlightedText` in `search-dialog.tsx` |
+| Input, modal width, scrolling and responsive layout | `SearchDialogView` in `search-dialog.tsx` and host Dialog/ScrollArea primitives |
+| Trigger label and placement | `search-bar.tsx` and its host page/header |
+| Suggested article links | Project-owned `src/data/search.ts` |
+
+The default result hierarchy uses a prominent title, an optional smaller muted section caption
+in its original case, and a separate readable excerpt. Keep the icon aligned with the title.
+Internal source labels stay hidden. Adapt tokens and typography to the host while preserving
+keyboard selection, focus return, close controls on touch devices, result order, counts, safe
+highlight rendering and distinct empty/loading/failure states.
+
+`SearchDialog` owns network requests and analytics; its controlled `SearchDialogView` renders
+those states. Hosts can render the view with synthetic data to review their own theme without
+calling SiteOS. The SiteOS monorepo catalogs the real website adaptation under **Search / Visitor
+dialog**: Suggestions, Results, No results, Loading, Unavailable, More results, More results failed,
+Long content and Mobile. Review light and dark themes as well as narrow viewports before delivery.
+Storybook tooling and fixtures are not shipped in the public plugin or the customer's runtime.
+
 ## Canonical UI Generation Contract
 
 Generated search UI must match the committed canonical assets as closely as the host project allows.
