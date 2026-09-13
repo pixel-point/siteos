@@ -18,21 +18,13 @@ export type SiteOSProjectSearchDialogItem = {
 };
 
 export type SiteOSProjectSearchDialogSection = {
-  title: string;
+  title?: string;
   items: SiteOSProjectSearchDialogItem[];
 };
 
 export type SiteOSProjectSearchDialogHighlightPart = {
   text: string;
   matched: boolean;
-};
-
-const CATEGORY_LABELS: Record<SiteOSProjectSearchDialogCategory, string> = {
-  documentation: "Documentation",
-  api: "API Reference",
-  guide: "Guides",
-  component: "Components",
-  tutorial: "Tutorials",
 };
 
 export function isSiteOSProjectSuggestionsState(query: string): boolean {
@@ -56,15 +48,8 @@ export function buildSiteOSProjectSearchDialogSections(params: {
     ];
   }
 
-  // Preserve the engine's ranking. Group only adjacent results with the same label.
-  const sections: SiteOSProjectSearchDialogSection[] = [];
-  for (const item of params.results) {
-    const title = item.sourceLabel || CATEGORY_LABELS[item.category];
-    const last = sections[sections.length - 1];
-    if (last?.title === title) last.items.push(item);
-    else sections.push({ title, items: [item] });
-  }
-  return sections;
+  // Keep engine order without exposing internal source names as visitor headings.
+  return params.results.length > 0 ? [{ items: params.results }] : [];
 }
 
 export function resolveSiteOSProjectSearchTextParts(params: {

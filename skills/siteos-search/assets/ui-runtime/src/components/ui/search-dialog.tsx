@@ -47,7 +47,6 @@ function mapRemoteSearchHitToItem(
     icon: hit.sourceType === "docs" ? "book-open" : "file-text",
     category: hit.sourceType === "docs" ? "guide" : "tutorial",
     url: hit.url,
-    sourceLabel: hit.sourceLabel,
     sectionLabel: hit.sectionLabel,
     highlights: hit.highlights,
   };
@@ -253,7 +252,6 @@ function SearchHint({
   title,
   description,
   icon,
-  sourceLabel,
   sectionLabel,
   highlights,
   isSelected,
@@ -298,17 +296,15 @@ function SearchHint({
         <p className="line-clamp-1 max-w-full text-sm leading-tight font-medium tracking-tight text-popover-foreground transition-colors duration-150">
           <HighlightedText parts={titleParts} />
         </p>
+        {sectionLabel ? (
+          <span className="text-[0.6875rem] leading-none font-medium tracking-wide text-muted-foreground uppercase">
+            {sectionLabel}
+          </span>
+        ) : null}
         {description ? (
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            {sourceLabel || sectionLabel ? (
-              <span className="text-[0.6875rem] leading-none font-medium tracking-wide text-muted-foreground uppercase">
-                {[sourceLabel, sectionLabel].filter(Boolean).join(" / ")}
-              </span>
-            ) : null}
-            <p className="max-w-full break-words text-[0.8125rem] leading-snug font-normal tracking-tight text-muted-foreground transition-colors duration-150">
-              <HighlightedText parts={descriptionParts} />
-            </p>
-          </div>
+          <p className="max-w-full break-words text-[0.8125rem] leading-snug font-normal tracking-tight text-muted-foreground transition-colors duration-150">
+            <HighlightedText parts={descriptionParts} />
+          </p>
         ) : null}
       </div>
     </Link>
@@ -316,7 +312,7 @@ function SearchHint({
 }
 
 interface SearchGroupProps<T extends SearchHintItem> {
-  title: string;
+  title?: string;
   items: T[];
   startIndex: number;
   selectedIndex: number | null;
@@ -354,9 +350,11 @@ function SearchGroup<T extends SearchHintItem>({
 
   return (
     <div className="flex flex-col gap-y-3">
-      <h3 className="text-[0.8125rem] leading-none font-medium tracking-tight text-muted-foreground">
-        {title}
-      </h3>
+      {title ? (
+        <h3 className="text-[0.8125rem] leading-none font-medium tracking-tight text-muted-foreground">
+          {title}
+        </h3>
+      ) : null}
       <ul>
         {items.map((item, index) => {
           const itemIndex = startIndex + index;

@@ -181,7 +181,8 @@ Keep these canonical behaviors intact when copying, adapting, or recreating host
 
 - the visible surface is the canonical compact `SearchBar` trigger
 - the main interaction surface is the canonical `SearchDialog`
-- source labels, section labels, suggestions, recent searches, highlighting, keyboard navigation, and screen-reader title/description behavior remain present
+- section labels, suggestions, recent searches, highlighting, keyboard navigation, and screen-reader title/description behavior remain present
+- internal source names stay out of visitor result headings and captions; render query results in engine order
 - browser code queries only a project-owned search endpoint; `/api/search/query` is the canonical Next.js route shape
 - the host server route queries SiteOS through `/api/search/environment/:environmentSlug` and attaches `SITEOS_SEARCH_TOKEN` as `x-siteos-project-search-credential`
 - layout remains responsive without inventing alternate mobile-only or desktop-only search models
@@ -225,7 +226,7 @@ Invalid dedicated page output includes:
 - invented marketing copy such as `Find <project> content fast.`
 - runtime badges such as `Runtime prod`
 
-If a host-native recreation is unavoidable, the recreated components must still expose the same observable canonical markers and behavior: trigger opens dialog, dialog owns input/results, keyboard navigation, highlighting, source/section labels, `/api/search/query`, server-side credential boundary, and responsive behavior. If those markers cannot be preserved, stop with an adaptation blocker instead of delivering a custom inline search page.
+If a host-native recreation is unavoidable, the recreated components must still expose the same observable canonical markers and behavior: trigger opens dialog, dialog owns input/results, keyboard navigation, highlighting, section labels, `/api/search/query`, server-side credential boundary, and responsive behavior. If those markers cannot be preserved, stop with an adaptation blocker instead of delivering a custom inline search page.
 
 ## Server-Proxied Search Query Contract
 
@@ -309,14 +310,14 @@ The canonical Next.js asset `src/app/api/search/query/route.ts` owns:
 - the real search input
 - debounce-driven querying
 - suggestions and project-owned recents
-- grouped result rendering
+- results in engine order, with separate suggestions and recents
 - keyboard navigation
 - highlight rendering
 - click/Enter navigation
 
 `src/lib/siteos-project-search-dialog.ts` owns:
 
-- grouping rules
+- result ordering and suggestions/recents sections
 - suggestions-state detection
 - highlight-part fallback logic
 
@@ -533,6 +534,6 @@ If no browser tool is available, skip browser automation, record `browserVerific
 
 Deliver `src/lib/siteos-search-analytics.ts` alongside the query client and dialog. Preserve the host’s visual design and adapt existing primitives. The helper is optional for collection but required by the delivered dialog import; collection remains off without explicit consent and backend enablement. See [search-experience.md](search-experience.md) for the consent adapter and installation verification commands.
 
-The proxy forwards only supported query parameters, bounds requests, rejects redirects, returns `Cache-Control: no-store`, and supports a same-origin POST for signed search/click receipts. Keep the query credential and exact environment on the server. The dialog cancels stale responses, distinguishes a failed request from zero results, preserves engine ranking, supports additional result pages and returns focus to its trigger. Group only adjacent results; regrouping by category would silently change relevance.
+The proxy forwards only supported query parameters, bounds requests, rejects redirects, returns `Cache-Control: no-store`, and supports a same-origin POST for signed search/click receipts. Keep the query credential and exact environment on the server. The dialog cancels stale responses, distinguishes a failed request from zero results, preserves engine ranking, supports additional result pages and returns focus to its trigger. Render query results as one list without source headings. Internal source names must not appear in result captions; use the article section when available. Regrouping by source or category would silently change relevance.
 
 Verify late responses, empty/error states, pagination, mouse and Enter clicks, Escape focus return and reduced motion. Check that no analytics request or interaction identifier is sent before consent or after revocation, and that query/click receipts are never printed. Finish with `siteos search installation verify` through the actual local or hosted website endpoint; direct runtime reachability alone does not prove the proxy.
