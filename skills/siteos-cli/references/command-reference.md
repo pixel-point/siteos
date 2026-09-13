@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.8.0`
+Package: `@siteoshq/cli@2.9.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -245,9 +245,11 @@ siteos forms submissions export --output <new-file> [--form <id>] [--query <text
 siteos search migrate algolia --records <export.ndjson> --mapping <mapping.json> --out <new-directory> [--settings <settings.json>] [--synonyms <synonyms.ndjson>] [--rules <rules.ndjson>] [--json]
 siteos search delivery status --environment <slug> [--json]
 siteos search delivery configure --environment <slug> --file <delivery.json> --apply [--json]
-siteos search crawl status --environment <slug> [--json]
-siteos search crawl configure --environment <slug> --file <crawler.json> [--json]
-siteos search crawl start --environment <slug> [--json]
+siteos search crawl list --environment <slug> [--json]
+siteos search crawl create --environment <slug> --name <name> --file <crawler.json> [--json]
+siteos search crawl status --environment <slug> [--crawler <id>] [--json]
+siteos search crawl configure --environment <slug> --file <crawler.json> [--crawler <id>] [--name <name>] [--json]
+siteos search crawl start --environment <slug> [--crawler <id>] [--json]
 siteos search crawl publish --environment <slug> --run <id> --apply [--accept-truncated] [--accept-removals] [--json]
 siteos search content --environment <slug> [--query <text>] [--source <type>] [--offset <n>] [--json]
 siteos search query --environment <slug> --query <text> [--source <type>] [--section <label>] [--offset <n>] [--json]
