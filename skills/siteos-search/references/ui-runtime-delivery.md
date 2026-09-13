@@ -145,6 +145,8 @@ These assets represent the canonical search interaction model:
 - click opens the dialog instead of focusing an inline page input
 - all interactive search happens inside the dialog
 - dialog results update while the user types
+- a settled query shows the engine result count; loading and failure remain separate states
+- matched title and excerpt segments render as escaped text inside semantic highlights, including typo and synonym matches returned by the engine
 - keyboard navigation and highlight behavior stay canonical
 
 ## Canonical UI Generation Contract

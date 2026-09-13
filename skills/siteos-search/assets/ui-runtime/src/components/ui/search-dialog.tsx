@@ -219,7 +219,7 @@ const SearchInput = ({ query, setQuery, className }: SearchInputProps) => {
   return (
     <input
       className={cn(
-        "w-full border-b border-border bg-transparent py-3.5 pr-16 pl-4 leading-snug tracking-tight remove-autocomplete-styles placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0",
+        "w-full border-0 bg-transparent py-3.5 pr-16 pl-4 leading-snug tracking-tight remove-autocomplete-styles placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0",
         className,
       )}
       type="text"
@@ -294,7 +294,7 @@ function SearchHint({
           isSelected && "sm:text-foreground",
         )}
       />
-      <div className="flex flex-col gap-y-0.5">
+      <div className="flex min-w-0 flex-col gap-y-0.5">
         <p className="line-clamp-1 max-w-full text-sm leading-tight font-medium tracking-tight text-popover-foreground transition-colors duration-150">
           <HighlightedText parts={titleParts} />
         </p>
@@ -305,7 +305,7 @@ function SearchHint({
                 {[sourceLabel, sectionLabel].filter(Boolean).join(" / ")}
               </span>
             ) : null}
-            <p className="line-clamp-1 max-w-full text-[0.8125rem] leading-snug font-medium tracking-tight text-muted-foreground transition-colors duration-150">
+            <p className="max-w-full break-words text-[0.8125rem] leading-snug font-normal tracking-tight text-muted-foreground transition-colors duration-150">
               <HighlightedText parts={descriptionParts} />
             </p>
           </div>
@@ -330,17 +330,11 @@ function HighlightedText(props: {
 }) {
   return (
     <>
-      {props.parts.map((part, index) => (
-        <span
-          key={`${part.text}-${index}`}
-          className={cn(
-            part.matched &&
-              "rounded-[0.1875rem] bg-primary/12 px-0.5 font-semibold text-foreground",
-          )}
-        >
+      {props.parts.map((part, index) => part.matched ? (
+        <mark key={index} className="rounded-sm bg-primary/20 px-0.5 font-semibold text-foreground">
           {part.text}
-        </span>
-      ))}
+        </mark>
+      ) : <span key={index}>{part.text}</span>)}
     </>
   );
 }
@@ -582,6 +576,11 @@ export default function SearchDialog({
 
         <ScrollArea className="max-h-[calc(75dvh-3.125rem)] sm:max-h-[min(calc(40rem-3.5rem),calc(60dvh-3.5rem))]">
           <div className="relative flex min-h-20 flex-col gap-y-5 overflow-hidden px-4 py-5">
+            {!isLoading && !error && query.trim() && (
+              <p role="status" className="text-xs text-muted-foreground">
+                {total.toLocaleString()} {total === 1 ? "result" : "results"} for “{query.trim()}”
+              </p>
+            )}
             {isLoading ? (
               <div className="flex justify-center pt-3">
                 <div
