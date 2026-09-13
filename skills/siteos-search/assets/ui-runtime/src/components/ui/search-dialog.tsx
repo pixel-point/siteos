@@ -276,7 +276,7 @@ function SearchHint({
   return (
     <Link
       className={cn(
-        "group flex w-full cursor-pointer items-center gap-x-3 rounded-lg py-2.5 text-left outline-hidden transition-colors duration-150 focus-within:bg-muted/50 sm:pr-6 sm:pl-3",
+        "group flex w-full cursor-pointer items-start gap-x-3 rounded-lg py-2.5 text-left outline-hidden transition-colors duration-150 focus-within:bg-muted/50 sm:pr-6 sm:pl-3",
         isSelected && "sm:bg-muted/50",
         isFirst && "scroll-mt-12",
         !isFirst && !isLast && "scroll-my-2",
