@@ -5,18 +5,16 @@ description: Use when creating, selecting, configuring, validating, testing, syn
 
 # SiteOS Pulse
 
+Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
+
 Pulse owns its Projects, Checks, schedules, deployment bundles, credentials, and runtime data.
 
-For hosted run history and failure details, prefer the available `siteos_pulse_list_runs` and
-`siteos_pulse_get_run` MCP tools after `siteos_get_context` and explicit Project/Environment
-selection. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md); a repository and CLI
-login are not prerequisites for these reads. Use the CLI workflow below for authoring, validation,
-configuration, deployments and operations outside the MCP catalog.
+Hosted reads: `siteos_pulse_list_runs` and `siteos_pulse_get_run` for run history and failure details.
 
 ## Workflow
 
-1. From the repository root, run `npx @siteoshq/cli auth status --json`. Use `$siteos-auth` if sign-in or Organization selection is required.
-2. Run `npx @siteoshq/cli project status --json`. Use `$siteos` to select the intended common website Project when missing.
+1. Resolve the target through the shared execution contract.
+2. Inspect the Pulse attachment with `npx @siteoshq/cli project status --json`.
 3. If Pulse is not attached, run `npx @siteoshq/cli project connect pulse --json` within the requested monitoring setup. Attach an existing resource with `--resource <id>` when preserving an existing deployment. Read the resource ID and environment bindings from `project status --json`; do not select a second Project.
 4. Inspect the repository's existing Playwright configuration, fixtures, helpers, and specs before creating monitoring files. Reuse suitable tests and conventions instead of creating a parallel suite.
 5. Select the intended common environment with `npx @siteoshq/cli project environment use <slug> --json`. Initialize missing Pulse monitoring files with `npx @siteoshq/cli pulse init`. Do not replace an existing Playwright setup or Pulse configuration.

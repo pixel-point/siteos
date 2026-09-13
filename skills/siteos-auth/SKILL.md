@@ -5,7 +5,9 @@ description: Use when authenticating the unified SiteOS CLI, checking or ending 
 
 # SiteOS Auth
 
-For remote MCP access, use the host OAuth flow and verify the authorized Organization with `siteos_get_context`. MCP and CLI login are independent. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md); MCP does not expose account mutations or credentials.
+Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
+
+MCP does not expose account mutations or credentials.
 
 Auth owns user identity, Organizations, memberships, CLI sessions, and short-lived service grants. It does not own Projects or service resources.
 
@@ -32,9 +34,8 @@ Use `npx @siteoshq/cli auth logout --json` only when the user asks to end the lo
 
    The server decides eligibility. Never retry a denied creation through another endpoint or identity.
 
-3. With one Organization, use it only when the user's request or confirmation establishes that choice.
-4. With multiple Organizations, present only immutable IDs and display names and ask for one choice.
-5. Select only by immutable ID:
+3. Resolve the intended Organization using the shared execution contract and this safe discovery output.
+4. When the task needs the global Auth default, select by immutable ID. Project binding follows the orchestrator's [Project workflow](../siteos/references/projects-and-environments.md):
 
    ```sh
    npx @siteoshq/cli auth select --organization <organization-id> --json

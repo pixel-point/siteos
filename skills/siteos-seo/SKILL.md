@@ -5,6 +5,8 @@ description: Use for complete SiteOS SEO/GEO setup and improvement, or focused t
 
 # SiteOS SEO/GEO
 
+Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
+
 Study the website, turn SEO and AI-search evidence into prioritized improvements, and carry
 authorized setup, checks and fixes through verification. Use this skill for search-engine and
 AI-answer visibility; use `$siteos-search` for search inside a website, `$siteos-pulse`
@@ -36,24 +38,19 @@ discovery. Missing reports are a reason to prepare grounded inputs, not to stop 
 `research plan` validates those inputs and reports availability; it does not study the website or
 generate keywords, competitors or questions.
 
-For account access, use `$siteos-auth`; for installation and version support, use `$siteos-cli`.
-Read `npx @siteoshq/cli project status --json`,
-`npx @siteoshq/cli project environment list --json` and `npx @siteoshq/cli seo --help` before CLI work.
-Use the exact selected environment and application origin. Never fall back to Production or bind by
-matching a website name. Repository code and public CLI/server releases can differ.
+Resolve the target through the shared execution contract. For SEO CLI operations, inspect the SEO
+attachment with `npx @siteoshq/cli project status --json` and check `npx @siteoshq/cli seo --help`
+for the required capability.
 
 ## Execute through MCP and CLI
 
-Use [MCP and CLI context](../siteos/references/mcp-and-cli.md) for supported hosted reads and exact
-context. When technical audit evidence is relevant, prefer `siteos_seo_get_audit`; this is not a
-mandatory first step for research. The current MCP catalog is read-only and has no research-launch
-tool. Use the SEO CLI for research history/show/export, plan/run/wait, audits, Performance and GSC.
+When technical audit evidence is relevant, use the available `siteos_seo_get_audit` read; this is not a
+mandatory first step for research. Research history/show/export, plan/run/wait, audits, Performance
+and GSC use the SEO CLI where those operations are absent from MCP.
 CLI requests use the authenticated SiteOS API and its workers, with the same scope and accounting
 as the application. Do not use computer-use or browser clicks in SiteOS to run or read these checks.
 
-Authentication and new provider connections may require user interaction: MCP uses host OAuth,
-CLI uses `$siteos-auth`, and a new Google connection uses interactive OAuth. Return to CLI/MCP
-afterward; never borrow browser credentials. Performance runs Lighthouse in a server-side browser,
+Performance runs Lighthouse in a server-side browser,
 not the user's browser. Reading the public target website for context is separate from operating
 the SiteOS application. Missing CLI support follows `$siteos-cli`, not UI automation.
 

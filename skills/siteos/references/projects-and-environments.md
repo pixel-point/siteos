@@ -2,6 +2,29 @@
 
 One Project represents one website/product. Its name is shared; each environment has one website URL managed in Project settings. Production is created with the Project. Select the repository's common Project and environment before service work:
 
+An explicit application, Organization, Project and environment in the user's request is sufficient
+authorization to select that existing context. Verify access and identity; do not ask again merely
+because the CLI was last used for another website. Check `project --help` for `--organization`;
+use `$siteos-cli` if the installed version lacks it.
+
+Establish the requested application origin first. With exact IDs and environment supplied, run
+`project use` directly, then verify its status and service attachment. Use `project list` for
+discovery when needed; reading the previously selected Project is not a prerequisite.
+
+```sh
+npx @siteoshq/cli project list --organization <organization-id> --json
+npx @siteoshq/cli project use <project-id> --organization <organization-id> --environment <slug> --json
+```
+
+Selection saves the Organization, Project and environment for this repository and application.
+It does not change the global `auth select` default or provision resources. Service grants use
+that bound Organization and the server verifies current access for every grant. Reselecting the
+same Project retains its saved environment; selecting a new Project requires `--environment`.
+The `project status --json` response includes a safe `context` with application origin,
+Organization/Project IDs and environment ID/slug. Match the requested service attachment too.
+An access denial never falls back to the global Organization. A different application origin is
+a separate installation; use its authenticated session rather than copying credentials.
+
 ```sh
 npx @siteoshq/cli project status --json
 npx @siteoshq/cli project environment list --json

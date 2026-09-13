@@ -1,8 +1,29 @@
-# Choosing MCP or CLI
+# Shared execution contract
 
-Use the remote SiteOS MCP for supported hosted reads. Use the CLI for local files, initialization,
-builds, validation, deployment, CI and operations outside the MCP catalog. Focused service skills
-still define the workflow and evidence required for the user's outcome.
+This reference belongs to the `siteos` orchestrator and applies to every focused skill, including
+direct invocation. Read it once per task; continue to the focused workflow without loading unrelated
+services or recursively restarting the orchestrator. Service references supply capabilities and
+product-specific requirements, not another connection or context policy.
+
+| Responsibility | Owner |
+| --- | --- |
+| Tool choice, exact target, handoffs and failure recovery | This shared contract |
+| Available hosted reads | SiteOS MCP |
+| SiteOS initialization, validation, deployment, CI and operations absent from MCP | Unified CLI |
+| Local source inspection, edits and local tests | Repository tools |
+| Identity, membership, sessions and authorization flows | Auth and the supported host/provider flow |
+| Product operations, domain rules, scopes and result interpretation | The owning module and focused skill |
+
+Pulse, Cookie, Forms, Search, Trace, SEO and Analytics use common Project/environment context.
+Integrations and Billing use Organization context. Account operations do not require a Project.
+Adding a new module requires adopting this contract and the common context adapters; adding a skill
+alone does not automatically implement or authorize its CLI/MCP operations.
+
+Respect the user's explicitly requested interface. Otherwise choose by the operation, not by a mandatory setup sequence. Use an available MCP
+read directly after resolving its authorized target. Local source edits and tests use repository
+tools; they do not themselves need CLI authentication. Invoke the CLI when the operation requires
+it, such as a recheck, deployment or an unsupported report. Do not repeat successful reads through
+both interfaces merely to confirm their connection.
 
 ## Hosted reads
 
@@ -44,11 +65,21 @@ Existing single-Organization credentials retain their selection and can be edite
  Arguments do not expand permissions. Invalid credentials never
 fall back to browser cookies, CLI sessions or a different Organization.
 
-MCP does not write or read the private CLI binding files. Before continuing the same task through
-CLI, run `siteos auth status --json` and `siteos project status --json`; compare the origin,
-Organization, Project and Environment with the MCP context. Resolve any mismatch before acting.
-Select a CLI Project/Environment only when the user's task identifies it. Never print tokens,
-private bindings or environment credentials.
+MCP does not write or read the private CLI binding files. For an exact target already identified
+by the user's task, supply those IDs to MCP without asking for selection again. If that Organization
+is outside this connection's authorized list, request its inclusion through the existing connection
+flow; task parameters do not grant access.
+
+Before continuing through CLI, establish the specified application origin and follow
+[Projects and environments](projects-and-environments.md). For an exact supplied target, use
+`siteos project use <project-id> --organization <organization-id> --environment <slug> --json`
+directly, then compare the safe `project status --json` `context` and service attachment with that
+target. Do not make access to the previously selected Project a prerequisite for selecting the
+requested one. This task already authorizes selecting its existing target. The global
+Organization shown by `auth status` may differ; bound Project commands use their own Organization,
+so do not change that global default merely to make it match. A missing session uses `$siteos-auth`.
+Ask about genuine ambiguity, unavailable access or inconsistent resolved identities, not a stale
+selection. Never print tokens, private bindings or environment credentials.
 
 If an operation fails, first inspect its result and current state. An authorization denial requires
 correct authorization, not a retry through broader credentials. A connection or protocol failure

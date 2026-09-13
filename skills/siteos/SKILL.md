@@ -7,15 +7,18 @@ description: Use for SiteOS setup, common Project and environment selection, an 
 
 One plugin, one remote MCP, one CLI, one Project for the website or product. Load only the focused skills required by the user's outcome.
 
-For hosted reads, first check whether the SiteOS MCP tools are available. Read
-`siteos_get_context`, select the intended Project and explicit Environment, and prefer supported
-MCP reads. A local repository and CLI login are not prerequisites for these reads. Follow
-[Choosing MCP or CLI](references/mcp-and-cli.md). For local work, writes and reads outside the MCP
-catalog, use the CLI workflow below. Missing MCP tools do not prove the server is unavailable.
+## Shared execution contract
+
+This orchestrator owns tool selection, context, authentication handoffs and recovery across services.
+Read the [shared execution contract](references/mcp-and-cli.md) once per task before choosing an
+interface or resolving context. It applies equally to direct calls of focused skills; those skills
+link to this same reference and own only their service-specific operations and evidence.
+Maintain these common rules here and in the linked references, not as copies in each service.
+The following workflow applies when the task needs CLI Project operations.
 
 1. Resolve the target repository. Use `$siteos-cli` if installation, version or supported commands need attention.
-2. Authenticate once with `$siteos-auth` and select the intended Organization.
-3. Run `npx @siteoshq/cli project status --json`. If no Project is selected, run `npx @siteoshq/cli project list --json`, then `npx @siteoshq/cli project use <id-or-slug> --json` for the intended Project. When the task requires a new website/product, create it with `npx @siteoshq/cli project create --name <name> --slug <slug> --domain <domain> --json`, then select it. Resolve ambiguity from the task and repository context; ask only when the intended Project is still unclear.
+2. Reuse CLI authentication; use `$siteos-auth` only when login or Organization discovery is needed. The task's explicit target authorizes selecting that existing context within current access without another confirmation. A different saved selection alone is not ambiguity.
+3. Follow [Projects and environments](references/projects-and-environments.md) to verify or select the repository's exact Organization, Project and environment without changing the global Auth default. Use `project list --organization <id> --json` for discovery and `project use <project-id> --organization <id> --environment <slug> --json` for an identified target. Create a Project only when the task requests a new website/product; never create one to recover a stale selection. Ask only if the target remains ambiguous or inaccessible.
 4. Read the service attachments from Project status. `project use` never creates service resources. Configure only the service requested by the user with `npx @siteoshq/cli project connect <service> --json`. To retain an existing service resource and its keys, use `--resource <id>` explicitly; never infer identity from a matching name or slug.
 5. Route the work:
    - `$siteos-pulse`: Playwright monitoring, checks, local validation and deployments.

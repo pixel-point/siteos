@@ -33,8 +33,8 @@ installation uses `https://siteosapp.xui.se`. A Project's website URL is not its
 When the project is not linked:
 
 1. Load `references/siteos-connection-onboarding.md`.
-2. Delegate missing Auth or Organization selection to `$siteos-auth`.
-3. Run `project status --json`, select the intended common Project and explicitly connect Forms.
+2. Resolve context through the orchestrator's [shared execution contract](../../siteos/references/mcp-and-cli.md).
+3. Run `project status --json` and explicitly connect Forms when the requested setup needs it.
 4. After the Forms Project boundary succeeds, list Forms Environments.
 5. If none exists, stop for an explicit Environment slug and display name before creating one.
 6. After an explicit Environment is selected, use Forms credential metadata to choose initial issue/install or intentional rotate/install.

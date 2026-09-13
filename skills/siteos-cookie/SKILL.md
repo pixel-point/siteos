@@ -5,13 +5,15 @@ description: Use when configuring, styling, installing, publishing or diagnosing
 
 # SiteOS Cookie
 
-For supported hosted reads, prefer the available `siteos_cookie_get_site` and `siteos_cookie_get_analytics` MCP tools after checking `siteos_get_context` and the exact Organization, Project and Environment. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require repository setup or CLI login. Use the existing CLI workflow for local work, mutations and operations outside the MCP catalog.
+Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
+
+Hosted reads: `siteos_cookie_get_site` and `siteos_cookie_get_analytics`.
 
 Use the common SiteOS Project and the unified CLI. Cookie owns banner configuration, public delivery, consent observations and receipts; it never owns the user's account or another service's configuration. Complete routine configuration through chat and CLI when the commands support it; do not send the user to the web editor merely to edit a JSON field.
 
 ## Establish the website and current capabilities
 
-1. Run `npx @siteoshq/cli project status --json`. Use `$siteos` for missing account, Organization or Project selection. Select the intended environment with `npx @siteoshq/cli project environment use <slug> --json`. Its URL can be set with `npx @siteoshq/cli project environment update <slug> --url <website-url> --json`; never fall back to Production.
+1. Resolve the target through the shared execution contract, then inspect the Cookie attachment with `npx @siteoshq/cli project status --json`. Manage the website URL through the orchestrator's [Project workflow](../siteos/references/projects-and-environments.md).
 2. Before a new Cookie connection, check the Cookie service terms as described below. If Cookie setup is requested and no resource is attached, run `npx @siteoshq/cli project connect cookie --json`. Attach an existing resource explicitly with `--resource <id>` to preserve its key and installation. Project owns name and hostname; preserve them in Cookie draft payloads. Changing the website address requires explicit banner republication.
 3. Read `npx @siteoshq/cli cookie --help`, `npx @siteoshq/cli cookie status --json` and `npx @siteoshq/cli cookie draft get --json`. Keep the complete save payload: `name`, `hostname`, `expectedDraftVersion` and `draft`. Preserve fields outside the requested change. New appearance fields require a compatible deployed Cookie service; local source changes do not update the hosted API or installed plugin.
 4. Inspect the site's actual source and, when available, its rendered pages before selecting services or matching its design. Identify existing CMPs, GTM containers, scripts, pixels, embeds, cookies/storage and server-side integrations. Distinguish observed behavior from inferred purpose. Do not invent legal text, controller identity, policies, vendors or consent. Ask for missing business facts while continuing independent work.

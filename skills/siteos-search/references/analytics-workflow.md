@@ -2,13 +2,13 @@
 
 Use this Search reporting workflow from the root of a target external project, or pass an explicit target project root when the user names one.
 
-This workflow owns analytics and reporting for existing SiteOS managed Search Projects. It does not create/select a Search Project, configure sources, scaffold `siteos-search.config.ts`, author source handlers, deliver search UI, run `search:sync`, install SiteOS MCP, or change SiteOS APIs. For those tasks, use the setup workflow in the parent Search skill.
+This workflow owns analytics and reporting for existing SiteOS managed Search Projects. Resolve an existing target through the [shared execution contract](../../siteos/references/mcp-and-cli.md). Creating a resource, configuring sources, scaffolding `siteos-search.config.ts`, authoring source handlers, delivering search UI and running `search:sync` belong to the parent Search setup workflow.
 
-Start by using safe CLI output to confirm Auth, the Search Project, and the selected environment:
+Use supported MCP reads when they provide the requested report. For CLI reports:
 
 1. Resolve the target project root.
-2. Run `npx @siteoshq/cli auth status --json`. Delegate missing Auth or Organization selection to `$siteos-auth`.
-3. Run `npx @siteoshq/cli project status --json`. Delegate missing Search Project selection or product repair to `$siteos-search`; never interpret private binding state or inspect credential-bearing files.
+2. Resolve the target through the shared execution contract.
+3. Inspect the Search attachment with `npx @siteoshq/cli project status --json`. Delegate missing Search resource setup to `$siteos-search`.
 4. Read `siteos-search.config.ts` only when needed to resolve an explicitly configured environment slug or explain source labels. Stop when no environment is selected; do not fall back to `prod`.
 5. For index/job health run `npx @siteoshq/cli search analytics --environment <slug> --json`. For visitor searches, popular queries, no results or result clicks use `npx @siteoshq/cli search visitors report --environment <slug> --days 30 --json` and [search-experience.md](search-experience.md).
 6. Run `npx @siteoshq/cli search diagnostics --environment <slug> --json` only when supporting readiness context is needed.
@@ -36,4 +36,4 @@ Stop before:
 - writing analytics HTML reports inside the target project without explicit user approval
 - installing SiteOS MCP
 - changing SiteOS API, DB schema, CLI behavior, or exported-project behavior
-- running Auth/Organization mutations instead of delegating to `$siteos-auth`, or Search Project mutations instead of delegating to `$siteos-search`
+- creating resources or changing Search configuration for a reporting-only request

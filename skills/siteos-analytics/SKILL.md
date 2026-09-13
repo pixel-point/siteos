@@ -5,18 +5,20 @@ description: Set up SiteOS website Analytics in a selected Project environment, 
 
 # SiteOS Analytics
 
+Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
+
 For an existing Google Analytics property, GA4 report charts or Google tracking investigation,
 use `$siteos-trace` and its optional Google Analytics MCP workflow. Those requests do not require
 installing SiteOS Analytics. Keep Google-reported metrics separate from SiteOS collection counts.
 
-For supported hosted reads, prefer the available `siteos_analytics_get_report` and `siteos_analytics_get_realtime` MCP tools after checking `siteos_get_context` and the exact Organization, Project and Environment. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require repository setup or CLI login. Use the existing CLI workflow for local work, mutations and operations outside the MCP catalog.
+Hosted reads: `siteos_analytics_get_report` and `siteos_analytics_get_realtime`.
 
 Complete the path from the site's business action to a saved Analytics report. Cookie and Trace are optional services; Analytics works independently without either service.
 
 ## Establish the target
 
 1. Run `npx @siteoshq/cli analytics --help` and confirm that the installed CLI and selected server support these commands. Source documentation does not prove a public release. Delegate missing CLI support to `$siteos-cli` and missing authentication to `$siteos-auth`; do not substitute private APIs.
-2. Use `npx @siteoshq/cli auth status --json` and `npx @siteoshq/cli project status --json` to confirm Organization, Project and environment. Use an explicit `--environment <slug>` on Analytics commands when needed. Never fall back to Production or infer a binding from a matching name/domain.
+2. Resolve the target through the shared execution contract and inspect the Analytics attachment with `npx @siteoshq/cli project status --json`.
 3. If Analytics is absent, use `npx @siteoshq/cli project connect analytics` within the user's requested setup. This explicitly attaches Analytics only. Use `$siteos` for common Project or environment repair. Never inspect private binding or credential files.
 4. Read `npx @siteoshq/cli analytics status --json` and `npx @siteoshq/cli analytics installation --json`.
 5. A newly attached Analytics workspace may have no native source enabled. For the requested SiteOS installation, read `analytics settings show --environment <slug> --json` and explicitly enable collection with `analytics settings set --revision <current-revision> --enabled true --environment <slug>`. Read it back before installing. Connecting GA4 through Analytics Setup is independent and does not enable the SiteOS collector; do not install a native script for a GA4-only request.

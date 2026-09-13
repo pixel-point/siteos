@@ -5,6 +5,8 @@ description: Use when installing, upgrading, diagnosing, or discovering commands
 
 # SiteOS CLI
 
+Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
+
 Use the single public package and binary:
 
 ```sh
@@ -37,6 +39,7 @@ before authentication. This selects a separate SiteOS installation, not a Projec
 - Never print one-time tokens, sessions, service grants, runtime credentials, authorization headers, private binding files, or `.env` contents.
 - Private state belongs under `${SITEOS_HOME:-~/.siteos}` and must not be committed.
 - `siteos project use` selects one common Project privately for the repository. `siteos.config.json` remains the tracked Pulse monitoring configuration. There are no service-private Project references; do not create `.siteos/forms/project.json` or `.siteos/search/project.json`.
+- Check `project --help` and `integrations --help` for `--organization` before the shared contract's exact-context handoff. Older CLIs need a release containing this capability or the explicitly requested local development build. Selection behavior belongs to the orchestrator's [Project workflow](../siteos/references/projects-and-environments.md).
 - Use `siteos project` for common selection, service setup and environments. Use `siteos project environment use <slug>` to switch every service together; Project settings own the name and per-environment URL. Never create a tracked `.siteos/project.json`.
 - Common Projects and the Cookie, Trace and Integrations commands require CLI 1.1.0 or newer and the matching SiteOS server. Check the installed help before using them; a source checkout does not prove the public package has been released.
 - If a command is absent from the generated reference, run the appropriate `--help`; do not invent it or call a private API as a substitute.

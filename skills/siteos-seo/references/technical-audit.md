@@ -7,11 +7,14 @@ relevant saved finding without turning that task into a new crawl or repair pass
 
 ## Select the context
 
-Run `npx @siteoshq/cli seo --help` before this workflow. Use a CLI and server that implement these
+For supported saved-evidence reads, follow [MCP and CLI context](../../siteos/references/mcp-and-cli.md)
+and use the available MCP tools. CLI authentication is not a prerequisite for those reads or local
+repository edits. Before an operation that needs CLI, run `npx @siteoshq/cli seo --help`. Use a CLI and server that implement these
 commands; a local source change does not establish that the public package or hosted server was
 released. Use the repository's built CLI when explicitly working on a local development installation.
 Use `$siteos-cli` for installation and supported commands, `$siteos-auth` for authentication.
 
+For CLI operations, select the exact target through the [common context workflow](../../siteos/references/projects-and-environments.md).
 Read `npx @siteoshq/cli project status --json` and `npx @siteoshq/cli project environment list --json`.
 Use the intended Project/environment. An explicit `--environment <slug>` overrides the saved
 selection for that SEO command. Never substitute Production for a missing binding. When setup is
@@ -40,7 +43,9 @@ Setup creates a resource and performs no crawl. Project settings own the website
 `seo repair`, repeated recheck URLs and the `--resource` guard require CLI 2.1.0 or newer and
 the matching server. Check `npx @siteoshq/cli --version` and `seo --help`; upgrade a stale global
 installation or use `npx @siteoshq/cli@latest`. Compare the brief's application origin,
-Organization, Project, environment and resource with the current CLI context before acting.
+Organization, Project, environment and resource with the resolved MCP or CLI context before acting.
+Resolve selection or access issues through the orchestrator's
+[shared execution contract](../../siteos/references/mcp-and-cli.md).
 The brief is generated from saved evidence without an AI call or research-credit charge.
 
 Use `npx @siteoshq/cli seo repair --audit <audit-id> --url <observed-url> --rule <rule-id> --json`

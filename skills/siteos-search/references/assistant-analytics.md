@@ -9,17 +9,15 @@ This step fetches the API v1 analytics/diagnostics data and chooses the output c
 Start from the linkage checks in [analytics-workflow.md](analytics-workflow.md):
 
 - target project root
-- Auth readiness and Search Project status reported by safe CLI output
-- required environment selection from the user or `siteos-search.config.ts`
+- the exact Search attachment and common environment resolved through the shared execution contract
 
-Use safe CLI output only. Never read `.env`, private Auth state, binding files, grants, runtime credentials, Meilisearch keys, or raw headers. Delegate Auth or Organization repair to `$siteos-auth` and Search Project repair to `$siteos-search`.
+Use supported MCP or safe CLI output according to the [shared execution contract](../../siteos/references/mcp-and-cli.md). Never read `.env`, private Auth state, binding files, grants, runtime credentials, Meilisearch keys, or raw headers. Search resource setup belongs to `$siteos-search`; account and target resolution belong to the shared contract.
 
 ## CLI Calls
 
-Inspect identity and Search Project readiness first:
+After resolving CLI context through the shared contract, inspect the Search attachment:
 
 ```text
-npx @siteoshq/cli auth status --json
 npx @siteoshq/cli project status --json
 ```
 
@@ -29,7 +27,7 @@ Prefer analytics as the primary source:
 npx @siteoshq/cli search analytics --environment <environmentSlug> --json
 ```
 
-Require `environmentSlug` from the user or explicit `siteos-search.config.ts` configuration. Do not rely on an API default; `prod` is valid only as an explicit selection.
+Use the resolved common environment slug; the CLI maps it to the Search environment binding.
 
 Use diagnostics as supporting context when analytics indicates not-ready state, missing source/environment coverage, recent failures, or when the user asks for remediation:
 
@@ -37,7 +35,7 @@ Use diagnostics as supporting context when analytics indicates not-ready state, 
 npx @siteoshq/cli search diagnostics --environment <environmentSlug> --json
 ```
 
-The CLI acquires a fresh central `siteos-search` grant and uses the private bound Search Project ID. Do not call Auth, Search, credential, Meilisearch, SiteOS UI, SiteOS MCP, public query, or project-local browser endpoints directly.
+The CLI acquires a `siteos-search` grant and resolves the Search resource through the common attachment. Use supported tools and commands for the requested report; do not construct private Auth, credential or Meilisearch requests.
 
 ## Output Channel Selection
 

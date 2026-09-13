@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.9.0`
+Package: `@siteoshq/cli@2.10.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -37,9 +37,9 @@ siteos auth logout [--json]
 ## Projects
 
 ```text
-siteos project list [--json]
-siteos project create --name <name> --slug <slug> [--url <url>] [--domain <domain>] [--json]
-siteos project use <id-or-slug> [--environment <slug>] [--json]
+siteos project list [--organization <id>] [--json]
+siteos project create --name <name> --slug <slug> [--organization <id>] [--url <url>] [--domain <domain>] [--json]
+siteos project use <id-or-slug> [--organization <id>] [--environment <slug>] [--json]
 siteos project update [--name <name>] [--slug <slug>] [--url <production-url>] [--json]
 siteos project status [--json]
 siteos project connect <pulse|cookie|forms|search|trace|seo|analytics> [--resource <id>] [--json]
@@ -184,10 +184,10 @@ siteos analytics ga4 saved remove <id> --revision <number> [--environment <slug>
 ## Integrations
 
 ```text
-siteos integrations status [--json]
-siteos integrations connect [--json]
-siteos integrations channels [--query <name>] [--cursor <cursor>] [--json]
-siteos integrations destination create --channel <provider-channel-id> [--json]
+siteos integrations status [--organization <id>] [--json]
+siteos integrations connect [--organization <id>] [--json]
+siteos integrations channels [--query <name>] [--cursor <cursor>] [--organization <id>] [--json]
+siteos integrations destination create --channel <provider-channel-id> [--organization <id>] [--json]
 ```
 
 ## Pulse

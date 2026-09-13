@@ -5,13 +5,9 @@ description: Investigate website tracking and configure evidence-backed event ch
 
 # SiteOS Trace
 
-For hosted evidence, prefer `siteos_trace_get_coverage`, `siteos_trace_get_report`,
-`siteos_trace_list_events`, `siteos_trace_list_issues`, `siteos_trace_get_issue`,
-`siteos_trace_list_observations`, `siteos_trace_get_gtm_summary`, `siteos_trace_get_ga4` and `siteos_trace_get_notifications`
-MCP tools after `siteos_get_context` and explicit Project/Environment selection. Follow
-[MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require a local
-repository or CLI login. Use the CLI workflow below for setup, edits, publication and reads outside
-the MCP catalog; loading this skill does not imply authorization to configure or publish anything.
+Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
+
+Hosted reads: `siteos_trace_get_coverage`, `siteos_trace_get_report`, `siteos_trace_list_events`, `siteos_trace_list_issues`, `siteos_trace_get_issue`, `siteos_trace_list_observations`, `siteos_trace_get_gtm_summary`, `siteos_trace_get_ga4` and `siteos_trace_get_notifications`.
 
 Trace combines Google reports/configuration history with optional browser observations. Use its Health Summary, Destinations and
 Debugger to understand where an event was observed and why a rule raised an issue. It is separate

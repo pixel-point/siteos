@@ -1,7 +1,7 @@
 # Search connection onboarding
 
-1. Run `npx @siteoshq/cli auth status --json`. Use `$siteos-auth` for missing authentication or Organization selection.
-2. Run `npx @siteoshq/cli project status --json`. Select the intended common Project with `$siteos`; its [Project workflow](../../siteos/SKILL.md) documents list/create/use.
+1. Resolve the target through the [shared execution contract](../../siteos/references/mcp-and-cli.md).
+2. Inspect the Search attachment with `npx @siteoshq/cli project status --json`.
 3. If Search is not attached and the task requests setup, run `npx @siteoshq/cli project connect search --json`. Use `--resource <id>` explicitly to retain an existing resource and its data. Matching names never establish identity.
 4. Run `npx @siteoshq/cli project environment list --json`. A newly configured resource includes the common Project's environments. For an existing resource, connect the intended environment explicitly using [the common environment workflow](../../siteos/references/projects-and-environments.md).
 5. Select the common environment with `npx @siteoshq/cli project environment use <slug> --json`. Use its common catalog slug for Search operations. Preserve existing credentials; install a scoped credential only when the task needs it and no suitable credential exists. Never inspect `.env` or private CLI bindings.

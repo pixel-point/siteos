@@ -5,7 +5,9 @@ description: Use when creating, selecting, configuring, verifying, repairing, or
 
 # SiteOS Search
 
-For supported hosted reads, discover and use `siteos_search_query`, `siteos_search_list_content`, `siteos_search_get_visitors`, `siteos_search_get_relevance`, `siteos_search_get_connection`, `siteos_search_get_crawler`, `siteos_search_get_diagnostics` and `siteos_search_get_analytics` MCP tools after checking `siteos_get_context` and the exact Organization, Project and Environment. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require repository setup or CLI login. Use the existing CLI workflow for local work, mutations and operations outside the MCP catalog.
+Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
+
+Hosted reads: `siteos_search_query`, `siteos_search_list_content`, `siteos_search_get_visitors`, `siteos_search_get_relevance`, `siteos_search_get_connection`, `siteos_search_get_crawler`, `siteos_search_get_diagnostics` and `siteos_search_get_analytics`.
 
 Use this skill from the root of a target external project, or pass an explicit target project root when the user names one.
 
@@ -13,7 +15,7 @@ For setup or migration, start with [Choose the shortest setup path](references/s
 
 This skill owns Search setup, operation and reporting. For offline export preparation, use [Algolia migration](references/algolia-migration.md); this local-only command needs no Auth or Project preflight. For editable components on any platform, use [framework integration](references/framework-integration.md). A hosted `search.js` widget is not required. Use [references/website-crawler.md](references/website-crawler.md) for public HTML crawling, sitemap discovery, ownership verification, extraction, scheduled crawls and guarded automatic publication. An approved crawler source does not require local source-handler scaffolding; website UI delivery remains separate. Use [references/search-experience.md](references/search-experience.md) for content import previews, relevance tuning, resumable installation checks and consented visitor analytics. For search health, usage, diagnostics, charts or sidecar reports, go directly to [references/analytics-workflow.md](references/analytics-workflow.md); do not start onboarding, sync or UI changes for a reporting request. For implementation, use the connection, source, synchronization and UI workflows below. Website pageviews, custom events and conversions belong to `$siteos-analytics`.
 
-Run `npx @siteoshq/cli auth status --json` before remote Search operations and delegate missing authentication or Organization selection to `$siteos-auth`. Use the common `siteos project` workflow for discovery, creation and selection; service operations require that shared selection. Never call Auth, Project, or credential-management endpoints directly, inspect CLI private state, or use legacy Organization tokens or Project API keys.
+Resolve the target through the shared execution contract. Search resource setup and indexing/query credential management use the supported CLI commands; legacy Organization tokens and Project API keys are not supported.
 
 Do not inspect secret-bearing environment files or process environment values with output-producing commands. Determine credential readiness through safe CLI metadata and run the intended Search commands without exposing plaintext. The common CLI selection owns Project identity; no service reference file is required. Runtime query and indexing credentials belong only in the ignored owner-only project `.env` installed by the CLI.
 
@@ -162,13 +164,13 @@ npx @siteoshq/cli search indexing-credential rotate --environment <slug> --insta
 ## First Pass
 
 1. Resolve the target project root.
-2. Run `npx @siteoshq/cli auth status --json`; delegate missing Auth or Organization selection to `$siteos-auth`.
-3. Run `npx @siteoshq/cli project status --json`. Use `$siteos` for missing common Project selection; run `npx @siteoshq/cli project connect search --json` when Search setup is requested and not yet attached.
-4. After SiteOS connection is usable, inspect only the local files needed for mode selection, verify SiteOS API v1 search readiness, classify the workflow mode, and report findings with secrets redacted.
+2. Resolve context through the shared execution contract.
+3. Run `npx @siteoshq/cli project status --json`; run `npx @siteoshq/cli project connect search --json` when Search setup is requested and not yet attached.
+4. Inspect the local files needed for mode selection, verify Search readiness when the selected operation needs it, classify the workflow mode, and report findings with secrets redacted.
 
 ## Linkage Check
 
-The first remote preflight is `npx @siteoshq/cli auth status --json`, followed by `npx @siteoshq/cli project status --json`. Do not inspect package metadata, routes, or project shape before this preflight completes, except for resolving the target project root.
+Use the shared execution contract for interface choice, target selection and access recovery.
 
 A usable Search workspace requires the common Project selection, an explicit Search attachment and a chosen common environment. Select it with `npx @siteoshq/cli project environment use <slug> --json`; operational `--environment` flags accept common catalog slugs. The CLI resolves the resource privately; `.siteos/search/project.json` is not required for this workflow. Search configuration and runtime data stay service-owned; do not bypass the shared lifecycle. Use the explicitly selected common slug for CLI operations. Runtime validate/query helpers use the installed environment slug reported by credential installation; an adopted resource can retain a different native slug.
 
@@ -181,7 +183,7 @@ Resolve the Search API origin in this order:
 
 Never use legacy Project `apiBaseUrl`, Server Legacy, or another product origin as a Search fallback.
 
-If Auth or Organization selection is unavailable, delegate it to `$siteos-auth`. If the Search Project is unavailable, load [references/siteos-connection-onboarding.md](references/siteos-connection-onboarding.md) and complete common selection and explicit Search setup. Do not fabricate IDs, copy a Project key, use `--replace` without approval, or silently select another Project.
+For missing Search setup, load [references/siteos-connection-onboarding.md](references/siteos-connection-onboarding.md). Preserve service resources and use `--replace` only for an authorized replacement.
 
 Never echo authorization codes, CLI sessions, service grants, scoped credentials, Project keys, Meilisearch keys, raw headers, or full config JSON. It is safe to report safe IDs, status, metadata, and which API base URL source was selected.
 

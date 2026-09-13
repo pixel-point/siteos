@@ -95,13 +95,13 @@ Status:
 
 ## Checkpoint-Specific Fill Rules
 
-For missing Auth or Organization selection, delegate the exact repair to `$siteos-auth` and stop. For Forms Project selection, use the Forms-owned CLI workflow and report the required slug/name decision.
+For context or access issues, follow the orchestrator's [shared execution contract](../../siteos/references/mcp-and-cli.md) and report only the unresolved input or access action it requires.
 
 - an explicit Forms Environment slug and display name when none exists
 - the exact next CLI-owned technical action when no user input is needed
 
-Names and slugs are Forms-local selection only. Do not fabricate an immutable binding, couple the
-selection to another product, fall back to a legacy command, ask for a Project API key, or continue
+Project and environment identity belongs to the common Project workflow. Do not fabricate an immutable binding,
+fall back to a legacy command, ask for a Project API key, or continue
 project edits while the Forms binding is missing.
 
 For form implementation, stop only for real product choices such as form purpose, required fields, destination page, or submit UX when they cannot be inferred from the user's request or existing project conventions.

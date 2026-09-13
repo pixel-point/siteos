@@ -50,9 +50,8 @@ The session JSON remains the canonical source for step state, checkpoint decisio
 
 For `siteos-connection`, fill `What is needed to continue` with the next minimal input or technical action:
 
-- delegation to `$siteos-auth` when authentication or Organization selection needs repair
-- an explicit existing Search Project slug, or a new Search Project slug and display name
-- an explicit existing Search Environment slug
+- unresolved target or access input identified by the [shared execution contract](../../siteos/references/mcp-and-cli.md)
+- an explicit common Project/environment choice when the task has not already supplied it
 
 Do not run Auth or Organization mutations, mutate another product's Project, fabricate a binding, ask for a Project API key, or edit the project before the Search Project gate is complete.
 
