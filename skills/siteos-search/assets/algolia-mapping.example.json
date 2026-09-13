@@ -1,0 +1,9 @@
+{
+  "indexName": "docs",
+  "origin": "https://acme.com",
+  "sourceType": "algolia",
+  "title": ["hierarchy.lvl1", "hierarchy.lvl2"],
+  "content": ["content"],
+  "url": "url",
+  "section": ["hierarchy.lvl0"]
+}

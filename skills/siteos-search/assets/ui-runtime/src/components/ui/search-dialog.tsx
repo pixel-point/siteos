@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyboardEvent, useCallback, useEffect, useState } from "react";
+import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { recentSearches, suggestions } from "@/data/search";
 import { BookOpen, FileText } from "lucide-react";
@@ -16,10 +16,13 @@ import {
   type SiteOSProjectSearchDialogCategory,
   type SiteOSProjectSearchDialogHighlightPart,
   type SiteOSProjectSearchDialogItem,
-  type SiteOSProjectSearchDialogSection,
 } from "@/lib/siteos-project-search-dialog";
 import { cn } from "@/lib/utils";
-import useDebounce from "@/hooks/use-debounce";
+import {
+  canRecordSiteOSSearch,
+  recordSiteOSSearch,
+  subscribeSiteOSSearchConsent,
+} from "@/lib/siteos-search-analytics";
 import { useTouchDevice } from "@/hooks/use-touch-device";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +41,7 @@ function mapRemoteSearchHitToItem(
 ): SearchItem {
   return {
     id: index + 1,
+    documentId: hit.id,
     title: hit.title,
     description: hit.snippet,
     icon: hit.sourceType === "docs" ? "book-open" : "file-text",
@@ -49,40 +53,159 @@ function mapRemoteSearchHitToItem(
   };
 }
 
-function useSearch() {
-  const [results, setResults] = useState<SearchItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const performSearch = useCallback(async (searchQuery: string) => {
-    if (!searchQuery.trim()) {
-      setResults([]);
-      return;
+function useSearch(query: string, open: boolean) {
+  const [data, setData] = useState<{
+    query: string;
+    results: SearchItem[];
+    loading: boolean;
+    error: boolean;
+    total: number;
+  }>({ query: "", results: [], loading: false, error: false, total: 0 });
+  const [consentVersion, setConsentVersion] = useState(0);
+  const [retryVersion, setRetryVersion] = useState(0);
+  const [more, setMore] = useState(false);
+  const controller = useRef<AbortController | null>(null);
+  const interaction = useRef<string | undefined>(undefined);
+  const receipts = useRef(new Map<string, string>());
+  useEffect(
+    () => subscribeSiteOSSearchConsent(() => setConsentVersion((v) => v + 1)),
+    [],
+  );
+  useEffect(() => {
+    const abort = new AbortController();
+    controller.current = abort;
+    receipts.current.clear();
+    let settle: ReturnType<typeof setTimeout> | undefined;
+    const normalized = query.trim();
+    setMore(false);
+    if (!open || !normalized) {
+      interaction.current = undefined;
+      setData({
+        query: normalized,
+        results: [],
+        loading: false,
+        error: false,
+        total: 0,
+      });
+      return () => abort.abort();
     }
-
-    setIsLoading(true);
-
-    try {
-      const response = await searchSiteOSProject(searchQuery, { limit: 20 });
-      if (response.success) {
-        setResults(
-          response.hits.map((hit, index) =>
-            mapRemoteSearchHitToItem(hit, index),
-          ),
-        );
-      } else {
-        setResults([]);
+    if (canRecordSiteOSSearch()) interaction.current ??= crypto.randomUUID();
+    else interaction.current = undefined;
+    setData({
+      query: normalized,
+      results: [],
+      loading: true,
+      error: false,
+      total: 0,
+    });
+    const timer = setTimeout(async () => {
+      try {
+        const response = await searchSiteOSProject(normalized, {
+          limit: 20,
+          signal: abort.signal,
+          interactionId: interaction.current,
+        });
+        if (abort.signal.aborted) return;
+        if (!response.success) {
+          setData({
+            query: normalized,
+            results: [],
+            loading: false,
+            error: true,
+            total: 0,
+          });
+          return;
+        }
+        if (response.analyticsReceipt)
+          for (const hit of response.hits)
+            receipts.current.set(hit.id, response.analyticsReceipt);
+        setData({
+          query: normalized,
+          results: response.hits.map(mapRemoteSearchHitToItem),
+          loading: false,
+          error: false,
+          total: response.total,
+        });
+        settle = setTimeout(() => {
+          if (!abort.signal.aborted)
+            recordSiteOSSearch(response.analyticsReceipt);
+        }, 500);
+      } catch {
+        if (!abort.signal.aborted)
+          setData({
+            query: normalized,
+            results: [],
+            loading: false,
+            error: true,
+            total: 0,
+          });
       }
+    }, 300);
+    return () => {
+      abort.abort();
+      clearTimeout(timer);
+      clearTimeout(settle);
+    };
+  }, [query, open, consentVersion, retryVersion]);
+  async function loadMore() {
+    const abort = controller.current;
+    if (
+      !abort ||
+      abort.signal.aborted ||
+      more ||
+      data.results.length >= data.total
+    )
+      return;
+    setMore(true);
+    try {
+      const response = await searchSiteOSProject(query, {
+        limit: 20,
+        offset: data.results.length,
+        signal: abort.signal,
+        interactionId: interaction.current,
+      });
+      if (abort.signal.aborted) return;
+      if (!response.success) {
+        setData((previous) => ({ ...previous, error: true }));
+        return;
+      }
+      if (response.analyticsReceipt)
+        for (const hit of response.hits)
+          receipts.current.set(hit.id, response.analyticsReceipt);
+      setData((previous) => ({
+        ...previous,
+        error: false,
+        total: response.hits.length ? response.total : previous.results.length,
+        results: [
+          ...previous.results,
+          ...response.hits.map((hit, i) =>
+            mapRemoteSearchHitToItem(hit, previous.results.length + i),
+          ),
+        ],
+      }));
     } catch {
-      setResults([]);
+      if (!abort.signal.aborted)
+        setData((previous) => ({ ...previous, error: true }));
     } finally {
-      setIsLoading(false);
+      if (!abort.signal.aborted) setMore(false);
     }
-  }, []);
-
+  }
   return {
-    isLoading,
-    performSearch,
-    results,
+    results: data.query === query.trim() ? data.results : [],
+    isLoading:
+      data.loading || (Boolean(query.trim()) && data.query !== query.trim()),
+    error: data.error && data.query === query.trim(),
+    total: data.total,
+    more,
+    loadMore,
+    retry: () => setRetryVersion((v) => v + 1),
+    select: (item: SearchItem) => {
+      if (item.documentId && data.query === query.trim())
+        recordSiteOSSearch(
+          receipts.current.get(item.documentId),
+          item.documentId,
+        );
+    },
   };
 }
 
@@ -103,7 +226,9 @@ const SearchInput = ({ query, setQuery, className }: SearchInputProps) => {
       placeholder="What are you searching for?"
       value={query}
       onChange={(event) => setQuery(event.target.value)}
-      tabIndex={1}
+      aria-label="Search site content"
+      maxLength={500}
+      autoComplete="off"
     />
   );
 };
@@ -197,7 +322,7 @@ interface SearchGroupProps<T extends SearchHintItem> {
   selectedIndex: number | null;
   totalItems: number;
   onItemChange: (index: number) => void;
-  onSelectItem: () => void;
+  onSelectItem: (item: T) => void;
 }
 
 function HighlightedText(props: {
@@ -257,7 +382,7 @@ function SearchGroup<T extends SearchHintItem>({
                 isLast={itemIndex === totalItems - 1}
                 dataIndex={itemIndex}
                 onMouseEnter={() => onItemChange(itemIndex)}
-                onSelect={onSelectItem}
+                onSelect={() => onSelectItem(item)}
               />
             </li>
           );
@@ -283,8 +408,8 @@ export default function SearchDialog({
   onSelectResult,
 }: SearchDialogProps) {
   const [query, setQuery] = useState("");
-  const debouncedQuery = useDebounce(query, 300);
-  const { results, isLoading, performSearch } = useSearch();
+  const { results, isLoading, error, total, more, loadMore, retry, select } =
+    useSearch(query, open);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const isTouchDevice = useTouchDevice();
 
@@ -296,26 +421,20 @@ export default function SearchDialog({
       results,
     });
 
-    return sections.flatMap((section) =>
+    return sections.flatMap((section, sectionIndex) =>
       section.items.map((item, index) => ({
         item,
         index:
           sections
-            .slice(
-              0,
-              sections.findIndex((candidate) => candidate.title === section.title),
-            )
-            .reduce((sum, candidate) => sum + candidate.items.length, 0) + index,
+            .slice(0, sectionIndex)
+            .reduce((sum, candidate) => sum + candidate.items.length, 0) +
+          index,
       })),
     );
   }, [query, results]);
 
   const items = allItems();
   const totalItems = items.length;
-
-  useEffect(() => {
-    void performSearch(debouncedQuery);
-  }, [debouncedQuery, performSearch]);
 
   useEffect(() => {
     if (!open) {
@@ -347,7 +466,9 @@ export default function SearchDialog({
           ? "end"
           : "nearest";
     selectedElement.scrollIntoView({
-      behavior: "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
       block: blockOption,
     });
   }, [isTouchDevice, selectedIndex, totalItems]);
@@ -358,11 +479,8 @@ export default function SearchDialog({
     }
   };
 
-  const handleCloseAutoFocus = (event: Event) => {
-    event.preventDefault();
-  };
-
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if ((event.target as HTMLElement).tagName !== "INPUT") return;
     if (event.key === "ArrowDown") {
       event.preventDefault();
       if (selectedIndex < totalItems - 1) {
@@ -380,10 +498,6 @@ export default function SearchDialog({
     }
 
     if (event.key === "Enter" && selectedIndex !== null) {
-      if ((event.target as HTMLElement)?.tabIndex === 2) {
-        return;
-      }
-
       event.preventDefault();
       const selectedElement = document.querySelector(
         `[data-index="${selectedIndex}"]`,
@@ -412,17 +526,20 @@ export default function SearchDialog({
     let startIndex = 0;
     return (
       <>
-        {sections.map((section) => {
+        {sections.map((section, sectionIndex) => {
           const group = (
             <SearchGroup
-              key={section.title}
+              key={`${section.title}-${sectionIndex}`}
               title={section.title}
               items={section.items}
               startIndex={startIndex}
               selectedIndex={selectedIndex}
               totalItems={totalItems}
               onItemChange={setSelectedIndex}
-              onSelectItem={onSelectResult}
+              onSelectItem={(item) => {
+                select(item);
+                onSelectResult();
+              }}
             />
           );
           startIndex += section.items.length;
@@ -436,7 +553,6 @@ export default function SearchDialog({
     <DialogContent
       className="top-auto bottom-0 h-[75dvh] w-full max-w-(--breakpoint-sm) translate-y-0 rounded-t-xl p-0 shadow-none outline-hidden data-[state=closed]:zoom-out-100 data-[state=closed]:slide-out-to-bottom-1/2 data-[state=open]:zoom-in-100 data-[state=open]:slide-in-from-bottom-1/2 sm:top-[20dvh] sm:bottom-auto sm:h-auto sm:rounded-lg sm:data-[state=closed]:zoom-out-95 sm:data-[state=closed]:slide-out-to-bottom-1 sm:data-[state=open]:zoom-in-95 sm:data-[state=open]:slide-in-from-bottom-1"
       onOpenAutoFocus={handleOpenAutoFocus}
-      onCloseAutoFocus={handleCloseAutoFocus}
     >
       <DialogTitle className="sr-only">Search</DialogTitle>
       <DialogDescription className="sr-only">
@@ -455,7 +571,6 @@ export default function SearchDialog({
               isTouchDevice && "hidden",
             )}
             variant="outline"
-            tabIndex={2}
             size="xs"
           >
             <span className="sr-only">Close search</span>
@@ -469,7 +584,11 @@ export default function SearchDialog({
           <div className="relative flex min-h-20 flex-col gap-y-5 overflow-hidden px-4 py-5">
             {isLoading ? (
               <div className="flex justify-center pt-3">
-                <div className="size-5 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
+                <div
+                  role="status"
+                  aria-label="Searching"
+                  className="size-5 motion-reduce:animate-none animate-spin rounded-full border-2 border-muted-foreground border-t-transparent"
+                />
               </div>
             ) : null}
 
@@ -496,7 +615,38 @@ export default function SearchDialog({
               </>
             ) : null}
 
-            {!isLoading && query ? renderSearchResults() : null}
+            {!isLoading && error && (
+              <div
+                role="alert"
+                className="flex flex-col items-center gap-3 py-3 text-sm"
+              >
+                <p>Search is temporarily unavailable.</p>
+                <Button
+                  variant="outline"
+                  onClick={results.length ? () => void loadMore() : retry}
+                >
+                  Try again
+                </Button>
+              </div>
+            )}
+            {!isLoading && query && (!error || results.length > 0)
+              ? renderSearchResults()
+              : null}
+            {!isLoading &&
+              query &&
+              results.length > 0 &&
+              results.length < total &&
+              results.length < 10_000 && (
+                <Button
+                  variant="outline"
+                  disabled={more}
+                  onClick={() => void loadMore()}
+                >
+                  {more
+                    ? "Loading…"
+                    : `More results (${results.length} of ${total})`}
+                </Button>
+              )}
           </div>
           <ScrollBar className="invisible" orientation="horizontal" />
         </ScrollArea>

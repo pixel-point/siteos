@@ -1,0 +1,21 @@
+{
+  "settings": {
+    "searchableAttributes": [
+      "title",
+      "searchableText",
+      "presentation.snippet",
+      "presentation.sourceLabel",
+      "presentation.sectionLabel",
+      "presentation.category"
+    ],
+    "synonyms": { "help": ["support"], "support": ["help"] },
+    "typoTolerance": {
+      "enabled": true,
+      "minWordSizeForTypos": { "oneTypo": 5, "twoTypos": 9 }
+    }
+  },
+  "benchmarks": [
+    { "query": "getting started", "expectedIds": [] },
+    { "query": "help", "expectedIds": [] }
+  ]
+}

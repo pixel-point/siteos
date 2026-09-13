@@ -94,7 +94,9 @@ Use `healthy` only when environment state, source coverage, sync/job signals, an
 
 ## Limitations To State
 
-Always distinguish supported analytics from missing durable analytics:
+These limits describe the operational `search analytics` endpoint only. The separate `search visitors report` contract is documented in [search-experience.md](search-experience.md). Never infer visitor counts from operational telemetry.
+
+Always distinguish supported operational analytics from missing fields in that response:
 
 - `queryActivity.telemetryScope: "in-process-recent-events"` is query-protection telemetry, not durable historical analytics. Its `logging.retention: "process-lifetime-or-200-events"` and `logging.scope: "in-process"` describe the current recent-event window.
 - `recent_process_local_query_telemetry` means query activity may reset with server process lifecycle.

@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.7.0`
+Package: `@siteoshq/cli@2.8.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -242,6 +242,24 @@ siteos forms submissions export --output <new-file> [--form <id>] [--query <text
 ## Search
 
 ```text
+siteos search migrate algolia --records <export.ndjson> --mapping <mapping.json> --out <new-directory> [--settings <settings.json>] [--synonyms <synonyms.ndjson>] [--rules <rules.ndjson>] [--json]
+siteos search delivery status --environment <slug> [--json]
+siteos search delivery configure --environment <slug> --file <delivery.json> --apply [--json]
+siteos search crawl status --environment <slug> [--json]
+siteos search crawl configure --environment <slug> --file <crawler.json> [--json]
+siteos search crawl start --environment <slug> [--json]
+siteos search crawl publish --environment <slug> --run <id> --apply [--accept-truncated] [--accept-removals] [--json]
+siteos search content --environment <slug> [--query <text>] [--source <type>] [--offset <n>] [--json]
+siteos search query --environment <slug> --query <text> [--source <type>] [--section <label>] [--offset <n>] [--json]
+siteos search sync --environment <slug> --file <payload.json> [--apply] [--json]
+siteos search relevance show --environment <slug> [--json]
+siteos search relevance preview --environment <slug> --file <relevance.json> [--json]
+siteos search relevance compare --environment <slug> --revision <id> [--query <text>] [--json]
+siteos search relevance apply --environment <slug> --revision <id> [--json]
+siteos search installation status --environment <slug> [--json]
+siteos search installation verify --environment <slug> --url <website-query-endpoint> --query <text> [--json]
+siteos search visitors report --environment <slug> [--days <7|30|90>] [--json]
+siteos search visitors configure --environment <slug> --enabled <true|false> --retention-days <7|30|90> [--json]
 siteos search analytics --environment <slug> [--json]
 siteos search diagnostics --environment <slug> [--json]
 siteos search doctor --environment <slug> [--json]

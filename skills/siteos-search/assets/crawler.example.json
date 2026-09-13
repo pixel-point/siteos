@@ -1,0 +1,22 @@
+{
+  "startUrl": "https://acme.com/docs",
+  "sitemapUrls": [
+    "https://acme.com/sitemap.xml"
+  ],
+  "includePaths": [
+    "/docs"
+  ],
+  "excludePaths": [
+    "/docs/archive"
+  ],
+  "maxPages": 100,
+  "maxDepth": 4,
+  "includeNoindex": false,
+  "schedule": "manual",
+  "publication": "review",
+  "maxRemovalPercent": 10,
+  "extraction": {
+    "contentSelector": "main, article",
+    "splitSections": true
+  }
+}

@@ -1,15 +1,17 @@
 ---
 name: siteos-search
-description: Use when creating, selecting, configuring, verifying, repairing, or operating SiteOS Search for a common website Project, including Environments, source discovery, scoped credentials, sync, query, UI delivery, search health, usage analytics and reports through @siteoshq/cli.
+description: Use when creating, selecting, configuring, verifying, repairing, or operating SiteOS Search for a common website Project, including Environments, source discovery, scoped credentials, sync, query, UI delivery, website crawling, relevance previews, installation checks, consented visitor analytics, search health and reports through @siteoshq/cli.
 ---
 
 # SiteOS Search
 
-For supported hosted reads, prefer the available `siteos_search_get_diagnostics` and `siteos_search_get_analytics` MCP tools after checking `siteos_get_context` and the exact Organization, Project and Environment. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require repository setup or CLI login. Use the existing CLI workflow for local work, mutations and operations outside the MCP catalog.
+For supported hosted reads, discover and use `siteos_search_query`, `siteos_search_list_content`, `siteos_search_get_visitors`, `siteos_search_get_relevance`, `siteos_search_get_connection`, `siteos_search_get_crawler`, `siteos_search_get_diagnostics` and `siteos_search_get_analytics` MCP tools after checking `siteos_get_context` and the exact Organization, Project and Environment. Follow [MCP and CLI context](../siteos/references/mcp-and-cli.md). These reads do not require repository setup or CLI login. Use the existing CLI workflow for local work, mutations and operations outside the MCP catalog.
 
 Use this skill from the root of a target external project, or pass an explicit target project root when the user names one.
 
-This skill owns Search setup, operation and reporting. For search health, usage, diagnostics, charts or sidecar reports, go directly to [references/analytics-workflow.md](references/analytics-workflow.md); do not start onboarding, sync or UI changes for a reporting request. For implementation, use the connection, source, synchronization and UI workflows below. Website pageviews, custom events and conversions belong to `$siteos-analytics`.
+For setup or migration, start with [Choose the shortest setup path](references/setup-paths.md): add content, check results, then add the native website interface. Reuse observed state and previously approved decisions. Select the crawler, local source-handler, prepared import or Algolia path before implementation; only the local source-handler path requires the detailed extraction session below.
+
+This skill owns Search setup, operation and reporting. For offline export preparation, use [Algolia migration](references/algolia-migration.md); this local-only command needs no Auth or Project preflight. For editable components on any platform, use [framework integration](references/framework-integration.md). A hosted `search.js` widget is not required. Use [references/website-crawler.md](references/website-crawler.md) for public HTML crawling, sitemap discovery, ownership verification, extraction, scheduled crawls and guarded automatic publication. An approved crawler source does not require local source-handler scaffolding; website UI delivery remains separate. Use [references/search-experience.md](references/search-experience.md) for content import previews, relevance tuning, resumable installation checks and consented visitor analytics. For search health, usage, diagnostics, charts or sidecar reports, go directly to [references/analytics-workflow.md](references/analytics-workflow.md); do not start onboarding, sync or UI changes for a reporting request. For implementation, use the connection, source, synchronization and UI workflows below. Website pageviews, custom events and conversions belong to `$siteos-analytics`.
 
 Run `npx @siteoshq/cli auth status --json` before remote Search operations and delegate missing authentication or Organization selection to `$siteos-auth`. Use the common `siteos project` workflow for discovery, creation and selection; service operations require that shared selection. Never call Auth, Project, or credential-management endpoints directly, inspect CLI private state, or use legacy Organization tokens or Project API keys.
 
@@ -17,13 +19,13 @@ Do not inspect secret-bearing environment files or process environment values wi
 
 Use [references/siteos-connection-onboarding.md](references/siteos-connection-onboarding.md) for CLI-owned SiteOS repository connection, [references/source-discovery.md](references/source-discovery.md) for candidate discovery and the combined source/UI placement checkpoint, [references/source-confirmation-and-handlers.md](references/source-confirmation-and-handlers.md) for confirmed config and handler work, [references/scaffold-contract.md](references/scaffold-contract.md) for the committed scaffold and sync runner, [references/ui-runtime-delivery.md](references/ui-runtime-delivery.md) for canonical `SearchBar` + `SearchDialog` UI/runtime delivery, and [references/onboarding-report-template.md](references/onboarding-report-template.md) for user-facing onboarding reports.
 
-On onboarding runs only, use `scripts/session-state-cli.mjs` to create and maintain `.siteos/temp/search/session-<started-at>.json`. The JSON session file is the canonical source for `siteosConnection`, steps, user decisions, blockers, findings, artifacts, per-step timing metadata, checkpoint progression, cleanup confirmation, and the saved UI placement decision. Step timing is observability metadata only; it must not drive progression, checkpoint decisions, source confirmation, UI placement, or sync/runtime behavior. Do not create onboarding session files for analytics, reporting, or other non-onboarding requests.
+On local source-handler onboarding runs only, use `scripts/session-state-cli.mjs` to create and maintain `.siteos/temp/search/session-<started-at>.json`. The JSON session file is the canonical source for `siteosConnection`, steps, user decisions, blockers, findings, artifacts, per-step timing metadata, checkpoint progression, cleanup confirmation, and the saved UI placement decision. Step timing is observability metadata only; it must not drive progression, checkpoint decisions, source confirmation, or sync/runtime behavior. For crawler and prepared import/migration paths, use their CLI status and preview contracts; do not create an extraction session for them, analytics or reporting.
 
 ## Session State CLI Contract
 
 Use `scripts/session-state-cli.mjs` as the only supported session-state interface. Do not read or import `scripts/session-state.mjs` during normal skill execution. If syntax is unclear, run `node .agents/skills/siteos-search/scripts/session-state-cli.mjs help`; do not inspect the implementation file.
 
-Create the onboarding session immediately after the Search Project preflight determines onboarding mode or a real blocker:
+For the local source-handler path, create the onboarding session immediately after the Search Project preflight determines onboarding mode or a real blocker:
 
 ```bash
 node .agents/skills/siteos-search/scripts/session-state-cli.mjs init-onboarding \
@@ -201,7 +203,7 @@ Use the CLI JSON response to classify:
 - `not-ready`: SiteOS is reachable, but environment search health, accepted payload, sync success, or query target checks are not ready.
 - `api-blocked`: SiteOS API cannot be reached, authorization is rejected, the response is malformed, or the endpoint fails in a way that prevents a truthful readiness verdict. A `404` for the explicitly selected environment means it is unavailable or inaccessible to the current authorization; do not infer absence, select a fallback environment, or probe other environment slugs.
 
-Before the first live sync in onboarding mode, record the selected environment explicitly (normally `production`), rerun diagnostics with `--environment <slug>`, and use the unified CLI to list then issue/install or intentionally rotate/install the environment's indexing credential. The first successful `pnpm search:sync` is the only Search setup path; do not activate or manage a runtime.
+Before the first live sync, record the explicitly selected environment and rerun diagnostics with `--environment <slug>`. The unattended scaffold runner needs an indexing credential: list then issue/install or intentionally rotate/install it through the CLI. Authenticated CLI JSON imports use the Search service grant and do not need a separate indexing credential. A successful index publication makes content queryable; do not activate or manage a separate runtime.
 
 Manage shared environments through Project settings or the common CLI:
 
@@ -229,6 +231,10 @@ Inspect only enough local files to choose the next workflow and prepare later ph
 Do not execute arbitrary project code during this foundation step. Read files and inspect paths only.
 
 ## Mode Selection
+
+This config-file classification applies to the local source-handler path. For crawler and prepared
+import/migration paths, inspect their remote status and content instead; absence of a local
+`siteos-search.config.ts` does not mean an existing crawler or imported index needs setup again.
 
 Choose exactly one mode:
 
@@ -263,7 +269,7 @@ For onboarding decision checkpoints and blockers after mode selection, use [refe
 
 ## Workflow Routing
 
-For `onboarding`, initialize or update the session only through `scripts/session-state-cli.mjs`, then route each step through the linked references. Continue automatically through technical steps until `session-state-cli.mjs evaluate` reports a user-decision checkpoint or a real blocker. The only routine user-decision checkpoint is the combined source/result-reference and search UI placement confirmation before scaffold/source-handler work starts.
+For `onboarding` with local source handlers, initialize or update the session only through `scripts/session-state-cli.mjs`, then route each step through the linked references. Continue automatically through technical steps until `session-state-cli.mjs evaluate` reports a user-decision checkpoint or a real blocker. The only routine user-decision checkpoint is the combined source/result-reference and search UI placement confirmation before scaffold/source-handler work starts. For crawler or prepared import/migration onboarding, follow [setup paths](references/setup-paths.md) and the selected path's status/preview operations without entering scaffold steps.
 
 For `existing-search`, treat `siteos-search.config.ts`, `scripts/siteos-search/**`, and the `search:sync` package script as reviewable search implementation state. Route source changes through [references/source-discovery.md](references/source-discovery.md) and [references/source-confirmation-and-handlers.md](references/source-confirmation-and-handlers.md), runtime-token repair through `scripts/runtime-token-tooling.mjs`, sync/scaffold repair through [references/scaffold-contract.md](references/scaffold-contract.md), and UI/runtime repair through [references/ui-runtime-delivery.md](references/ui-runtime-delivery.md).
 
@@ -292,3 +298,12 @@ Stop before:
 - installing SiteOS MCP
 - changing SiteOS API, DB schema, CLI behavior, or exported-project behavior
 - installing global browser automation packages for verification
+
+## Public delivery and large imports
+
+Use `siteos search delivery status --environment SLUG --json` before selecting direct Edge delivery.
+Configure only an explicitly public index with exact website origins, a reviewed JSON settings file
+and `siteos search delivery configure --environment SLUG --file delivery.json --apply --json`.
+See [framework integration](references/framework-integration.md). Never expose a private query key.
+Large content snapshots use the same `siteos search sync` preview/apply workflow up to 100 MB;
+transport chunks are assembled before one index replacement. See [Algolia migration](references/algolia-migration.md).

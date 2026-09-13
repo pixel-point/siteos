@@ -48,6 +48,8 @@ export async function GET(request: Request): Promise<Response> {
     const response = await fetch(upstreamUrl, {
       method: "GET",
       cache: "no-store",
+      redirect: "error",
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(15_000)]),
       headers: {
         Accept: "application/json",
         [SITEOS_RUNTIME_QUERY_CREDENTIAL_HEADER]: queryCredential,
@@ -86,15 +88,37 @@ function buildSiteOSSearchRuntimeUrl(requestUrl: URL, query: string): URL {
   if (!apiBaseUrl) {
     throw new Error("SITEOS_SEARCH_PUBLIC_URL is required.");
   }
+  const origin = new URL(apiBaseUrl);
+  if (
+    origin.username ||
+    origin.password ||
+    origin.pathname !== "/" ||
+    origin.search ||
+    origin.hash ||
+    !(
+      origin.protocol === "https:" ||
+      (origin.protocol === "http:" &&
+        ["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname))
+    )
+  )
+    throw new Error("Invalid Search origin.");
   const upstreamUrl = new URL(
     `/api/search/environment/${encodeURIComponent(environmentSlug)}`,
     apiBaseUrl,
   );
 
-  for (const [key, value] of requestUrl.searchParams.entries()) {
-    upstreamUrl.searchParams.append(key, value);
-  }
   upstreamUrl.searchParams.set("q", query);
+  for (const key of [
+    "limit",
+    "offset",
+    "kind",
+    "section",
+    "interactionId",
+    "installation",
+  ]) {
+    const value = requestUrl.searchParams.get(key);
+    if (value) upstreamUrl.searchParams.set(key, value);
+  }
 
   return upstreamUrl;
 }
@@ -152,6 +176,7 @@ function createUpstreamErrorResponse(
 function createJsonResponse(payload: unknown, status: number): Response {
   return Response.json(payload, {
     status,
+    headers: { "Cache-Control": "no-store" },
   });
 }
 
@@ -178,4 +203,73 @@ function readString(value: unknown): string | null {
   return typeof value === "string" && value.trim().length > 0
     ? value.trim()
     : null;
+}
+
+export async function POST(request: Request): Promise<Response> {
+  // A same-origin endpoint keeps the server credential out of visitor code.
+  if (!isSameOrigin(request))
+    return createJsonResponse({ accepted: false }, 403);
+  const credential = process.env.SITEOS_SEARCH_TOKEN?.trim();
+  if (!credential) return createJsonResponse({ accepted: false }, 503);
+  if (Number(request.headers.get("content-length") ?? 0) > 17_000)
+    return createJsonResponse({ accepted: false }, 400);
+  try {
+    const source = await request.text();
+    if (new TextEncoder().encode(source).length > 17_000)
+      return createJsonResponse({ accepted: false }, 400);
+    const value: unknown = JSON.parse(source);
+    if (
+      !isRecord(value) ||
+      typeof value.receipt !== "string" ||
+      value.receipt.length > 16_000 ||
+      Object.keys(value).some(
+        (key) => !["receipt", "clickedResultId"].includes(key),
+      ) ||
+      (value.clickedResultId !== undefined &&
+        (typeof value.clickedResultId !== "string" ||
+          value.clickedResultId.length > 255))
+    )
+      return createJsonResponse({ accepted: false }, 400);
+    const upstream = buildSiteOSSearchRuntimeUrl(new URL(request.url), "");
+    upstream.search = "";
+    upstream.pathname += "/events";
+    const result = await fetch(upstream, {
+      method: "POST",
+      redirect: "error",
+      cache: "no-store",
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(5000)]),
+      headers: {
+        "Content-Type": "application/json",
+        [SITEOS_RUNTIME_QUERY_CREDENTIAL_HEADER]: credential,
+      },
+      body: JSON.stringify(value),
+    });
+    return createJsonResponse(
+      { accepted: result.ok },
+      result.ok ? 202 : normalizeUpstreamStatus(result.status),
+    );
+  } catch {
+    return createJsonResponse({ accepted: false }, 503);
+  }
+}
+
+function isSameOrigin(request: Request): boolean {
+  try {
+    const rawOrigin = request.headers.get("origin");
+    if (!rawOrigin) return false;
+    const origin = new URL(rawOrigin);
+    const url = new URL(request.url);
+    // Next.js can construct request.url with an internal hostname. Host describes
+    // the incoming website request; arbitrary forwarded-host headers are ignored.
+    const host = request.headers.get("host") ?? url.host;
+    const site = request.headers.get("sec-fetch-site");
+    return (
+      rawOrigin === origin.origin &&
+      ["http:", "https:"].includes(origin.protocol) &&
+      origin.host === host &&
+      (!site || site === "same-origin")
+    );
+  } catch {
+    return false;
+  }
 }

@@ -1,6 +1,8 @@
 # SiteOS Search UI Runtime Delivery
 
-Use this reference only after a target project has a confirmed `siteos-search` scaffold and Phase 5 sync/query verification has succeeded or the user explicitly asks to prepare UI files for review.
+For other frameworks, use [framework integration](framework-integration.md). The Next.js source is a reference; a hosted widget is optional. Choose between the server proxy and an available, verified Search Edge deployment using that guide.
+
+For local source-handler onboarding, use this reference after the confirmed scaffold and successful sync/query verification, or when the user explicitly asks to prepare UI files for review. For crawler or prepared import/migration paths, require a verified published query and agreed UI placement; a local extraction scaffold is unnecessary. Apply the same host inspection, adaptation and browser acceptance rules below, using local review artifacts without the extraction session commands.
 
 This step defines the canonical SiteOS search UI asset pack, the server-proxied SiteOS environment query contract, and the delivery semantics for adapting those assets into a real host project. It does not install browser tooling or overwrite conflicts without approval.
 
@@ -347,9 +349,9 @@ When equivalent host primitives do not exist, the skill may deliver the canonica
 
 ## Search Placement Planning And Confirmation
 
-Search placement is confirmed in the combined source and UI placement checkpoint before scaffold/source-handler work starts. UI delivery must consume the saved `userDecisions.chosenUiPlacement` value instead of asking a second routine placement question.
+Search placement is confirmed in the combined source and UI placement checkpoint before scaffold/source-handler work starts. For that path, UI delivery consumes the saved `userDecisions.chosenUiPlacement` value instead of asking a second routine placement question. Crawler and prepared import paths reuse the placement already agreed in the conversation and their local review artifact; they do not initialize an extraction session for this step.
 
-Read the saved placement decision through the CLI evaluation output:
+For an existing extraction session, read the saved placement through the CLI evaluation output:
 
 ```bash
 node .agents/skills/siteos-search/scripts/session-state-cli.mjs evaluate \
@@ -376,7 +378,7 @@ Recommended session-scoped artifact for the combined checkpoint:
 
 - `.siteos/temp/search/session-<started-at>.ui-placement-plan.json`
 
-Create or update that artifact with:
+When using an extraction session, create or update that artifact with:
 
 ```bash
 node .agents/skills/siteos-search/scripts/session-state-cli.mjs write-ui-placement-plan \
@@ -460,7 +462,7 @@ Recommended minimum shape:
 
 After a future delivery flow applies or previews these files, use [onboarding-report-template.md](onboarding-report-template.md) for the user-facing onboarding report. Report the saved placement decision from `userDecisions.chosenUiPlacement`; do not present a second routine placement checkpoint. If the saved placement is blocked, fill `What is needed to continue` with the specific unblock action, such as clarifying an ambiguous host surface or choosing a safe dedicated search page fallback.
 
-Record UI delivery step state and delivery artifacts with:
+For the local source-handler session, record UI delivery step state and delivery artifacts with:
 
 ```bash
 node .agents/skills/siteos-search/scripts/session-state-cli.mjs start-step \
@@ -523,3 +525,12 @@ If a browser tool is available, verify:
 - the dedicated page or confirmed host placement works on desktop and mobile viewports when the tool supports viewport changes
 
 If no browser tool is available, skip browser automation, record `browserVerification: "skipped-no-available-tool"` in the final verification artifact, and tell the user the exact local page/API route that needs manual verification.
+
+
+## Updated runtime acceptance
+
+Deliver `src/lib/siteos-search-analytics.ts` alongside the query client and dialog. Preserve the host’s visual design and adapt existing primitives. The helper is optional for collection but required by the delivered dialog import; collection remains off without explicit consent and backend enablement. See [search-experience.md](search-experience.md) for the consent adapter and installation verification commands.
+
+The proxy forwards only supported query parameters, bounds requests, rejects redirects, returns `Cache-Control: no-store`, and supports a same-origin POST for signed search/click receipts. Keep the query credential and exact environment on the server. The dialog cancels stale responses, distinguishes a failed request from zero results, preserves engine ranking, supports additional result pages and returns focus to its trigger. Group only adjacent results; regrouping by category would silently change relevance.
+
+Verify late responses, empty/error states, pagination, mouse and Enter clicks, Escape focus return and reduced motion. Check that no analytics request or interaction identifier is sent before consent or after revocation, and that query/click receipts are never printed. Finish with `siteos search installation verify` through the actual local or hosted website endpoint; direct runtime reachability alone does not prove the proxy.

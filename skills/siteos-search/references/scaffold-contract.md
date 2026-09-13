@@ -122,3 +122,6 @@ Keep these facts in session artifacts and use them only when a decision or block
 Do not stop only because scaffold creation completed. Continue into source extraction and explicit local dry-run preview when the confirmed source and data path are clear. Then continue through diagnostics rerun and the first live `pnpm search:sync` for the selected environment when no real blocker exists.
 
 Do not run live `pnpm search:sync` as a SiteOS push in this slice.
+
+
+The runner can export a new owner-only JSON file with `pnpm search:sync --dry-run --output .siteos/temp/search/content-preview.json`. This runs local extraction without resolving a remote credential or sending a request. Use `siteos search sync --environment <common-slug> --file <path>` to inspect the remote full-replacement delta; `--apply` explicitly queues that file. Existing unattended `pnpm search:sync` keeps its environment-scoped indexing credential and uses the canonical `/api/v1/search/environments/:slug/actions/sync` route. A queued job is not a completed publication.

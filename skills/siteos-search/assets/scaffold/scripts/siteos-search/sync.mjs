@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
@@ -21,23 +21,37 @@ class SiteOSSearchSyncError extends Error {
   }
 }
 
-const args = new Set(process.argv.slice(2));
-
 function readSyncOptions() {
-  for (const argument of args) {
-    if (argument === "--" || argument === "--dry-run") {
+  const args = process.argv.slice(2);
+  let isDryRun = false;
+  let output;
+  for (let i = 0; i < args.length; i++) {
+    const argument = args[i];
+    if (argument === "--") continue;
+    if (argument === "--dry-run") {
+      isDryRun = true;
       continue;
     }
-
+    if (
+      argument === "--output" &&
+      args[i + 1] &&
+      !args[i + 1].startsWith("--") &&
+      !output
+    ) {
+      output = args[++i];
+      continue;
+    }
     throw new SiteOSSearchSyncError(
       "unsupported-argument",
-      `Unsupported argument "${argument}". Use "pnpm search:sync" to update the SiteOS index or "pnpm search:sync --dry-run" to preview the payload without updating SiteOS.`,
+      `Unsupported argument "${argument}". Use "pnpm search:sync" or "pnpm search:sync --dry-run [--output <new-file.json>]".`,
     );
   }
-
-  return {
-    isDryRun: args.has("--dry-run"),
-  };
+  if (output && !isDryRun)
+    throw new SiteOSSearchSyncError(
+      "unsupported-argument",
+      "--output requires --dry-run.",
+    );
+  return { isDryRun, output };
 }
 
 async function readJsonFile(filePath, label) {
@@ -122,7 +136,9 @@ function readSourceId(value, label) {
   const sourceId = readNonEmptyString(value, label);
 
   if (!sourceIdPattern.test(sourceId)) {
-    throw new Error(`${label} must use lowercase letters, numbers, and hyphens.`);
+    throw new Error(
+      `${label} must use lowercase letters, numbers, and hyphens.`,
+    );
   }
 
   return sourceId;
@@ -145,7 +161,9 @@ function readEnvironmentSlug(value) {
 }
 
 function readOptionalString(value) {
-  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
+  return typeof value === "string" && value.trim().length > 0
+    ? value.trim()
+    : null;
 }
 
 function readEnvVariable(content, name) {
@@ -200,7 +218,9 @@ async function readIndexingCredential(projectRoot) {
       "The SiteOS Search indexing credential cannot be read. Install it through the SiteOS CLI.",
     );
   }
-  const fromDotenv = readOptionalString(readEnvVariable(dotenv, indexingCredentialEnvName));
+  const fromDotenv = readOptionalString(
+    readEnvVariable(dotenv, indexingCredentialEnvName),
+  );
   if (!fromDotenv) {
     throw new SiteOSSearchSyncError(
       "indexing-credential-missing",
@@ -218,7 +238,9 @@ async function readIndexingCredential(projectRoot) {
 }
 
 async function resolveApiBaseUrl(config) {
-  const envName = readOptionalString(config.project?.apiBaseUrlEnv) ?? "SITEOS_SEARCH_PUBLIC_URL";
+  const envName =
+    readOptionalString(config.project?.apiBaseUrlEnv) ??
+    "SITEOS_SEARCH_PUBLIC_URL";
   const fromEnv = readOptionalString(process.env[envName]);
   let fromDotenv;
   const dotenvPath = path.join(projectRoot, ".env");
@@ -233,14 +255,31 @@ async function resolveApiBaseUrl(config) {
       `${envName} is required for SiteOS Search sync.`,
     );
   }
-  return configured.replace(/\/+$/, "");
+  const url = new URL(configured);
+  if (
+    url.username ||
+    url.password ||
+    url.pathname !== "/" ||
+    url.search ||
+    url.hash ||
+    !(
+      url.protocol === "https:" ||
+      (url.protocol === "http:" &&
+        ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname))
+    )
+  )
+    throw new SiteOSSearchSyncError(
+      "api-base-url-invalid",
+      "Search requires an HTTPS origin or loopback HTTP.",
+    );
+  return url.origin;
 }
 
 function sourceIdToDocumentPrefix(sourceId, documentId) {
-  const normalizedDocumentId = readNonEmptyString(documentId, "document.id").replace(
-    /[^a-zA-Z0-9_-]+/g,
-    "-",
-  );
+  const normalizedDocumentId = readNonEmptyString(
+    documentId,
+    "document.id",
+  ).replace(/[^a-zA-Z0-9_-]+/g, "-");
   const expectedPrefix = `${sourceId}_`;
   return normalizedDocumentId.startsWith(expectedPrefix)
     ? normalizedDocumentId
@@ -256,7 +295,9 @@ function ensureRelativeHandlerPath(handlerPath) {
     path.isAbsolute(normalized) ||
     normalized.includes("..")
   ) {
-    throw new Error(`source.handler must stay under scripts/siteos-search/sources/: ${normalized}`);
+    throw new Error(
+      `source.handler must stay under scripts/siteos-search/sources/: ${normalized}`,
+    );
   }
 
   return normalized;
@@ -270,11 +311,19 @@ async function loadSourceHandler(source) {
     throw new Error(`Source handler is missing: ${handlerPath}`);
   }
 
-  const handlerModule = await import(`${pathToFileURL(absoluteHandlerPath).href}?t=${Date.now()}`);
+  const handlerModule = await import(
+    `${pathToFileURL(absoluteHandlerPath).href}?t=${Date.now()}`
+  );
   const handler = handlerModule.default ?? handlerModule.sourceHandler;
 
-  if (!handler || typeof handler !== "object" || typeof handler.collectDocuments !== "function") {
-    throw new Error(`Source handler must export sourceHandler.collectDocuments(): ${handlerPath}`);
+  if (
+    !handler ||
+    typeof handler !== "object" ||
+    typeof handler.collectDocuments !== "function"
+  ) {
+    throw new Error(
+      `Source handler must export sourceHandler.collectDocuments(): ${handlerPath}`,
+    );
   }
 
   return { handler, handlerPath };
@@ -300,7 +349,9 @@ function normalizeDocument(source, document) {
     metadata: document.metadata,
     presentation: document.presentation,
     searchableText:
-      typeof document.searchableText === "string" ? document.searchableText.trim() : "",
+      typeof document.searchableText === "string"
+        ? document.searchableText.trim()
+        : "",
     sourceName: sourceId,
     sourcePayload: document.sourcePayload,
     title,
@@ -324,12 +375,16 @@ async function collectSourceDocuments(source) {
     );
   }
 
-  const normalizedDocuments = documents.map((document) => normalizeDocument(source, document));
+  const normalizedDocuments = documents.map((document) =>
+    normalizeDocument(source, document),
+  );
   const seenIds = new Set();
 
   for (const document of normalizedDocuments) {
     if (seenIds.has(document.id)) {
-      throw new Error(`Source "${sourceId}" returned duplicate document id "${document.id}".`);
+      throw new Error(
+        `Source "${sourceId}" returned duplicate document id "${document.id}".`,
+      );
     }
     seenIds.add(document.id);
   }
@@ -349,7 +404,9 @@ async function collectSourceDocuments(source) {
 
 async function buildSyncPayload(config) {
   if (config.sync?.mode !== "full-replace") {
-    throw new Error('siteos-search.config.ts must use sync.mode: "full-replace".');
+    throw new Error(
+      'siteos-search.config.ts must use sync.mode: "full-replace".',
+    );
   }
 
   const environmentSlug = readEnvironmentSlug(config.environment?.slug);
@@ -383,7 +440,10 @@ function summarizePayload(payload) {
     mode: payload.mode,
     environmentSlug: payload.target?.environmentSlug,
     sourceCount: payload.sources.length,
-    documentCount: payload.sources.reduce((count, source) => count + source.documents.length, 0),
+    documentCount: payload.sources.reduce(
+      (count, source) => count + source.documents.length,
+      0,
+    ),
     sources: payload.sources.map((source) => ({
       id: source.sourceType,
       label: source.label,
@@ -415,6 +475,8 @@ async function requestSiteOSJson(params) {
   try {
     response = await fetch(`${params.apiBaseUrl}${params.path}`, {
       method: "POST",
+      redirect: "error",
+      signal: AbortSignal.timeout(30_000),
       headers: {
         [indexingCredentialHeader]: params.credential,
         "Content-Type": "application/json",
@@ -422,7 +484,10 @@ async function requestSiteOSJson(params) {
       body: JSON.stringify(params.body),
     });
   } catch {
-    throw new SiteOSSearchSyncError("api-unreachable", "SiteOS Search sync is unreachable.");
+    throw new SiteOSSearchSyncError(
+      "api-unreachable",
+      "SiteOS Search sync is unreachable.",
+    );
   }
 
   const body = await readJsonResponse(response);
@@ -446,7 +511,14 @@ async function requestSiteOSJson(params) {
     );
   }
 
-  if (!body || typeof body !== "object" || body.success !== true) {
+  if (
+    !body ||
+    typeof body !== "object" ||
+    !(
+      typeof body.jobId === "string" &&
+      (body.state === "queued" || body.success === true)
+    )
+  ) {
     throw new SiteOSSearchSyncError(
       "invalid-response",
       "SiteOS Search returned an invalid sync response.",
@@ -463,7 +535,7 @@ async function submitPayload(params) {
     body: params.payload,
     failureCode: "sync-submit-failed",
     method: "POST",
-    path: `/api/v1/project/search/environments/${encodeURIComponent(params.environmentSlug)}/actions/sync`,
+    path: `/api/v1/search/environments/${encodeURIComponent(params.environmentSlug)}/actions/sync`,
   });
 
   return body;
@@ -472,12 +544,12 @@ async function submitPayload(params) {
 async function main() {
   const options = readSyncOptions();
   const config = await loadSearchConfig(searchConfigPath);
-  const apiBaseUrl = await resolveApiBaseUrl(config);
+  const apiBaseUrl = options.isDryRun ? null : await resolveApiBaseUrl(config);
   const payload = await buildSyncPayload(config);
   const summary = summarizePayload(payload);
 
   console.log("SiteOS search sync payload is ready.");
-  console.log(`SiteOS API base URL: ${apiBaseUrl}`);
+  if (apiBaseUrl) console.log(`SiteOS API base URL: ${apiBaseUrl}`);
   console.log(`Mode: ${summary.mode}`);
   console.log(`Environment: ${summary.environmentSlug}`);
   console.log(`Sources: ${summary.sourceCount}`);
@@ -487,8 +559,24 @@ async function main() {
   }
 
   if (options.isDryRun) {
+    if (options.output) {
+      const outputPath = path.resolve(projectRoot, options.output);
+      await mkdir(path.dirname(outputPath), { recursive: true });
+      await writeFile(outputPath, JSON.stringify(payload, null, 2) + "\n", {
+        flag: "wx",
+        mode: 0o600,
+      });
+      console.log(
+        `Payload saved to ${outputPath}. Existing files are never overwritten.`,
+      );
+      console.log(
+        "Review the remote replacement with siteos search sync --environment <common-slug> --file <file> before applying.",
+      );
+    }
     console.log("Dry run only. No request was sent to SiteOS.");
-    console.log('Run "pnpm search:sync" without --dry-run to update the SiteOS search index.');
+    console.log(
+      'Run "pnpm search:sync" without --dry-run to update the SiteOS search index.',
+    );
     return;
   }
 
@@ -505,13 +593,17 @@ async function main() {
   console.log(
     JSON.stringify(
       {
-        success: result?.success === true,
+        success: typeof result?.jobId === "string",
         skipped: result?.skipped === true,
         jobId: result?.jobId ?? null,
         syncRunId: result?.syncRunId ?? null,
-        sourceTypes: Array.isArray(result?.sourceTypes) ? result.sourceTypes : [],
+        sourceTypes: Array.isArray(result?.sourceTypes)
+          ? result.sourceTypes
+          : [],
         acceptedDocumentCount:
-          typeof result?.acceptedDocumentCount === "number" ? result.acceptedDocumentCount : null,
+          typeof result?.documentCount === "number"
+            ? result.documentCount
+            : (result?.acceptedDocumentCount ?? null),
       },
       null,
       2,
@@ -527,6 +619,8 @@ try {
   if (error instanceof SiteOSSearchSyncError) {
     console.error(`Classification: ${error.code}`);
   }
-  console.error(error instanceof Error ? error.message : "SiteOS search sync failed.");
+  console.error(
+    error instanceof Error ? error.message : "SiteOS search sync failed.",
+  );
   process.exitCode = 1;
 }

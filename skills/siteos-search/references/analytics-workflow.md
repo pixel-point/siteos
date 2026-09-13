@@ -10,7 +10,7 @@ Start by using safe CLI output to confirm Auth, the Search Project, and the sele
 2. Run `npx @siteoshq/cli auth status --json`. Delegate missing Auth or Organization selection to `$siteos-auth`.
 3. Run `npx @siteoshq/cli project status --json`. Delegate missing Search Project selection or product repair to `$siteos-search`; never interpret private binding state or inspect credential-bearing files.
 4. Read `siteos-search.config.ts` only when needed to resolve an explicitly configured environment slug or explain source labels. Stop when no environment is selected; do not fall back to `prod`.
-5. Run `npx @siteoshq/cli search analytics --environment <slug> --json` as the primary source.
+5. For index/job health run `npx @siteoshq/cli search analytics --environment <slug> --json`. For visitor searches, popular queries, no results or result clicks use `npx @siteoshq/cli search visitors report --environment <slug> --days 30 --json` and [search-experience.md](search-experience.md).
 6. Run `npx @siteoshq/cli search diagnostics --environment <slug> --json` only when supporting readiness context is needed.
 7. Choose concise chat or a sidecar HTML report from prompt complexity before answering.
 
@@ -31,7 +31,7 @@ Stop before:
 - adding source handlers or modifying `scripts/siteos-search/**`
 - running `pnpm search:sync`
 - changing search UI or server-side query files
-- printing raw `.siteos/search/project.json`, private bindings, broad credentials, authorization headers, environment query credentials, Meilisearch keys, raw query events, raw query text, or client identifiers
+- printing raw `.siteos/search/project.json`, private bindings, broad credentials, authorization headers, environment query credentials, Meilisearch keys, raw event rows, receipts, or client identifiers. Bounded aggregate query text from `visitors report` may be used for the requested query analysis
 - fabricating durable query history, top-query analytics, zero-result analytics, click tracking, auth-failure breakdowns, or per-user history outside the API contract
 - writing analytics HTML reports inside the target project without explicit user approval
 - installing SiteOS MCP
