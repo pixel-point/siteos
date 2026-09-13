@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.6.0`
+Package: `@siteoshq/cli@2.7.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -113,7 +113,7 @@ siteos seo repair --audit <id> --url <url> [--url <url>...] [--rule <id>] [--res
 siteos seo recheck --audit <id> --url <url> [--url <url>...] [--resource <expected-id>] [--environment <slug>] [--json]
 siteos seo issue <ignore|restore> --audit <id> --url <url> --rule <id> --reason <text> --revision <number> [--environment <slug>] [--json]
 siteos seo schedule show [--environment <slug>] [--json]
-siteos seo schedule set --enabled <true|false> --weekday <1-7> --time <HH:mm> --timezone <IANA> --revision <number> [--environment <slug>] [--json]
+siteos seo schedule set --enabled <true|false> (--days <1,2,3|daily|weekdays> | --weekday <1-7>) --time <HH:mm> --timezone <IANA> --revision <number> [--environment <slug>] [--json]
 siteos seo notifications retry <notification-id> [--environment <slug>] [--json]
 siteos seo notifications show [--environment <slug>] [--json]
 siteos seo notifications destinations [--environment <slug>] [--json]
@@ -216,7 +216,7 @@ siteos forms credential list --environment <slug> [--json]
 siteos forms credential issue --environment <slug> --install [--name <name>] [--json]
 siteos forms credential rotate --environment <slug> --install [--name <name>] [--json]
 siteos forms credential revoke --environment <slug> --credential <credential-id> [--json]
-siteos forms submissions list --environment <slug> --form <form-id> [--query <text>] [--status <status>] [--from <ISO>] [--to <ISO>] [--limit <1-100>] [--cursor <cursor>] [--json]
+siteos forms submissions list --environment <slug> [--form <form-id>] [--query <text>] [--status <new|read|archived|spam|inbox|all>] [--purpose <regular|test|all>] [--version <id>] [--from <ISO>] [--to <ISO>] [--limit <1-100>] [--cursor <cursor>] [--json]
 siteos forms submissions read --environment <slug> --form <form-id> --submission <id> [--json]
 siteos forms submissions status --environment <slug> --form <form-id> --submission <id> --status <new|read|archived|spam> --expected-status <status> [--json]
 siteos forms deploy --manifest <path> [--json]
@@ -224,6 +224,19 @@ siteos forms deployment-key issue --environment <slug> --install [--name <name>]
 siteos forms deployment-key list --environment <slug> [--json]
 siteos forms deployment-key revoke --environment <slug> --credential <id> [--json]
 siteos forms submit --input <path> [--json]
+siteos forms contacts list [--query <text>] [--form <id>] [--status <allowed|blocked|all>] [--source <regular|test|spam|all>] [--from <ISO>] [--to <ISO>] [--offset <number>] [--environment <slug>] [--json]
+siteos forms contacts read --contact <id> [--offset <number>] [--environment <slug>] [--json]
+siteos forms contacts edit --contact <id> --input <json-file> [--environment <slug>] [--json]
+siteos forms contacts block --contact <id> --input <json-file> [--environment <slug>] [--json]
+siteos forms contacts merge --contact <id> --input <json-file> [--environment <slug>] [--json]
+siteos forms contacts import [--environment <slug>] [--json]
+siteos forms contacts mappings [--environment <slug>] [--json]
+siteos forms contacts mapping-set --input <json-file> [--environment <slug>] [--json]
+siteos forms contacts protection [--environment <slug>] [--json]
+siteos forms contacts protection-set --input <json-file> [--environment <slug>] [--json]
+siteos forms contacts export --input <json-file> --output <new-file> [--environment <slug>] [--json]
+siteos forms submissions bulk --input <json-file> [--environment <slug>] [--json]
+siteos forms submissions export --output <new-file> [--form <id>] [--query <text>] [--status <new|read|archived|spam|inbox>] [--purpose <regular|test|all>] [--from <ISO>] [--to <ISO>] [--version <id>] [--environment <slug>] [--json]
 ```
 
 ## Search

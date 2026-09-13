@@ -2,14 +2,14 @@
 
 This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Analytics, and Integrations.
 
-Release: 2.10.0.
+Release: 2.11.0.
 
 ## Install
 
 ### Codex
 
 ```sh
-codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v2.10.0
+codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v2.11.0
 codex plugin add siteos@siteos
 ```
 
@@ -40,7 +40,7 @@ Routes initial setup, unspecified requests, and cross-service work to only the r
 
 ### Remote MCP
 
-The plugin connects to `https://app.siteos.sh/mcp` for read-only Project/service discovery, Pulse/Trace/SEO diagnostics, Cookie configuration and aggregates, Forms definitions and submissions, Search and Analytics reports, Organization integration status and usage limits. Authorize the intended Organization in the host. Read `siteos_get_context` first, then pass explicit Project and Environment identifiers. MCP does not change the CLI selection. The matching server must be deployed before this plugin release is published.
+The plugin connects to `https://app.siteos.sh/mcp` for read-only Project/service discovery, Pulse/Trace/SEO diagnostics, Cookie configuration and aggregates, Forms definitions, submissions and Contacts, SEO audit schedules, Search and Analytics reports, Organization integration status and usage limits. Authorize the intended Organization in the host. Read `siteos_get_context` first, then pass explicit Project and Environment identifiers. MCP does not change the CLI selection. The matching server must be deployed before this plugin release is published.
 
 Use CLI for local files, builds, validation, deployment, CI and operations outside the MCP catalog. Compare origin, Organization, Project and Environment before switching interfaces. See `skills/siteos/references/mcp-and-cli.md`.
 

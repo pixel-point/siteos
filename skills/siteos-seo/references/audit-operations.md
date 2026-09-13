@@ -27,10 +27,15 @@ regular audits are part of the user's request. Preserve the saved revision and u
 IANA time zone:
 
 ```sh
-npx @siteoshq/cli seo schedule set --enabled true --weekday 1 --time 09:00 --timezone Europe/Madrid --revision <revision> --json
+npx @siteoshq/cli seo schedule set --enabled true --days 1,3,5 --time 09:00 --timezone Europe/Madrid --revision <revision> --json
 ```
 
-Read back the schedule and next run. Weekdays are Monday=1 through Sunday=7. A missing DST time
+CLI 2.7.0 supports `--days daily` (every day), `--days weekdays` (Monday–Friday), or a
+comma-separated set such as `--days 1,3,5`. The legacy `--weekday 1` remains supported; do not
+combine it with `--days`. MCP `siteos_seo_get_automation` reads the saved schedule and notification
+configuration without activating anything. Audit timing is separate from result notifications.
+
+Read back the complete `days` array, time zone, revision and next run. Weekdays are Monday=1 through Sunday=7. A missing DST time
 is skipped; a repeated time runs once. After downtime only one due occurrence is considered.
 An active audit or full queue skips that slot; inspect `lastOutcome`, not just enabled.
 New full HTML audits allow 1–500 pages during Early Access (default 100), including CLI and
