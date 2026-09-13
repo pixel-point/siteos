@@ -219,10 +219,12 @@ Pay attention to these canonical interaction details when a manual JSX adaptatio
 
 - the dialog search input uses `type="text"` unless the native search cancel control is explicitly disabled; do not ship a duplicate browser clear button next to the canonical clear affordance
 - the clear affordance, query reset behavior, focus behavior, and `enterKeyHint="search"` should match the canonical input behavior
+- opening the dialog and changing the query or results clears selection; Enter must not navigate until a row is selected with the pointer or arrow keys
+- from no selection, ArrowDown selects the first row and ArrowUp the last; subsequent navigation is bounded
 - ArrowDown and ArrowUp navigation should match the canonical bounded behavior: move within the first and last result instead of wrapping around the list unless a recorded `canonicalDeviation` explains the change
 - the highlighted result must stay visible while navigating with the keyboard; preserve the canonical `data-index` + `scrollIntoView` behavior or an equivalent ref-based implementation
 - only keyboard navigation should trigger automatic scrolling; pointer hover and wheel/touch scrolling must not move a partially visible row into view or restart a smooth scroll
-- keep hovered and keyboard-selected rows visibly distinct from the dialog surface using the host's semantic colors
+- keep hovered and keyboard-selected rows subtly distinct from the dialog surface using the host's semantic colors; matched words must remain more prominent than the row background
 - the scroll target must be the active result row inside the dialog results viewport, not the page body or the whole dialog
 - touch-device handling should remain equivalent to the canonical behavior; do not add desktop keyboard scrolling side effects to touch-only flows
 - result rows must preserve the observable selected/highlighted state used by keyboard navigation and Enter/click navigation

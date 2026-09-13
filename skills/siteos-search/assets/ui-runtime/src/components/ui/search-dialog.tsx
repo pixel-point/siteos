@@ -247,8 +247,8 @@ function SearchHint({
   return (
     <Link
       className={cn(
-        "group flex w-full cursor-pointer items-start gap-x-3 rounded-lg py-3 text-left outline-hidden transition-colors duration-150 hover:bg-foreground/10 focus-visible:bg-foreground/10 sm:pr-6 sm:pl-3",
-        isSelected && "sm:bg-foreground/10",
+        "group flex w-full cursor-pointer items-start gap-x-3 rounded-lg py-3 text-left outline-hidden transition-colors duration-150 hover:bg-foreground/5 focus-visible:bg-foreground/5 sm:pr-6 sm:pl-3",
+        isSelected && "sm:bg-foreground/5",
         isFirst && "scroll-mt-12",
         !isFirst && !isLast && "scroll-my-2",
         isLast && "scroll-mb-5",
@@ -424,7 +424,7 @@ export function SearchDialogView({
 }: SearchDialogViewProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const scrollFromKeyboard = useRef(false);
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const isTouchDevice = useTouchDevice();
 
   const allItems = useCallback((): { item: SearchItem; index: number }[] => {
@@ -451,12 +451,14 @@ export function SearchDialogView({
 
   useEffect(() => {
     if (!open) {
-      setSelectedIndex(0);
+      scrollFromKeyboard.current = false;
+      setSelectedIndex(null);
     }
   }, [open]);
 
   useEffect(() => {
-    setSelectedIndex(0);
+    scrollFromKeyboard.current = false;
+    setSelectedIndex(null);
   }, [results, query]);
 
   useEffect(() => {
@@ -496,18 +498,18 @@ export function SearchDialogView({
     if ((event.target as HTMLElement).tagName !== "INPUT") return;
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      if (selectedIndex < totalItems - 1) {
+      if (totalItems > 0 && (selectedIndex === null || selectedIndex < totalItems - 1)) {
         scrollFromKeyboard.current = true;
-        setSelectedIndex(selectedIndex + 1);
+        setSelectedIndex(selectedIndex === null ? 0 : selectedIndex + 1);
       }
       return;
     }
 
     if (event.key === "ArrowUp") {
       event.preventDefault();
-      if (selectedIndex > 0) {
+      if (totalItems > 0 && (selectedIndex === null || selectedIndex > 0)) {
         scrollFromKeyboard.current = true;
-        setSelectedIndex(selectedIndex - 1);
+        setSelectedIndex(selectedIndex === null ? totalItems - 1 : selectedIndex - 1);
       }
       return;
     }
@@ -522,7 +524,7 @@ export function SearchDialogView({
     }
 
     if (event.key === "Escape") {
-      setSelectedIndex(0);
+      setSelectedIndex(null);
     }
   };
 
