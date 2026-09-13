@@ -23,7 +23,7 @@ import {
 import { useTouchDevice } from "@/hooks/use-touch-device";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type SearchItem = SiteOSProjectSearchDialogItem;
 
@@ -216,7 +216,7 @@ interface SearchHintProps extends SearchHintItem {
   isSelected?: boolean;
   dataIndex: number;
   isLast?: boolean;
-  onMouseEnter: () => void;
+  onPointerMove: () => void;
   onSelect: () => void;
 }
 
@@ -230,7 +230,7 @@ function SearchHint({
   isSelected,
   dataIndex,
   isLast,
-  onMouseEnter,
+  onPointerMove,
   onSelect,
 }: SearchHintProps) {
   const isFirst = dataIndex === 0;
@@ -247,14 +247,16 @@ function SearchHint({
   return (
     <Link
       className={cn(
-        "group flex w-full cursor-pointer items-start gap-x-3 rounded-lg py-3 text-left outline-hidden transition-colors duration-150 focus-within:bg-muted/50 sm:pr-6 sm:pl-3",
-        isSelected && "sm:bg-muted/50",
+        "group flex w-full cursor-pointer items-start gap-x-3 rounded-lg py-3 text-left outline-hidden transition-colors duration-150 hover:bg-foreground/10 focus-visible:bg-foreground/10 sm:pr-6 sm:pl-3",
+        isSelected && "sm:bg-foreground/10",
         isFirst && "scroll-mt-12",
         !isFirst && !isLast && "scroll-my-2",
         isLast && "scroll-mb-5",
       )}
       href={url}
-      onMouseEnter={onMouseEnter}
+      onPointerMove={(event) => {
+        if (event.pointerType !== "touch") onPointerMove();
+      }}
       onClick={onSelect}
       tabIndex={-1}
       data-index={dataIndex}
@@ -345,7 +347,7 @@ function SearchGroup<T extends SearchHintItem>({
                 isSelected={selectedIndex === itemIndex}
                 isLast={itemIndex === totalItems - 1}
                 dataIndex={itemIndex}
-                onMouseEnter={() => onItemChange(itemIndex)}
+                onPointerMove={() => onItemChange(itemIndex)}
                 onSelect={() => onSelectItem(item)}
               />
             </li>
@@ -421,6 +423,7 @@ export function SearchDialogView({
   select,
 }: SearchDialogViewProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
+  const scrollFromKeyboard = useRef(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const isTouchDevice = useTouchDevice();
 
@@ -457,6 +460,8 @@ export function SearchDialogView({
   }, [results, query]);
 
   useEffect(() => {
+    if (!scrollFromKeyboard.current) return;
+    scrollFromKeyboard.current = false;
     if (isTouchDevice || selectedIndex === null) {
       return;
     }
@@ -476,6 +481,11 @@ export function SearchDialogView({
     });
   }, [isTouchDevice, selectedIndex, totalItems]);
 
+  const selectWithPointer = (index: number) => {
+    scrollFromKeyboard.current = false;
+    setSelectedIndex(index);
+  };
+
   const handleOpenAutoFocus = (event: Event) => {
     if (isTouchDevice) {
       event.preventDefault();
@@ -487,6 +497,7 @@ export function SearchDialogView({
     if (event.key === "ArrowDown") {
       event.preventDefault();
       if (selectedIndex < totalItems - 1) {
+        scrollFromKeyboard.current = true;
         setSelectedIndex(selectedIndex + 1);
       }
       return;
@@ -495,6 +506,7 @@ export function SearchDialogView({
     if (event.key === "ArrowUp") {
       event.preventDefault();
       if (selectedIndex > 0) {
+        scrollFromKeyboard.current = true;
         setSelectedIndex(selectedIndex - 1);
       }
       return;
@@ -538,7 +550,7 @@ export function SearchDialogView({
               startIndex={startIndex}
               selectedIndex={selectedIndex}
               totalItems={totalItems}
-              onItemChange={setSelectedIndex}
+              onItemChange={selectWithPointer}
               onSelectItem={(item) => {
                 select(item);
                 onSelectResult();
@@ -607,7 +619,7 @@ export function SearchDialogView({
                   startIndex={0}
                   selectedIndex={selectedIndex}
                   totalItems={totalItems}
-                  onItemChange={setSelectedIndex}
+                  onItemChange={selectWithPointer}
                   onSelectItem={onSelectResult}
                 />
                 <SearchGroup
@@ -616,7 +628,7 @@ export function SearchDialogView({
                   startIndex={recentSearches.length}
                   selectedIndex={selectedIndex}
                   totalItems={totalItems}
-                  onItemChange={setSelectedIndex}
+                  onItemChange={selectWithPointer}
                   onSelectItem={onSelectResult}
                 />
               </>
@@ -641,7 +653,6 @@ export function SearchDialogView({
                 </Button>
               )}
           </div>
-          <ScrollBar className="invisible" orientation="horizontal" />
         </ScrollArea>
       </div>
     </DialogContent>

@@ -174,7 +174,7 @@ highlight rendering and distinct empty/loading/failure states.
 those states. Hosts can render the view with synthetic data to review their own theme without
 calling SiteOS. The SiteOS monorepo catalogs the real website adaptation under **Search / Visitor
 dialog**: Suggestions, Results, No results, Loading, Unavailable, More results, More results failed,
-Long content and Mobile. Review light and dark themes as well as narrow viewports before delivery.
+Long content, Mobile and Scrollable results. Review light and dark themes as well as narrow viewports before delivery.
 Storybook tooling and fixtures are not shipped in the public plugin or the customer's runtime.
 
 ## Canonical UI Generation Contract
@@ -221,6 +221,8 @@ Pay attention to these canonical interaction details when a manual JSX adaptatio
 - the clear affordance, query reset behavior, focus behavior, and `enterKeyHint="search"` should match the canonical input behavior
 - ArrowDown and ArrowUp navigation should match the canonical bounded behavior: move within the first and last result instead of wrapping around the list unless a recorded `canonicalDeviation` explains the change
 - the highlighted result must stay visible while navigating with the keyboard; preserve the canonical `data-index` + `scrollIntoView` behavior or an equivalent ref-based implementation
+- only keyboard navigation should trigger automatic scrolling; pointer hover and wheel/touch scrolling must not move a partially visible row into view or restart a smooth scroll
+- keep hovered and keyboard-selected rows visibly distinct from the dialog surface using the host's semantic colors
 - the scroll target must be the active result row inside the dialog results viewport, not the page body or the whole dialog
 - touch-device handling should remain equivalent to the canonical behavior; do not add desktop keyboard scrolling side effects to touch-only flows
 - result rows must preserve the observable selected/highlighted state used by keyboard navigation and Enter/click navigation
