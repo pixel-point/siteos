@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+// Keep the tested 1.2.8 dependency pin: later builds lose thumb updates under Next.js minification.
+// https://github.com/radix-ui/primitives/issues/4097
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 
 import { cn } from "@/lib/utils";

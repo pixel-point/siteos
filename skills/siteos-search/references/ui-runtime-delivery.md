@@ -368,7 +368,7 @@ Expected package follow-up may include:
 
 - `lucide-react`
 - `@radix-ui/react-dialog`
-- `@radix-ui/react-scroll-area`
+- `@radix-ui/react-scroll-area@1.2.8` (exact version, without `^` or `~`, for the Radix support file)
 - `class-variance-authority`
 - `clsx`
 - `tailwind-merge`
@@ -381,6 +381,15 @@ The delivery flow should prefer host-project primitives when they already exist:
 - existing `cn`
 
 When equivalent host primitives do not exist, the skill may deliver the canonical support files from `assets/ui-runtime/**`.
+
+For a Radix-based host ScrollArea, inspect the resolved dependency as well as the manifest range.
+Versions 1.2.15 and 1.2.18 contain a published annotation that lets Next.js production minification
+remove the thumb's animation loop ([upstream issue](https://github.com/radix-ui/primitives/issues/4097)).
+The content scrolls while the thumb freezes. The tested 1.2.8 pin avoids that regression; do not
+replace it with a newer version until continuous scrolling and thumb dragging pass in the host's
+production build. If the host uses another working primitive, preserve it.
+Check several consecutive wheel or trackpad movements without pausing, reverse direction, drag
+the thumb, and verify keyboard navigation. A dev-server or Storybook check alone is insufficient.
 
 ## Search Placement Planning And Confirmation
 
