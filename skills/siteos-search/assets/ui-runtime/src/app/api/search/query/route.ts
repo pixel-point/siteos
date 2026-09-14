@@ -1,4 +1,4 @@
-import { buildSiteOSSearchRuntimeUrl } from "../runtime-url";
+import { buildSiteOSSearchRuntimeUrl, readSiteOSSearchCredential } from "../runtime-url";
 const SITEOS_RUNTIME_QUERY_CREDENTIAL_HEADER =
   "x-siteos-project-search-credential";
 
@@ -18,7 +18,7 @@ type SiteOSProjectSearchRouteErrorResponse = {
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const query = url.searchParams.get("q")?.trim() ?? "";
-  const queryCredential = process.env.SITEOS_SEARCH_TOKEN?.trim() ?? null;
+  const queryCredential = readSiteOSSearchCredential() ?? null;
 
   if (!query) {
     return createJsonResponse(
@@ -166,7 +166,7 @@ export async function POST(request: Request): Promise<Response> {
   // A same-origin endpoint keeps the server credential out of visitor code.
   if (!isSameOrigin(request))
     return createJsonResponse({ accepted: false }, 403);
-  const credential = process.env.SITEOS_SEARCH_TOKEN?.trim();
+  const credential = readSiteOSSearchCredential();
   if (!credential) return createJsonResponse({ accepted: false }, 503);
   if (Number(request.headers.get("content-length") ?? 0) > 17_000)
     return createJsonResponse({ accepted: false }, 400);

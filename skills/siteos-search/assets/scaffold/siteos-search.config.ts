@@ -1,8 +1,8 @@
 const siteosSearchConfig = {
   schemaVersion: 1,
-  project: {
-    apiBaseUrlEnv: "SITEOS_SEARCH_PUBLIC_URL",
-  },
+  // For a named index, set index: { id: "<exact-index-id>" }.
+  // CLI-installed credential names are derived from that ID; no default fallback.
+  project: {},
   environment: {
     slug: "prod",
   },

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
@@ -49,14 +50,14 @@ function usage() {
   return [
     "Usage:",
     "  node scripts/runtime-token-tooling.mjs help [command]",
-    "  node scripts/runtime-token-tooling.mjs validate --environment <slug> [--project-root <path>]",
-    "  node scripts/runtime-token-tooling.mjs query --q <query> --environment <slug> [--project-root <path>] [--limit <n>] [--offset <n>]",
+    "  node scripts/runtime-token-tooling.mjs validate --environment <slug> [--index <id>] [--project-root <path>]",
+    "  node scripts/runtime-token-tooling.mjs query --q <query> --environment <slug> [--index <id>] [--project-root <path>] [--limit <n>] [--offset <n>]",
   ].join("\n");
 }
 
 function commandUsage(command) {
   if (command === "validate") {
-    return "Usage:\n  node scripts/runtime-token-tooling.mjs validate --environment <slug> [--project-root <path>]";
+    return "Usage:\n  node scripts/runtime-token-tooling.mjs validate --environment <slug> [--index <id>] [--project-root <path>]";
   }
 
   if (command === "init" || command === "rotate") {
@@ -67,7 +68,7 @@ function commandUsage(command) {
   if (command === "query") {
     return [
       "Usage:",
-      "  node scripts/runtime-token-tooling.mjs query --q <query> --environment <slug> [--project-root <path>] [--limit <n>] [--offset <n>]",
+      "  node scripts/runtime-token-tooling.mjs query --q <query> --environment <slug> [--index <id>] [--project-root <path>] [--limit <n>] [--offset <n>]",
       "",
       "Reads SITEOS_SEARCH_TOKEN and SITEOS_SEARCH_ENV from the project .env and sends a runtime query smoke request without printing the token.",
     ].join("\n");
@@ -114,9 +115,9 @@ function isRuntimeTokenFormat(token) {
   return runtimeTokenRegex.test(token.trim());
 }
 
-function resolveApiBaseUrl(dotenv) {
-  const fromEnv = readOptionalString(process.env.SITEOS_SEARCH_PUBLIC_URL);
-  const fromDotenv = readOptionalString(readEnvVariable(dotenv, "SITEOS_SEARCH_PUBLIC_URL"));
+function resolveApiBaseUrl(dotenv, name = "SITEOS_SEARCH_PUBLIC_URL") {
+  const fromEnv = readOptionalString(process.env[name]);
+  const fromDotenv = readOptionalString(readEnvVariable(dotenv, name));
   const configured = fromEnv ?? fromDotenv;
   if (!configured) {
     throw new Error("SITEOS_SEARCH_PUBLIC_URL is required.");
@@ -172,6 +173,9 @@ async function loadToolContext(params = {}) {
   ) {
     throw new Error("Missing or invalid required --environment slug.");
   }
+  const indexId = readOptionalString(params.indexId);
+  if (indexId && !/^[A-Za-z0-9_-]{1,255}$/.test(indexId)) throw new Error("Invalid --index ID.");
+  const prefix = indexId ? `SITEOS_SEARCH_INDEX_${createHash("sha256").update(indexId).digest("hex").slice(0,24).toUpperCase()}` : "SITEOS_SEARCH";
   const dotenvPath = path.join(projectRoot, ".env");
   let dotenv = "";
   if (await fileExists(dotenvPath)) {
@@ -181,9 +185,9 @@ async function loadToolContext(params = {}) {
       throw new Error("The project .env cannot be read.");
     }
   }
-  const token = readOptionalString(readEnvVariable(dotenv, runtimeTokenEnvName));
+  const token = readOptionalString(readEnvVariable(dotenv, `${prefix}_TOKEN`));
   const installedEnvironmentSlug = readOptionalString(
-    readEnvVariable(dotenv, runtimeEnvironmentEnvName),
+    readEnvVariable(dotenv, `${prefix}_ENV`),
   );
   if (
     installedEnvironmentSlug &&
@@ -194,7 +198,7 @@ async function loadToolContext(params = {}) {
   }
 
   return {
-    apiBaseUrl: resolveApiBaseUrl(dotenv),
+    apiBaseUrl: resolveApiBaseUrl(dotenv, `${prefix}_PUBLIC_URL`),
     environmentSlug,
     installedEnvironmentSlug,
     token,
@@ -301,6 +305,7 @@ async function main() {
   const params = {
     projectRoot: args.get("project-root"),
     environmentSlug: args.get("environment"),
+    indexId: args.get("index"),
   };
 
   let result;

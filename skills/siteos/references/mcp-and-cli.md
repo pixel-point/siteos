@@ -15,6 +15,9 @@ product-specific requirements, not another connection or context policy.
 | Product operations, domain rules, scopes and result interpretation | The owning module and focused skill |
 
 Pulse, Cookie, Forms, Search, Trace, SEO and Analytics use common Project/environment context.
+Search additionally selects a logical index: discover with `siteos_search_list_indices`, then
+pass `indexId` on Search MCP reads and `--index ID` on hosted CLI operations. Named index creation
+is CLI/UI-owned. An omitted selector addresses the legacy default only.
 Integrations and Billing use Organization context. Account operations do not require a Project.
 Adding a new module requires adopting this contract and the common context adapters; adding a skill
 alone does not automatically implement or authorize its CLI/MCP operations.

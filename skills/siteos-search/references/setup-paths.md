@@ -5,11 +5,13 @@ Resume from observed state and existing decisions. Do not make the user choose a
 before inspecting the host framework, or present internal session steps as a fourteen-step setup.
 The detailed session protocol remains appropriate for local source-handler implementation.
 
+Before adding content, follow [index discovery and selection](named-indices.md). Reuse the selected index or create the explicitly requested empty destination.
+
 ## 1. Add content
 
-Confirm the exact Organization, common Project, environment and website scope. Use available MCP
+Confirm the exact Organization, common Project, environment, index and website scope. Use available MCP
 reads for existing state; use normal CLI Auth/Project preflight before mutations. MCP and CLI have
-independent selections: compare all three identifiers before switching. Never create an attachment
+independent selections: compare all four identifiers before switching. Never create an attachment
 just because a setup page or prompt was opened.
 
 Choose from actual source evidence and the user's request:
@@ -34,7 +36,7 @@ private source or production cutover requires that specific decision, not a rest
 ## 2. Check results
 
 Wait for the actual published index, not only an accepted job. Inspect content and run representative
-queries through available MCP reads or `siteos search query --environment SLUG --query TEXT --json`.
+queries through available MCP reads or `siteos search query --environment SLUG --index INDEX_ID --query TEXT --json`.
 Check titles, snippets, working local URLs/anchors and an expected no-result query. An Algolia
 migration also needs a comparison with saved queries and a review of unsupported settings/rules.
 Show a compact result sample and any rejected content before changing the website.

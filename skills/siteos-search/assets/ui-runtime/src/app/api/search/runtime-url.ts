@@ -1,11 +1,20 @@
-const SITEOS_SEARCH_ENVIRONMENT_ENV = "SITEOS_SEARCH_ENV";
+// For each route group, use the variable names returned by CLI --index ID --install.
+// Keep these server-owned; visitors must never choose a credential/environment variable.
+export const searchRuntimeVariables = {
+  credential: "SITEOS_SEARCH_TOKEN",
+  environment: "SITEOS_SEARCH_ENV",
+  origin: "SITEOS_SEARCH_PUBLIC_URL",
+};
+export function readSiteOSSearchCredential() {
+  return process.env[searchRuntimeVariables.credential]?.trim();
+}
 
 export function buildSiteOSSearchRuntimeUrl(requestUrl: URL, query: string): URL {
-  const environmentSlug = process.env[SITEOS_SEARCH_ENVIRONMENT_ENV]?.trim();
+  const environmentSlug = process.env[searchRuntimeVariables.environment]?.trim();
   if (!environmentSlug) {
     throw new Error("SITEOS_SEARCH_ENV is required.");
   }
-  const apiBaseUrl = process.env.SITEOS_SEARCH_PUBLIC_URL?.trim();
+  const apiBaseUrl = process.env[searchRuntimeVariables.origin]?.trim();
   if (!apiBaseUrl) {
     throw new Error("SITEOS_SEARCH_PUBLIC_URL is required.");
   }

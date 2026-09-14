@@ -1,19 +1,21 @@
 ---
 name: siteos-search
-description: Use when creating, selecting, configuring, verifying, repairing, or operating SiteOS Search for a common website Project, including Environments, source discovery, scoped credentials, sync, query, UI delivery, website crawling, curated suggestions, relevance previews, installation checks, consented visitor analytics, search health and reports through @siteoshq/cli.
+description: Use when creating, selecting, configuring, verifying, repairing, or operating SiteOS Search for a common website Project, including independent named indices, Environments, source discovery, scoped credentials, sync, query, UI delivery, website crawling, curated suggestions, relevance previews, installation checks, consented visitor analytics, search health and reports through @siteoshq/cli.
 ---
 
 # SiteOS Search
 
 Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
 
-Hosted reads: `siteos_search_query`, `siteos_search_list_content`, `siteos_search_get_visitors`, `siteos_search_get_relevance`, `siteos_search_get_connection`, `siteos_search_get_crawler`, `siteos_search_get_diagnostics` and `siteos_search_get_analytics`.
+Hosted reads: `siteos_search_list_indices`, `siteos_search_get_suggestions`, `siteos_search_query`, `siteos_search_list_content`, `siteos_search_get_visitors`, `siteos_search_get_relevance`, `siteos_search_get_connection`, `siteos_search_get_crawler`, `siteos_search_get_diagnostics` and `siteos_search_get_analytics`.
 
 Use this skill from the root of a target external project, or pass an explicit target project root when the user names one.
 
 For setup or migration, start with [Choose the shortest setup path](references/setup-paths.md): add content, check results, then add the native website interface. Reuse observed state and previously approved decisions. Select the crawler, local source-handler, prepared import or Algolia path before implementation; only the local source-handler path requires the detailed extraction session below.
 
 This skill owns Search setup, operation and reporting. For offline export preparation, use [Algolia migration](references/algolia-migration.md); this local-only command needs no Auth or Project preflight. For editable components on any platform, use [framework integration](references/framework-integration.md). A hosted `search.js` widget is not required. Use [references/website-crawler.md](references/website-crawler.md) for public HTML crawling, sitemap discovery, ownership verification, extraction, scheduled crawls and guarded automatic publication. An approved crawler source does not require local source-handler scaffolding; website UI delivery remains separate. Use [references/search-experience.md](references/search-experience.md) for content import previews, curated suggestions, per-article activity and filters, relevance tuning, resumable installation checks and consented visitor analytics. For initial suggestions or pinning articles, use that reference’s Suggestions before typing workflow; resolve indexed document IDs and publish the ordered list without sync, reindexing or website edits once the hosted runtime is installed. For search health, usage, diagnostics, charts or sidecar reports, go directly to [references/analytics-workflow.md](references/analytics-workflow.md); do not start onboarding, sync or UI changes for a reporting request. For implementation, use the connection, source, synchronization and UI workflows below. Website pageviews, custom events and conversions belong to `$siteos-analytics`.
+
+Read [independent indices](references/named-indices.md) before any hosted Search operation. Resolve the exact index after Project/environment selection and carry its ID through CLI, MCP, credentials, content, crawler and website setup. Never drop an explicit index selector after a failure.
 
 Resolve the target through the shared execution contract. Search resource setup and indexing/query credential management use the supported CLI commands; legacy Organization tokens and Project API keys are not supported.
 

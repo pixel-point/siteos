@@ -1,8 +1,8 @@
-import { buildSiteOSSearchRuntimeUrl } from "../runtime-url";
+import { buildSiteOSSearchRuntimeUrl, readSiteOSSearchCredential } from "../runtime-url";
 
 /** Same private server credential and exact environment as query; no search analytics. */
 export async function GET(request: Request): Promise<Response> {
-  const credential = process.env.SITEOS_SEARCH_TOKEN?.trim();
+  const credential = readSiteOSSearchCredential();
   const headers = { "Cache-Control": "no-store" };
   if (!credential) return Response.json({ configured: false, items: [] }, {status:503,headers});
   try {

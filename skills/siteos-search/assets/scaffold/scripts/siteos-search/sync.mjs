@@ -1,15 +1,22 @@
 #!/usr/bin/env node
 
+import { createHash } from "node:crypto";
 import { access, readFile, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
 
 const projectRoot = process.cwd();
-const searchConfigPath = path.join(projectRoot, "siteos-search.config.ts");
+
 const sourceIdPattern = /^[a-z0-9][a-z0-9-]{0,62}$/;
 const environmentSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const indexingCredentialEnvName = "SITEOS_SEARCH_INDEXING_CREDENTIAL";
+function credentialPrefix(config) {
+  const id = config.index?.id;
+  if (id === undefined) return "SITEOS_SEARCH";
+  if (typeof id !== "string" || !/^[A-Za-z0-9_-]{1,255}$/.test(id))
+    throw new Error("index.id must be an exact SiteOS index ID.");
+  return `SITEOS_SEARCH_INDEX_${createHash("sha256").update(id).digest("hex").slice(0,24).toUpperCase()}`;
+}
 const indexingCredentialHeader = "x-siteos-project-search-indexing-credential";
 const indexingCredentialPattern = /^psi_[A-Za-z0-9_-]{22}$/;
 
@@ -25,9 +32,14 @@ function readSyncOptions() {
   const args = process.argv.slice(2);
   let isDryRun = false;
   let output;
+  let configPath = "siteos-search.config.ts";
   for (let i = 0; i < args.length; i++) {
     const argument = args[i];
     if (argument === "--") continue;
+    if (argument === "--config" && args[i + 1] && !args[i + 1].startsWith("--")) {
+      configPath = args[++i];
+      continue;
+    }
     if (argument === "--dry-run") {
       isDryRun = true;
       continue;
@@ -51,7 +63,7 @@ function readSyncOptions() {
       "unsupported-argument",
       "--output requires --dry-run.",
     );
-  return { isDryRun, output };
+  return { isDryRun, output, configPath };
 }
 
 async function readJsonFile(filePath, label) {
@@ -190,7 +202,8 @@ function readEnvVariable(content, name) {
   return value;
 }
 
-async function readIndexingCredential(projectRoot) {
+async function readIndexingCredential(projectRoot, config) {
+  const indexingCredentialEnvName = `${credentialPrefix(config)}_INDEXING_CREDENTIAL`;
   const fromEnv = readOptionalString(process.env[indexingCredentialEnvName]);
   if (fromEnv) {
     if (!indexingCredentialPattern.test(fromEnv)) {
@@ -240,7 +253,7 @@ async function readIndexingCredential(projectRoot) {
 async function resolveApiBaseUrl(config) {
   const envName =
     readOptionalString(config.project?.apiBaseUrlEnv) ??
-    "SITEOS_SEARCH_PUBLIC_URL";
+    `${credentialPrefix(config)}_PUBLIC_URL`;
   const fromEnv = readOptionalString(process.env[envName]);
   let fromDotenv;
   const dotenvPath = path.join(projectRoot, ".env");
@@ -429,6 +442,7 @@ async function buildSyncPayload(config) {
   return {
     mode: "full-replace",
     target: {
+      ...(config.index?.id ? { indexId: config.index.id } : {}),
       environmentSlug,
     },
     sources,
@@ -543,7 +557,8 @@ async function submitPayload(params) {
 
 async function main() {
   const options = readSyncOptions();
-  const config = await loadSearchConfig(searchConfigPath);
+  const config = await loadSearchConfig(path.resolve(projectRoot, options.configPath));
+  credentialPrefix(config);
   const apiBaseUrl = options.isDryRun ? null : await resolveApiBaseUrl(config);
   const payload = await buildSyncPayload(config);
   const summary = summarizePayload(payload);
@@ -580,7 +595,7 @@ async function main() {
     return;
   }
 
-  const indexingCredential = await readIndexingCredential(projectRoot);
+  const indexingCredential = await readIndexingCredential(projectRoot, config);
 
   const result = await submitPayload({
     apiBaseUrl,

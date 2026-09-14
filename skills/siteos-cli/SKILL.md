@@ -5,6 +5,8 @@ description: Use when installing, upgrading, diagnosing, or discovering commands
 
 # SiteOS CLI
 
+Search supports independent indices per Project environment. Use `search index list/create` and pass `--index ID` to subsequent hosted Search operations. Named-index `--install` writes distinct credential variables and reports their names in safe installation metadata; do not overwrite another index's variables. See the Search skill's [index workflow](../siteos-search/references/named-indices.md).
+
 Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
 
 Use the single public package and binary:

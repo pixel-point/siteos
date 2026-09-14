@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.11.0`
+Package: `@siteoshq/cli@2.12.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -243,6 +243,8 @@ siteos forms submissions export --output <new-file> [--form <id>] [--query <text
 
 ```text
 siteos search migrate algolia --records <export.ndjson> --mapping <mapping.json> --out <new-directory> [--settings <settings.json>] [--synonyms <synonyms.ndjson>] [--rules <rules.ndjson>] [--json]
+siteos search index list --environment <slug> [--json]
+siteos search index create --environment <slug> --name <name> --slug <slug> [--json]
 siteos search delivery status --environment <slug> [--json]
 siteos search delivery configure --environment <slug> --file <delivery.json> --apply [--json]
 siteos search crawl list --environment <slug> [--json]
