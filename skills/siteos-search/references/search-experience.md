@@ -65,3 +65,60 @@ Reports provide completed searches, no-result searches, searches with a click, d
 Query text is normalized. Common sensitive patterns (email, URL, long numbers and credential-like assignments) are withheld while aggregate counts remain. This heuristic is not a PII classifier. Retention is 7, 30 or 90 days; expired rows are excluded immediately and require the configured explicit Search maintenance job for physical deletion. Disabling collection stops new events and does not erase retained history. Do not silently enable collection or extend retention for a reporting request.
 
 `search analytics` and its existing sidecar renderer remain operational index/job reports. `search visitors report` is the visitor report; hosted MCP operational analytics must not be described as visitor analytics. Report bounded query aggregates only when relevant to the requested analysis; never print receipt tokens, raw event rows, credentials or private identifiers.
+
+## Suggestions before typing
+
+Suggestions are curated articles, separate from query suggestions and relevance. Manage them in
+Search → Content: pin documents in All documents, open Suggestions, order the list and review
+before Publish suggestions. The list belongs to the selected environment. It does not rebuild or
+replace the index; removed documents are omitted from public delivery.
+
+With a CLI release that exposes `search suggestions` in `--help`, the same workflow is available
+through chat. Resolve the shared Project and explicit environment first. Read the published list
+and indexed content; never invent document IDs:
+
+```bash
+siteos search suggestions show --environment staging --json
+siteos search content --environment staging --query "installation" --json
+```
+
+Prepare a JSON file with the returned revision and the complete ordered selection (up to 10 unique
+IDs). For example, `{"revision": 2, "documentIds": ["<indexed-document-id>"]}`. Review the titles,
+order and environment with the user, then publish the authorized selection:
+
+```bash
+siteos search suggestions publish --environment staging --file suggestions.json --apply --json
+```
+
+An empty `documentIds` array explicitly clears hosted suggestions. A conflict means another session
+published a newer revision: reread and reconcile; do not blindly retry with the new revision. A
+missing document must be removed or replaced from the current index. Do not run sync/reindex for
+suggestion changes. The website must first use the current editable runtime and a suggestions
+endpoint; afterwards UI/CLI publication updates it without a website build. Search Edge refreshes
+its leased configuration automatically, so delivery can lag publication by a refresh interval.
+
+## Article activity in Content
+
+When the installed CLI help includes content activity flags, read per-document activity in the
+selected environment without a sync or index rebuild:
+
+```sh
+siteos search content --environment staging --days 30 --sort clicks --direction desc --json
+siteos search content --environment staging --from 2026-09-01 --to 2026-09-14 --filters '[{"dimension":"query","operator":"is","values":["install"]}]' --json
+```
+
+`--query` finds text in indexed documents. The `query` filter selects the visitor queries that
+returned them. Filters are a JSON array of up to three `{ dimension, operator, values }` objects:
+`section`, `query`, or `activity`; `is` or `is_not`; activity values `clicked`, `unclicked`, or
+`not_appeared`. Sort by `title`, `appearances`, `clicks`, or `ctr`, with `asc` or `desc` direction.
+The API sorts all matching documents before pagination (`--offset`). Query text is normalized and
+privacy filtered, as in visitor analytics.
+
+Appearances count an article in a completed search's latest signed result list, once per
+interaction/document. They are not screen impressions or all possible engine matches. Clicks count
+those interactions with a verified article click; CTR is clicks / appearances. Events use existing
+analytics consent and collection settings. Read `activity.collectedSince` and the effective report
+period before interpreting zero activity: historical search totals cannot reconstruct article
+appearances. Collection may be paused, and missing/private query text is excluded from query lists.
+Top queries are limited to ten per article. Do not infer that a low-click article is irrelevant or
+a no-appearance article is absent from the index. Suggestions are independent of these rankings.

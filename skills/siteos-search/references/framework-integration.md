@@ -56,3 +56,13 @@ Preserve these interactions when adapting:
 For existing Next.js delivery, the `searchSiteOSProject` convenience function and consent helper
 retain the current `/api/search/query` endpoint. Other frameworks can use the factory directly.
 Use [UI delivery](ui-runtime-delivery.md) for host inspection, adaptation and acceptance.
+
+## Hosted suggestions
+
+The editable client's `suggestions(signal?)` method reads curated articles for the empty-query
+state without an engine query or an analytics event. If the query URL ends in `/query`, implement
+its sibling `/suggestions`; otherwise append `/suggestions`. A Next.js host can use the bundled
+suggestions route and shared `runtime-url.ts` helper; other frameworks should implement the same
+server-only credential forwarding. Edge serves `/api/search/public/suggestions` using the same
+public key, origin policy and configuration lease. Preserve array order and safe text rendering.
+`configured: true` with no items means intentionally empty, not a signal to restore static defaults.

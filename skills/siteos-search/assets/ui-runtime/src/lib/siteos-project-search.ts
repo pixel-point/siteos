@@ -59,6 +59,9 @@ export type SiteOSProjectSearchQueryErrorResponse = {
   processingTimeMs: number;
 };
 
+export type SiteOSSearchSuggestion = {
+  id: string; title: string; url: string; snippet: string; sectionLabel: string;
+};
 export type SiteOSSearchClientConfig = {
   /** A host-owned proxy, or an explicitly published Search Edge query URL. */
   endpoint: string;
@@ -93,6 +96,23 @@ export function createSiteOSSearchClient(config: SiteOSSearchClientConfig) {
     search(query: string, options: SiteOSSearchQueryOptions = {}) {
       return querySiteOSProject(query, { ...options, interactionId: consent() ? options.interactionId : undefined }, config);
     },
+    async suggestions(signal?: AbortSignal): Promise<{ configured: boolean; items: SiteOSSearchSuggestion[] } | null> {
+      const url = config.endpoint.endsWith("/query") ? config.endpoint.slice(0, -6) + "/suggestions" : config.endpoint.replace(/\/$/u, "") + "/suggestions";
+      try {
+        const response = await fetch(url, { credentials: "omit", cache: "no-store", redirect: "error", referrerPolicy: "no-referrer",
+          headers: { Accept: "application/json", ...headers() },
+          signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(5000)]) : AbortSignal.timeout(5000) });
+        if (!response.ok) return null;
+        const body: unknown = await response.json();
+        if (!body || typeof body !== "object" || !("configured" in body) || typeof body.configured !== "boolean" || !("items" in body) || !Array.isArray(body.items) || body.items.length > 10) return null;
+        const items: SiteOSSearchSuggestion[] = [];
+        for (const item of body.items) {
+          if (!item || typeof item !== "object" || typeof item.id !== "string" || item.id.length > 255 || typeof item.title !== "string" || item.title.length > 500 || typeof item.url !== "string" || !safeSearchPath(item.url) || typeof item.snippet !== "string" || item.snippet.length > 500 || typeof item.sectionLabel !== "string" || item.sectionLabel.length > 200) continue;
+          items.push({id:item.id,title:item.title,url:item.url,snippet:item.snippet,sectionLabel:item.sectionLabel});
+        }
+        return {configured:body.configured,items};
+      } catch { return null; }
+    },
     async record(receipt: string | undefined, clickedResultId?: string): Promise<boolean> {
       if (!receipt || !consent()) return false;
       try {
@@ -105,6 +125,9 @@ export function createSiteOSSearchClient(config: SiteOSSearchClientConfig) {
       } catch { return false; }
     },
   };
+}
+export function loadSiteOSSearchSuggestions(signal?: AbortSignal) {
+  return createSiteOSSearchClient(siteosSearchDelivery).suggestions(signal);
 }
 export function searchSiteOSProject(query: string, options: SiteOSSearchQueryOptions = {}) {
   return querySiteOSProject(query, options, { endpoint: "/api/search/query" });

@@ -121,6 +121,8 @@ Canonical Next.js asset paths:
 - `src/lib/utils.ts`
 - `src/data/search.ts`
 - `src/app/api/search/query/route.ts`
+- `src/app/api/search/suggestions/route.ts`
+- `src/app/api/search/runtime-url.ts`
 
 Use these asset sources:
 
@@ -136,6 +138,8 @@ Use these asset sources:
 - `assets/ui-runtime/src/lib/utils.ts`
 - `assets/ui-runtime/src/data/search.ts`
 - `assets/ui-runtime/src/app/api/search/query/route.ts`
+- `assets/ui-runtime/src/app/api/search/suggestions/route.ts`
+- `assets/ui-runtime/src/app/api/search/runtime-url.ts`
 
 These assets represent the canonical search interaction model:
 
@@ -353,12 +357,17 @@ The canonical Next.js asset `src/app/api/search/query/route.ts` owns:
 - suggestions-state detection
 - highlight-part fallback logic
 
-`src/data/search.ts` is project-owned optional data for:
+The runtime fetches the environment's published Suggestions whenever the dialog opens. It uses
+`GET` on the sibling `/suggestions` endpoint of `/query` (or appends `/suggestions` to a custom
+endpoint). Deliver the host proxy and `runtime-url.ts` together, or use the public Edge endpoint and
+its publishable key. This read does not create a query receipt or visitor analytics event.
 
-- initial suggestions
-- optional initial recents
-
-When the agent can infer strong project-owned suggestions from the target project, it should populate `src/data/search.ts`. When it cannot, empty arrays are acceptable and are not a blocker for UI delivery.
+`src/data/search.ts` remains optional project-owned recents and legacy initial suggestions.
+Legacy suggestions are used only after a successful response with `configured: false`. A published
+empty list overrides them. Failed requests show no stale fallback articles and leave typed search
+available. For new installations, leave the arrays empty and configure Suggestions through
+Content or the CLI workflow in [search experience](search-experience.md). Preserve the host's visual
+customizations when upgrading the runtime; list publication needs no further website build or reindex.
 
 ## Dependency And Primitive Adaptation
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { recentSearches, suggestions } from "@/data/search";
 import { BookOpen, FileText, X } from "lucide-react";
 
-import { searchSiteOSProject, type SiteOSProjectSearchHit } from "@/lib/siteos-project-search";
+import { loadSiteOSSearchSuggestions, searchSiteOSProject, type SiteOSProjectSearchHit } from "@/lib/siteos-project-search";
 import {
   buildSiteOSProjectSearchDialogSections,
   isSiteOSProjectSuggestionsState,
@@ -372,6 +372,22 @@ interface SearchDialogProps {
 export default function SearchDialog({ open, onSelectResult }: SearchDialogProps) {
   const [query, setQuery] = useState("");
   const state = useSearch(query, open);
+  const [hostedSuggestions, setHostedSuggestions] = useState<SearchItem[]>([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(true);
+  useEffect(() => {
+    if (!open) return;
+    const abort = new AbortController();
+    setSuggestionsLoading(true);
+    void loadSiteOSSearchSuggestions(abort.signal).then((result) => {
+      if (abort.signal.aborted) return;
+      setHostedSuggestions(result?.configured ? result.items.map((item,index) => ({
+        id:index+1,documentId:item.id,title:item.title,url:item.url,description:item.snippet,
+        sectionLabel:item.sectionLabel,icon:"book-open",category:"documentation",
+      })) : result ? suggestions : []);
+      setSuggestionsLoading(false);
+    });
+    return () => abort.abort();
+  }, [open]);
   useEffect(() => {
     if (!open) setQuery("");
   }, [open]);
@@ -383,7 +399,8 @@ export default function SearchDialog({ open, onSelectResult }: SearchDialogProps
       query={query}
       setQuery={setQuery}
       recentSearches={recentSearches}
-      suggestions={suggestions}
+      suggestions={suggestionsLoading ? [] : hostedSuggestions}
+      isLoading={state.isLoading || (!query.trim() && suggestionsLoading)}
       onSelectResult={onSelectResult}
     />
   );

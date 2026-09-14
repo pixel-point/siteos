@@ -44,6 +44,13 @@ before authentication. This selects a separate SiteOS installation, not a Projec
 - Common Projects and the Cookie, Trace and Integrations commands require CLI 1.1.0 or newer and the matching SiteOS server. Check the installed help before using them; a source checkout does not prove the public package has been released.
 - If a command is absent from the generated reference, run the appropriate `--help`; do not invent it or call a private API as a substitute.
 
+## Search crawler source review
+
+CLI 2.11.0 adds `search crawl preview`, `--decisions` and `--review-token` for reviewing
+existing index matches and guarded publication. Use it with the matching Search backend and
+follow `$siteos-search` for source decisions. A ready crawl is not a published index; inspect the
+preview and resolve required choices before publication. Upgrade older CLIs before using this flow.
+
 ## SEO repair workflow
 
 CLI 2.1.0 adds `seo repair`, repeated `seo recheck --url` targets (up to 20), and the

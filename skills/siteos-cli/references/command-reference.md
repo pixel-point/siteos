@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.10.0`
+Package: `@siteoshq/cli@2.11.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -250,10 +250,13 @@ siteos search crawl create --environment <slug> --name <name> --file <crawler.js
 siteos search crawl status --environment <slug> [--crawler <id>] [--json]
 siteos search crawl configure --environment <slug> --file <crawler.json> [--crawler <id>] [--name <name>] [--json]
 siteos search crawl start --environment <slug> [--crawler <id>] [--json]
-siteos search crawl publish --environment <slug> --run <id> --apply [--accept-truncated] [--accept-removals] [--json]
-siteos search content --environment <slug> [--query <text>] [--source <type>] [--offset <n>] [--json]
+siteos search crawl preview --environment <slug> --run <id> [--decisions <choices.json>] [--json]
+siteos search crawl publish --environment <slug> --run <id> --apply [--decisions <choices.json>] [--review-token <token>] [--accept-truncated] [--accept-removals] [--json]
+siteos search suggestions show --environment <slug> [--json]
+siteos search suggestions publish --environment <slug> --file <suggestions.json> --apply [--json]
+siteos search content --environment <slug> [--query <text>] [--source <type>] [--days <7|30|90>] [--from <YYYY-MM-DD> --to <YYYY-MM-DD>] [--sort <title|appearances|clicks|ctr>] [--direction <asc|desc>] [--filters <json>] [--offset <n>] [--json]
 siteos search query --environment <slug> --query <text> [--source <type>] [--section <label>] [--offset <n>] [--json]
-siteos search sync --environment <slug> --file <payload.json> [--apply] [--json]
+siteos search sync --environment <slug> --file <payload.json> [--decisions <choices.json>] [--review-token <token>] [--apply] [--json]
 siteos search relevance show --environment <slug> [--json]
 siteos search relevance preview --environment <slug> --file <relevance.json> [--json]
 siteos search relevance compare --environment <slug> --revision <id> [--query <text>] [--json]
