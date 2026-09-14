@@ -88,6 +88,11 @@ If an operation fails, first inspect its result and current state. An authorizat
 correct authorization, not a retry through broader credentials. A connection or protocol failure
 may use a matching, authorized CLI read. Never repeat a write through another interface until its
 outcome has been reconciled. A tool or CLI response that merely queues work is not completion.
+Do not use browser automation or computer-use to operate SiteOS or read its saved results because
+an MCP/CLI adapter is missing, outdated or denied. Inspect supported CLI help/version and use an
+available authorized operation; otherwise report the capability or access blocker. Never click a
+write action to bypass that boundary. This does not prohibit the supported interactive sign-in or
+provider authorization flow, or browser testing of the user's website when the task needs it.
 
 ## Installation and release
 

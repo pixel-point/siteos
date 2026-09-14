@@ -23,6 +23,17 @@ The private common selection in `~/.siteos/projects.json` is keyed by API origin
 - `pulse deploy --dry-run --json` builds the same versioned JSON manifest and archive as deploy, writes only the requested/local artifact, and never uploads. With a common Project selected, it reads authenticated metadata to resolve the current environment URL and bound resource identity.
 - `pulse deploy --json` requires Auth and a repository-specific common Project/environment selection. It obtains grants for that binding's Organization and uploads against the immutable bound Pulse Project ID, independently of the global Auth default.
 
+- `pulse run --check <check-id> [--request-id <id>] --json` starts one deployed Check in the repository's selected environment through its bound Pulse resource. It requires CLI 2.13.0+ and a `siteos-pulse` grant with `pulse:runs:write`; normal membership, deployment and Secret-use admission still apply. CLI grant issuance currently requires owner/admin access. It neither deploys nor runs local tests.
+
+The remote run response contains `run.id`, `run.state`, `run.trigger`, the Pulse `projectId`,
+`checkId`, `requestId`, and the common Project/environment `context`. Preserve that context when
+reading `siteos_pulse_get_run`. Poll with bounded waits until terminal; report timeout/interruption
+as pending rather than passed. Do not repeat saved-state verification in the browser.
+A generated request ID is returned on success and included in uncertain-admission error hints.
+For a retry after a lost response, reuse that ID with the same Check and environment. The server
+returns the existing run even after it finishes; a fresh request ID means a new requested run.
+A pending/conflicting run requires reading existing state, not switching interfaces or Check IDs.
+
 Use `SITEOS_AUTH_BASE_URL` for an intentional local or staging override. Pulse APIs share the normal hosted SiteOS application origin `https://app.siteos.sh`.
 
 ## Failures
