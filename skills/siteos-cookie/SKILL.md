@@ -24,7 +24,7 @@ Use a CLI version whose `cookie --help` includes `terms show` and `terms accept`
 compatible application. Run `npx @siteoshq/cli cookie terms show --json` in the selected Organization
 and Project; this works before Cookie is attached. Existing connections remain operational.
 
-If the current version has not been accepted, show the returned notice, full document bundle (Terms and Privacy notice), version, document digest
+If the current version has not been accepted, show the returned notice, full document bundle (including Terms, DPA and Privacy notice), version, document digest
 and acknowledgement to the user. Obtain their explicit agreement on behalf of the displayed
 Organization, including their declaration of authority to act for it.
 No typed name or company field is required. The server records the authenticated actor and scope. Only then run:
@@ -36,8 +36,8 @@ npx @siteoshq/cli cookie terms accept --version <reviewed-version> --document-di
 Use `cookie terms history --json` and `cookie terms receipt --version <version> --json` to retrieve
 stored evidence. Do not present these records as independent identity verification, a qualified
 electronic signature or guaranteed enforceability. The Privacy Policy is a notice, not blanket
-GDPR consent. Read the returned documents: shared agreement version `2026-09-16.3` includes the
-platform DPA in the same acceptance. Never infer DPA acceptance from an older Terms-only record.
+GDPR consent. Use the server-returned version and documents; the platform DPA is included in the
+same acceptance. Never infer DPA acceptance from an older Terms-only record.
 A general request to configure or publish a banner is not agreement to service terms. Never accept
 terms autonomously, invent an acceptance, or reuse confirmation for a different version or
 Organization. Browser acceptance is available to every current member; CLI service grants still
@@ -74,6 +74,14 @@ Glass defaults to 55% background opacity and 16px blur. Lower opacity reveals mo
 Custom `iconImage` accepts only a normalized centered 128×128 alpha PNG data URI, at most 32768 characters; it is recolored using `foreground`. Never insert SVG markup, arbitrary HTML, a remote URL or a raw unnormalized image into this field. Studio has local SVG/PNG normalization, but the released CLI has no icon-upload/normalization command. In a chat workflow use a verified local image-processing capability to produce the required mask, validate dimensions/size and inspect it before saving; if that capability is unavailable, keep a built-in icon and state the limitation. Preserve an existing custom image when changing other fields. A publisher CSP that blocks data images leaves the built-in SVG fallback visible.
 
 Do not invent font-family, typography, logo-upload or other configuration fields absent from the supported contract. Explain the limitation if the requested design needs them.
+
+## Subdomains and a website-owned settings link
+
+For additional hostnames, shared choices or a footer link instead of the floating button, read
+[Domains and privacy links](references/domains-and-privacy-links.md). It covers `draft.domainScope`,
+`draft.banner.preferencesAccess`, the supported HTML attributes and separate browser acceptance.
+Adding installation hostnames does not enable shared consent automatically. Preserve these fields
+when changing the design; never broaden domain access or consent sharing just to match the site.
 
 ## Configure regional behavior
 
@@ -161,7 +169,7 @@ Verify a representative real route set in a fresh browser: first visit, Reject, 
 
 Check the actual published runtime/config endpoints, revision, strict failure behavior and installation observation. A handshake only proves the runtime was seen; it does not establish correct tag classification or legal compliance. Run `npx @siteoshq/cli cookie analytics --range-days 7 --json` only for actual aggregate observations.
 
-Run `npx @siteoshq/cli cookie verify --json` from the selected website repository. Use `--url /pricing` for another same-origin route and `--browser webkit` for WebKit. If the local browser is missing, follow the command's exact Playwright browser-install instruction, then rerun. Verification uses fresh isolated contexts, public runtime consent actions and actual network/storage observations; it does not reuse an authenticated browser or submit forms. It makes real visits, so installation signals and aggregate consent events may increase.
+Run `npx @siteoshq/cli cookie verify --json` from the selected website repository. Use `--url /pricing` for another same-origin route and `--browser webkit` for WebKit. If the local browser is missing, follow the command's exact Playwright browser-install instruction, then rerun. Verification uses fresh isolated contexts, public runtime consent actions and actual network/storage observations; it does not reuse an authenticated browser or submit forms. It makes real visits, so installation signals and aggregate consent events may increase. It does not navigate between subdomains or click the website's custom privacy links; complete the additional scenarios in [Domains and privacy links](references/domains-and-privacy-links.md) when applicable.
 
 Keep the complete JSON report with its publication revision, runtime versions, Edge region, scenarios, unknown origins/storage, timestamps and limitations. Reports stay local; Studio does not store or certify them. Exit 0 means the observed scope passed. `needs-review` and `failed` return exit 1; never hide this with `|| true`. Unknown resources, Advanced Consent Mode, delayed tags, first-party/server-side collection, visual/keyboard checks and GTM Tag Assistant need separate review. A single route or one observed country does not prove all routes or regions. Repeat on representative routes and invalidate evidence after website/configuration changes; reports expire after 24 hours.
 
