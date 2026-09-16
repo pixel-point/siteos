@@ -18,18 +18,30 @@ Use the common SiteOS Project and the unified CLI. Cookie owns banner configurat
 3. Read `npx @siteoshq/cli cookie --help`, `npx @siteoshq/cli cookie status --json` and `npx @siteoshq/cli cookie draft get --json`. Keep the complete save payload: `name`, `hostname`, `expectedDraftVersion` and `draft`. Preserve fields outside the requested change. New appearance fields require a compatible deployed Cookie service; local source changes do not update the hosted API or installed plugin.
 4. Inspect the site's actual source and, when available, its rendered pages before selecting services or matching its design. Identify existing CMPs, GTM containers, scripts, pixels, embeds, cookies/storage and server-side integrations. Distinguish observed behavior from inferred purpose. Do not invent legal text, controller identity, policies, vendors or consent. Ask for missing business facts while continuing independent work.
 
-## Review service terms before setup
+## Review service terms before setup or publication
 
 Use a CLI version whose `cookie --help` includes `terms show` and `terms accept`, together with a
 compatible application. Run `npx @siteoshq/cli cookie terms show --json` in the selected Organization
 and Project; this works before Cookie is attached. Existing connections remain operational.
 
-If the current version has not been accepted, show the returned notice, full terms link, version
-and acknowledgement to the user. Obtain their explicit agreement on behalf of the Organization
-before running `npx @siteoshq/cli cookie terms accept --version <reviewed-version> --confirm --json`.
+If the current version has not been accepted, show the returned notice, full document bundle (Terms and Privacy notice), version, document digest
+and acknowledgement to the user. Obtain their explicit agreement on behalf of the displayed
+Organization, including their declaration of authority to act for it.
+No typed name or company field is required. The server records the authenticated actor and scope. Only then run:
+
+```sh
+npx @siteoshq/cli cookie terms accept --version <reviewed-version> --document-digest <reviewed-digest> --confirm --json
+```
+
+Use `cookie terms history --json` and `cookie terms receipt --version <version> --json` to retrieve
+stored evidence. Do not present these records as independent identity verification, a qualified
+electronic signature or guaranteed enforceability. The Privacy Policy is a notice, not blanket
+GDPR consent. Read the returned documents: shared agreement version `2026-09-16.3` includes the
+platform DPA in the same acceptance. Never infer DPA acceptance from an older Terms-only record.
 A general request to configure or publish a banner is not agreement to service terms. Never accept
 terms autonomously, invent an acceptance, or reuse confirmation for a different version or
-Organization. Only an owner or admin can accept. Read back `cookie terms show` after success.
+Organization. Browser acceptance is available to every current member; CLI service grants still
+require owner/admin access. Acceptance does not expand service permissions. Read back `cookie terms show` after success.
 If the server reports changed terms, show the new version and obtain a new explicit agreement.
 
 Acceptance records service responsibilities; it does not approve a banner configuration or
@@ -118,7 +130,9 @@ When publication is authorized, prepare a JSON object with the freshly reviewed 
 
 Run `npx @siteoshq/cli cookie installation --json`. Use its exact `delivery` URLs and snippet; do not guess an Edge hostname or use staging endpoints on Production. Missing delivery configuration is a deployment issue. The runtime, configuration and analytics are served by Cookie Edge; receipts/handshakes use the application origin. Production routes share `app.siteos.sh` while remaining independently delivered.
 
-Install one loader through the site's chosen direct/framework/GTM channel. Remove a replaced CMP only as part of the authorized migration and verify that it no longer loads. Published design changes arrive through configuration. The loader v12 URL (`cookie-loader.js?v=12`) is an update channel with a five-minute cache, not an immutable pinned artifact. Old installations cached under the previous one-year policy need a one-time snippet/template URL upgrade to the generated loader v12 snippet. Do not claim that deploying a new runtime updates every browser that cached an older URL.
+For standard shared-origin delivery the generated direct snippet contains only `src` and `data-siteos-cookie`; the loader resolves the service addresses automatically. Keep any explicit endpoint attributes the server emits for split-origin or analytics-disabled installations. Never shorten a generated advanced or GTM installation by removing its endpoint configuration yourself.
+
+Install one loader through the site's chosen direct/framework/GTM channel. Remove a replaced CMP only as part of the authorized migration and verify that it no longer loads. Published design changes arrive through configuration. Use the server-generated snippet: current direct installs use the stable `cookie-loader.js` address without a customer-managed version. The loader selects the runtime cache generation internally; HTTP headers set the five-minute cache. Older `cookie-loader.js?v=12` installs remain supported. Cookie → Installation → Loading recovery provides an optional complete inline replacement that also handles the first external runtime request failing. Replace the short snippet; never install both. Without inline recovery, a failed external-loader download cannot retry itself. Keep optional scripts inert or explicitly consent-gated in both variants. GTM templates retain their native recovery and consent-default handling. Old runtime installations cached under the previous one-year policy need a one-time upgrade to the generated snippet. Do not claim that deploying a new runtime updates every browser that cached an older URL.
 
 The current service catalog has `google-analytics`, `google-ads`, `meta-pixel` and `hubspot-tracking`. Selecting a service describes its policy; it does not provision its tracking IDs, install its vendor code, or block every independently loaded script. Inventory and gate each optional resource before execution. Runtime cleanup covers managed resources and reviewed adapters; code that has already run can require a controlled reload on withdrawal. Preserve necessary forms, authentication and explicitly requested support actions separately from optional tracking.
 

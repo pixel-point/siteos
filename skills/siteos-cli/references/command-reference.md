@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.13.0`
+Package: `@siteoshq/cli@2.14.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -55,7 +55,9 @@ siteos project environment connect <pulse|cookie|forms|search|trace|seo|analytic
 
 ```text
 siteos cookie terms show [--json]
-siteos cookie terms accept --version <reviewed-version> --confirm [--json]
+siteos cookie terms history [--before <version>] [--json]
+siteos cookie terms receipt --version <version> [--json]
+siteos cookie terms accept --version <reviewed-version> --document-digest <sha256> --confirm [--json]
 siteos cookie status [--json]
 siteos cookie installation [--json]
 siteos cookie schema [--json]
@@ -184,8 +186,8 @@ siteos analytics ga4 saved remove <id> --revision <number> [--environment <slug>
 ## Integrations
 
 ```text
-siteos integrations status [--organization <id>] [--json]
-siteos integrations connect [--organization <id>] [--json]
+siteos integrations status [--provider <slack|telegram>] [--organization <id>] [--json]
+siteos integrations connect [--provider <slack|telegram>] [--organization <id>] [--json]
 siteos integrations channels [--query <name>] [--cursor <cursor>] [--organization <id>] [--json]
 siteos integrations destination create --channel <provider-channel-id> [--organization <id>] [--json]
 ```

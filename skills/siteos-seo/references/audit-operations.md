@@ -37,7 +37,7 @@ configuration without activating anything. Audit timing is separate from result 
 
 Read back the complete `days` array, time zone, revision and next run. Weekdays are Monday=1 through Sunday=7. A missing DST time
 is skipped; a repeated time runs once. After downtime only one due occurrence is considered.
-An active audit or full queue skips that slot; inspect `lastOutcome`, not just enabled.
+An active audit in the same Project environment or a full Organization queue skips that slot; inspect `lastOutcome`, not just enabled.
 New full HTML audits allow 1–500 pages during Early Access (default 100), including CLI and
 scheduled runs. A saved 100-page setting stays 100; select a larger limit in SEO Settings for an
 authorized larger audit. Previously saved explicit limits up to 500 remain effective.
@@ -45,8 +45,10 @@ Excluded, unavailable and non-HTML URLs count. The aggregate response budget is 
 pacing, concurrency, per-response bounds and the 15-minute deadline still apply.
 At `page_limit`, report partial coverage and unchecked URLs; never exceed 500 or repeat audits
 to evade other budgets. Historical reports keep their original settings and evidence.
-Rechecks remain limited to 20 selected observed URLs. HTML audits do not consume research credits; paid search and AI research have a separate shared balance. Crawl budgets, one active audit per Organization
-and queue capacity still apply. Do not loop on a 429 or create parallel work to evade these limits. Disable by saving the same fields with
+Rechecks remain limited to 20 selected observed URLs. HTML audits do not consume research credits; paid search and AI research have a separate shared balance. Crawl budgets, one active audit per Project environment and 100 queued audits per Organization
+still apply. Different projects and Organizations can run independently when executors are available.
+Queued means waiting for an executor or another crawl/Performance check of the same website; follow
+that accepted audit instead of submitting a duplicate. Do not loop on a 429 or evade crawl budgets. Disable by saving the same fields with
 `--enabled false` and the current revision. A revision conflict requires a fresh read and reconciliation.
 
 ## Send notifications through Integrations
