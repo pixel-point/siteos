@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.14.1`
+Package: `@siteoshq/cli@2.15.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -61,6 +61,8 @@ siteos cookie terms accept --version <reviewed-version> --document-digest <sha25
 siteos cookie status [--json]
 siteos cookie installation [--json]
 siteos cookie schema [--json]
+siteos cookie services list [--json]
+siteos cookie discover [--url <same-origin-url>] [--source-dir <directory>] [--gtm-export <container.json>] [--browser <chromium|webkit>] [--after-consent] [--json]
 siteos cookie validate --input <draft.json> [--json]
 siteos cookie regions resolve [--country <ISO>] [--subdivision <code>] [--source <draft|published>] [--json]
 siteos cookie verify [--url <same-origin-url>] [--browser <chromium|webkit>] [--json]

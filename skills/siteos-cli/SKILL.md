@@ -78,3 +78,7 @@ Use `forms deploy --manifest <path>` for non-interactive publication with an exp
 and release-only `SITEOS_FORMS_DEPLOYMENT_KEY`. `forms deployment-key issue|list|revoke` manages that
 separate Environment authority through normal Auth grants. Submission credentials cannot publish.
 Read `../siteos-forms/references/form-deployment.md` for generation, version pinning and rollback.
+
+## Cookie service discovery
+
+Use `cookie services list` for the deployed catalog and custom-service schema and `cookie discover` for a bounded local browser/source/GTM-export inventory. Discovery never saves or publishes; the Cookie skill researches unknown providers and uses revision-checked draft save/publication. See [service discovery](../siteos-cookie/references/service-discovery.md). Verify these commands exist in the installed help before use.
