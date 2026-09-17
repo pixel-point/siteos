@@ -9,6 +9,9 @@ For Basic mode, select `google-analytics` in the full Cookie draft and publish t
 configuration. Use the SiteOS Cookie GTM template on Consent Initialization. Add a Custom Event
 trigger named for analytics consent, with exact event `siteos_analytics_granted`, without regex.
 This fires both for an allowed returning visit and for consent granted on the current page.
+Runtime 11.7+ emits it once for the initial allowed state and again after a denied-to-allowed
+transition; saving unchanged consent emits no duplicate grant. It is an initialization signal,
+not a conversion event. Use the [service permission contract](service-permissions.md) for non-Google tags.
 
 Configure the Google tag with the stream's Measurement ID, this trigger, **Once per page**, and
 additional required consent `analytics_storage`. Do not leave its default Initialization trigger.

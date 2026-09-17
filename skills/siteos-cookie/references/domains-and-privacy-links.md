@@ -30,8 +30,10 @@ This partial example belongs inside `draft`, not at the top level of the save pa
 
 The runtime stores shared choices in `siteos_consent_<publicKey>` on the parent domain with
 `Secure`, `SameSite=Lax` and `Path=/`. Host-only installations use `siteos_consent`. Sharing remains
-bound to this banner, regional rule and material policy; it does not bypass GPC or regional checks.
-Changing domain scope requires visitors to choose again; old host-only choices are not promoted.
+bound to this banner; positive grants require the same regional rule, profile and material policy.
+Runtime 11.7+ retains unexpired purpose refusals and manual privacy restrictions across different
+policies without bypassing GPC. Material scope changes require reevaluating the choice; old host-only
+choices are not promoted to a shared cookie.
 Unrelated domains cannot share choices through this feature.
 
 Visible sibling pages check the shared cookie every second and on focus/visibility changes.
@@ -81,7 +83,9 @@ on the explicitly authorized installation hosts; never reuse an authenticated br
    link and confirm only its matching floating control hides. Do not change production settings
    merely to induce this failure.
 6. Verify material scope/policy changes in a fixture or during an authorized publication: a previous
-   choice must not be silently broadened. Include WebKit for pilot browser acceptance.
+   refusal must remain effective across opt-out/notice regions until its original expiry; an old
+   grant must not carry into a new strict policy. Verify runtime 11.7+ on every participating host.
+   Include WebKit for pilot browser acceptance.
 
 Report the tested hostnames, revision, browser, sharing mode, custom-link behavior and untested
 scope separately from the CLI result. Never call one successful route a cross-domain or compliance pass.
