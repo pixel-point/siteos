@@ -29,6 +29,9 @@ success actions through dataLayer, any GTM mapping, the destination request and 
 automatic discovery first and add explicit rules only for confirmed expectations. Identify what
 needs instrumentation or cannot be verified; do not infer mandatory events from a button label.
 The workflow supports SiteOS Analytics and other supported destinations, with or without GTM/GA4.
+For destination coverage, independent CMP readiness, SDK/pixel evidence and repeat diagnostics,
+read [Integration monitoring](references/integration-monitoring.md). These capabilities depend on
+the observed runtime and published rules; a server or plugin upgrade alone does not install them.
 
 ## Google Analytics investigations
 
@@ -132,7 +135,9 @@ installation workflow. This is one common monitor; individual event names and ta
 
 For `tracking-plan save`, write `{ "expectedDraftVersion": <current version>, "expectations": [...] }`.
 Each expectation contains `provider`, `eventName`, `required`, nullable `consentPurpose` (`analytics`
-or `advertising`), nullable `maximumSilenceMinutes`, optional nullable `afterConsentSeconds` (5–300), optional nullable
+or `advertising`), nullable `maximumSilenceMinutes`, optional nullable `afterConsentSeconds` (5–300),
+optional nullable `afterConsentReadySeconds` (5–300), optional `checkSdkConsent` and
+`allowRepeatedEvents` booleans, optional nullable
 `afterSourceEvent: {eventName, withinSeconds}` (5–300), and `properties`. Each property contains
 `name`, `type` (`string`, `number`, `boolean`, `null`, `array` or `object`) and `required`. Derive
 expectations from reviewed application events or actual discoveries; do not invent required events.
