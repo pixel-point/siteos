@@ -59,7 +59,7 @@ Edit these fields inside the returned `draft`; do not replace the entire draft w
 
 | Area | Supported configuration |
 | --- | --- |
-| Banner layout | `banner.layout`: `bottom` or `center` |
+| Banner layout | `banner.layout`: `bottom` (bottom left), `bottom-right` or `center` |
 | Banner colors | `banner.theme.accent`, `background`, `foreground`, `muted`: six-digit HEX |
 | Banner geometry | `banner.theme.radius`: 0–24; `paddingX`, `paddingTop`, `paddingBottom`, `contentGap`, `buttonGap`: integer pixels 0–48 |
 | Banner surface | `banner.theme.surface`: `solid` or `glass`; `backgroundOpacity`: 0–100; `backdropBlur`: 0–40 |
@@ -67,6 +67,8 @@ Edit these fields inside the returned `draft`; do not replace the entire draft w
 | Persistent button placement | `banner.floatingControls.corner`: `bottom-left` or `bottom-right`; `offsetX`: 8–96, `offsetY`: 8–160, `size`: 40–64 |
 | Persistent button appearance | `banner.floatingControls.radius`: 0–32; independent `background`, `foreground`, `surface`, `backgroundOpacity`, `backdropBlur`, `border`, `borderColor`, `borderOpacity` with the same color/material ranges |
 | Persistent button icon | `banner.floatingControls.icon`: `cookie`, `shield`, `sliders` or `custom`; `iconSize`: 16–32 |
+
+Bottom right requires runtime 11.8.0 or later. It mirrors the action order on desktop, with Accept on the left and Cookie settings on the right. At widths up to 580px, every position uses the normal order with Accept on the right. Regional `appearance.layout` supports the same values. Existing `bottom` settings keep the bottom-left position.
 
 All numeric values above are integers. Widget radius 0 makes a square; radius at least half the button size makes a circle. `stack` (`horizontal`/`vertical`) and `gap` (4–32px) matter when two privacy buttons exist. Keep the existing `zIndex` unless a real widget overlap requires changing it. The button appears after the first choice; accept or reject in a disposable preview to inspect it, then reopen preferences. Do not mistake the initial banner for the persistent button.
 
@@ -93,7 +95,7 @@ Region rules are technical policies chosen for the customer's requirements, not 
 - `strict-opt-in-v1` blocks optional purposes until an affirmative choice. `opt-out-gpc-v1` activates eligible purposes by default and applies mapped sale/share and targeted-advertising opt-outs. Use the latter only with an explicitly reviewed customer policy; the fact that a visitor is in the US does not establish that policy.
 - `notice-only-v1` does not turn a notice action into consent. `essential-only-v1` keeps optional processing blocked and shows no consent banner. These profiles are not shortcuts around consent requirements.
 - A rule's `appearance.layout` / `appearance.theme` override selected shared banner fields; omitted fields inherit. Keep global widget settings in `banner.floatingControls`.
-- Configure language through `defaultLocale`, complete `translations`, and each rule's `localeStrategy` (`browser` or `fixed`) / `fixedLocale`. Country and browser language are different inputs.
+- Configure language through `defaultLocale`, complete `translations`, and each rule's `localeStrategy` (`browser` or `fixed`) / `fixedLocale`. Country selects the regional rule. The `browser` strategy follows the website's `<html lang>` (exact locale, then base language, then `defaultLocale`), not `navigator.language` or the country. A `fixed` rule always serves `fixedLocale`. Adding a locale copies starter text; translate it and publish before visitors receive it.
 - Preserve GPC handling and the permanent settings/privacy entry. Never set `customerResponsibilityReviewed` merely because the agent finished editing; it records an actual customer acknowledgement.
 
 Geography is estimated from the visitor's direct request to Cookie Edge using trusted Cloudflare country/subdivision metadata. Do not proxy this through an application server, replace it with browser geolocation permission, or spoof production geography with headers/query parameters. Test country/state/unknown-location resolution using an isolated simulator or trusted regional traffic. Preview simulation is not evidence of production geography. Use `npx @siteoshq/cli cookie regions resolve --country GB --source draft --json`, `--country US --subdivision CA`, and omit country for unknown location. Choose `--source published` to simulate the active policy. Every result is explicitly marked `simulation: true`; it never changes production geography.
