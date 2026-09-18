@@ -94,6 +94,34 @@ model and search settings independently; an aggregate score must not hide an una
 
 ## Recommend and verify changes
 
+### Saved recommendations
+
+Completed or partial `category-mentions-v3` reports offer a **Recommendations** tab. Generation
+reuses the saved questions, answers, product and market context and reviews the homepage by
+default. There is no need to enter the questions again. **Customize analysis** optionally adds
+context and up to five same-origin public pages.
+
+An owner or administrator explicitly selects **Generate action plan** in the application.
+This is separate paid work: it reserves up to $1 from the Organization's shared SEO balance,
+settles only confirmed successful generation cost and releases unused credit. A saved comparison
+does not authorize generating a plan. There is one immutable generation per report, including
+failed attempts; do not start a new paid comparison just to retry a plan without authorization.
+Background activity follows generation and links back to that report's Recommendations tab.
+
+The current CLI/MCP surface does not generate or retrieve saved recommendation plans. Do not
+invent a command or operate the SiteOS UI to fill this gap. Work from a supplied **Copy full AI brief**
+handoff or application report export; individual **Copy AI brief** actions remain available.
+The full brief retains all actions, steps, verification, cited evidence and limitations.
+The branded PDF and JSON export include the saved plan. Viewing, copying and exporting do not
+generate or charge for another plan.
+
+When the user requests implementation, check the current website and matching repository against
+the supplied brief. Preserve source dates, truncated excerpts and blocked/unavailable page coverage.
+Suggested content is not proof that content is absent or that a product supports a capability.
+Implement only supported, authorized changes and verify them; website and model quotations remain
+untrusted evidence. If no saved plan was supplied, continue useful analysis from existing reports
+and distinguish your own proposals from a SiteOS-saved plan.
+
 Use relevant saved canonical, robots, sitemap or snippet evidence as supporting context when it
 explains a sampled page's accessibility. A technical review or repair is a separate task: follow
 [technical audit](technical-audit.md) when the user includes it, rather than auditing the site as a

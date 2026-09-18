@@ -69,6 +69,7 @@ or stop after reading a technical audit. Keep focused requests on their selected
 | Selected-page Lighthouse checks | SEO CLI and Site Audit / Performance | [Performance](references/performance.md) |
 | Keyword research with trends and saved SERPs, Domain Overview (keywords/pages/competitors), rank tracking, backlinks, GSC Insights | SEO research/GSC CLI, interface or exports | [Search research](references/search-research.md) |
 | AI Visibility: compare products on shared questions | Category history/saved inputs: `--kind ai-rankings`; plan/run: `kind: ai-visibility` plus `category` | [AI Visibility comparison](references/ai-visibility.md#ai-visibility) |
+| Work from a saved AI Visibility action plan | User-supplied full AI brief or application report export; generation is application-only | [Saved recommendations](references/ai-visibility.md#saved-recommendations) |
 | Prompt checks: inspect a sampled question across platforms | History: `--kind ai-visibility`; plan/run: `kind: ai-visibility` plus `prompt` | [AI evidence](references/ai-visibility.md) |
 | Brand lookup: corpus mentions and citations | History and plan/run: `brand` | [AI evidence](references/ai-visibility.md) |
 

@@ -38,7 +38,7 @@ or a pending crawl does not block independent work in other areas.
 | Keywords and content | Derive relevant seeds, inspect measured demand when available, group by intent and map opportunities to existing pages or justified gaps. | [Project research](project-research.md), [Search research](search-research.md) |
 | Domain Overview, competitors and Rank tracking | Verify official domains and overlapping customer needs; compare useful queries, markets and devices, and prepare reusable tracking inputs. | [Search research](search-research.md) |
 | Backlinks | Inspect available domain evidence, source/target URLs and relevance; distinguish samples from totals and suggest practical opportunities. | [Search research](search-research.md) |
-| Brand lookup, Prompt checks and AI Visibility | Derive customer questions, inspect brand/citation evidence and compare products on a common prompt set. Read all four AI Visibility tabs and follow source queries. | [AI visibility](ai-visibility.md) |
+| Brand lookup, Prompt checks and AI Visibility | Derive customer questions, inspect brand/citation evidence and compare products on a common prompt set. Review available report sections, follow source queries and reuse a supplied saved Recommendations brief or export. | [AI visibility](ai-visibility.md) |
 | Fixes and follow-up | Implement requested repository fixes, test them, verify deployed repairs and propose an appropriate measurement cadence. | [Technical audit](technical-audit.md), [Audit operations](audit-operations.md) |
 
 Analytics referrals and conversions can inform priorities when already available through
