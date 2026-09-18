@@ -59,8 +59,8 @@ Each call still supplies exactly one Organization ID. If a website's Organizatio
 Projects within the authorized Organizations and match the requested website before proceeding;
 ask when the match is ambiguous. Never assume the first Organization or change shared browser state.
 
-The connection's owner can add or remove Organizations in **Account settings → AI & MCP**
-(`/settings/account/mcp`, also linked from AI & MCP). Newly joined Organizations require explicit
+The connection's owner can add or remove Organizations in **AI & MCP → My connections**
+(`/ai-tools?tab=connections`, also linked from AI & MCP). Newly joined Organizations require explicit
 selection there. These edits apply on the next request without reinstalling the plugin or repeating
 OAuth for a live connection. Re-read `siteos_get_context` after an access change. Expired or revoked
 connections still require the host's sign-in flow; disconnect revokes the connection's authority.
