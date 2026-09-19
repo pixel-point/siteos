@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "siteos",
-  "version": "2.23.0",
+  "version": "2.24.0",
   "author": {
     "name": "Pixel Point",
     "email": "info@pixelpoint.io",
@@ -11,12 +11,12 @@
   "source": {
     "repository": "https://github.com/pixel-point/siteos-platform",
     "path": "plugins/siteos",
-    "revision": "dd988927283b8b198fb7b4bfd2befffe07234a30"
+    "revision": "57d237ce707d6b47d5fb885a2291d685f4fea8b9"
   },
   "artifact": {
     "algorithm": "sha256",
-    "digest": "4da5637267de76afec2fda1fd8187257f23d64cbc8badfc3162af9fa7f2c87ed",
-    "entries": 114,
+    "digest": "729b62c45aaae3927acca1271f8c6cbce1e1cae933d66fb0b861c7caa688cd02",
+    "entries": 115,
     "excludes": [
       "release.json"
     ],

@@ -65,6 +65,7 @@ or stop after reading a technical audit. Keep focused requests on their selected
 | --- | --- | --- |
 | Complete SEO/GEO setup, review and improvements | Coordinate the supported paths below for one Project environment | [Complete SEO/GEO](references/complete-seo-geo.md) |
 | Public HTML audit, canonical/robots/sitemap, technical GEO, verify fixes | SEO CLI and Site Audit | [Technical audit](references/technical-audit.md) |
+| Independent AI metadata, unfinished copy, spelling and grammar checks | Read-only content MCP; explicit paid content CLI operations | [Content checks](references/content-checks.md) |
 | Ignore/restore, weekly audits, notifications, export | SEO CLI and Site Audit/settings | [Audit operations](references/audit-operations.md) |
 | Selected-page Lighthouse checks | SEO CLI and Site Audit / Performance | [Performance](references/performance.md) |
 | Keyword research with trends and saved SERPs, Domain Overview (keywords/pages/competitors), rank tracking, backlinks, GSC Insights | SEO research/GSC CLI, interface or exports | [Search research](references/search-research.md) |

@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.15.0`
+Package: `@siteoshq/cli@2.16.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -123,6 +123,11 @@ siteos seo notifications show [--environment <slug>] [--json]
 siteos seo notifications destinations [--environment <slug>] [--json]
 siteos seo notifications set --enabled <true|false> [--destination <candidate-id>] --severity <error|warning> --failures <true|false> --revision <number> [--environment <slug>] [--json]
 siteos seo export --audit <id> --kind <pages|issues|changes> --format <csv|json> --output <new-file> [--query <text>] [--rule <id>] [--severity <error|warning|notice>] [--state <page-or-change-state>] [--environment <slug>] [--json]
+siteos seo content status [--environment <slug>] [--json]
+siteos seo content history [--environment <slug>] [--json]
+siteos seo content findings [--scan <id>] [--query <text>] [--kind <metadata|heading|placeholder|spelling|grammar|copy>] [--status <confirmed|checking|review|unconfirmed>] [--page <number>] [--environment <slug>] [--json]
+siteos seo content run [--environment <slug>] [--json]
+siteos seo content <continue|cancel> <scan-id> [--environment <slug>] [--json]
 siteos seo performance run --audit <id> --url <url> [--url <url>...] [--device <mobile|desktop>] [--idempotency-key <key>] [--environment <slug>] [--json]
 siteos seo performance list [--device <mobile|desktop>] [--environment <slug>] [--json]
 siteos seo performance show <id> [--url <url>] [--environment <slug>] [--json]

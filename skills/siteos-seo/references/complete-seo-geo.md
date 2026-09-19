@@ -34,6 +34,7 @@ or a pending crawl does not block independent work in other areas.
 | --- | --- | --- |
 | Technical SEO and AI crawler access | Inspect coverage, metadata, canonical, robots, sitemap, links and supported structured-data evidence; connect findings to important pages. Run a needed manual HTML audit within the saved limits. | [Technical audit](technical-audit.md) |
 | Performance | Inspect saved measurements; choose representative successful HTML pages from an audit and relevant devices for missing measurements. Keep lab results separate from field data. | [Performance](performance.md) |
+| AI content checks | Read saved metadata/copy findings; start an authorized independent check without waiting for the technical crawl. Review confirmed suggestions and preserve partial coverage. | [Content checks](content-checks.md) |
 | GSC Insights | Read the connected property's queries/pages and freshness; relate opportunities to audited URLs. If setup needs OAuth or a property choice, prepare that exact step and continue elsewhere. | [Search research](search-research.md) |
 | Keywords and content | Derive relevant seeds, inspect measured demand when available, group by intent and map opportunities to existing pages or justified gaps. | [Project research](project-research.md), [Search research](search-research.md) |
 | Domain Overview, competitors and Rank tracking | Verify official domains and overlapping customer needs; compare useful queries, markets and devices, and prepare reusable tracking inputs. | [Search research](search-research.md) |

@@ -40,6 +40,11 @@ Setup creates a resource and performs no crawl. Project settings own the website
 
 ## Prepare a repair
 
+For authorized semantic copy checks, use [independent content checks](content-checks.md).
+They can stream results while the technical audit runs; their balance or provider failure never
+blocks technical auditing. Ordinary `seo audit run` does not acquire paid content authority.
+Keep confirmed suggestions, preliminary signals and deterministic technical findings separate.
+
 `seo repair`, repeated recheck URLs and the `--resource` guard require CLI 2.1.0 or newer and
 the matching server. Check `npx @siteoshq/cli --version` and `seo --help`; upgrade a stale global
 installation or use `npx @siteoshq/cli@latest`. Compare the brief's application origin,
