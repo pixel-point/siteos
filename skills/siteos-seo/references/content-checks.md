@@ -5,7 +5,8 @@ Project environment. Read `siteos_seo_get_content_checks` through the connected 
 available; otherwise use `npx @siteoshq/cli seo content status --json`. Reads never launch work.
 Verify CLI help and the hosted capability before claiming a command is available.
 
-AI content checks use the Organization's SEO balance. An ordinary technical audit request
+AI content checks are available across Organizations and Projects with SEO attached when the
+hosted feature is enabled, using the selected Organization's SEO balance. An ordinary technical audit request
 does not silently authorize a paid content run. When covered by the user's scope, run
 `npx @siteoshq/cli seo content run --json`. Keep its returned `scanId`; a null ID with disabled
 availability means nothing started. After an uncertain response, read status before considering
