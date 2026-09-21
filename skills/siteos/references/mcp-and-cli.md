@@ -34,7 +34,7 @@ both interfaces merely to confirm their connection.
 2. Call `siteos_get_context`. Check the application origin and `organizations`, the currently authorized Organization list.
 3. For Project service reads, call `siteos_list_projects` with the intended Organization ID and `siteos_get_project` with the selected
    Project ID. Choose an explicit Environment from its catalog; no Production fallback is allowed.
-4. Use `siteos_get_overview` for the configured services and observed state. Use Pulse run reads,
+4. Use `siteos_get_overview` for the configured services and observed state. Use Pulse Check diagnostics (published settings, overrides, effective scheduling, package and incident state) and run reads,
    Trace coverage/events/issues, incident details, observations, GTM summaries, GA4 configuration/report reconciliation and notification history, SEO audits, Cookie configuration/aggregates, Forms definitions/inbox,
    Search queries/published content/crawler previews/relevance/installation/consented visitor reports/diagnostics or Analytics reports/realtime when the outcome needs their evidence.
    Preserve filters

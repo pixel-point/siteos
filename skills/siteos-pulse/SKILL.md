@@ -9,7 +9,7 @@ Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once p
 
 Pulse owns its Projects, Checks, schedules, deployment bundles, credentials, and runtime data.
 
-Hosted reads: `siteos_pulse_list_runs` and `siteos_pulse_get_run` for run history and failure details.
+Hosted reads: `siteos_pulse_list_checks` and `siteos_pulse_get_check` expose published settings, overrides, effective schedules, active package versions and open incident evidence. `siteos_pulse_list_runs` and `siteos_pulse_get_run` provide run history and failure details. Discover available tools first; older servers may not expose Check reads.
 
 ## Workflow
 
@@ -32,8 +32,8 @@ Hosted reads: `siteos_pulse_list_runs` and `siteos_pulse_get_run` for run histor
    npx @siteoshq/cli pulse deploy --dry-run --json
    ```
 
-8. Run `npx @siteoshq/cli pulse deploy --json` only when the user requested deployment. A successful dry run proves bundle construction, not remote deployment.
-9. When remote verification is requested or follows an authorized repair/deployment, run `npx @siteoshq/cli pulse run --check <check-id> --json` (CLI 2.13.0+ and the matching server). Use the exact Check ID from deployment output or verified saved run evidence in the selected Project/environment. This starts one manual run of the deployed Check; it does not upload local changes.
+8. Run `npx @siteoshq/cli pulse deploy --json` only when the user requested deployment. A successful dry run proves bundle construction, not remote deployment. Verify published state with `siteos_pulse_list_checks` / `siteos_pulse_get_check`, or `pulse checks list` / `pulse checks read --check <id>` when available. Compare published defaults, preserved overrides, effective scheduling and active version/checksum; an upload response alone does not prove the effective schedule.
+9. When remote verification is requested or follows an authorized repair/deployment, run `npx @siteoshq/cli pulse run --check <check-id> --json` (CLI 2.13.0+ and the matching server). Use the exact Check ID from Check reads, deployment output or verified saved run evidence in the selected Project/environment. This starts one manual run of the deployed Check; it does not upload local changes.
 10. Read the returned Run ID with `siteos_pulse_get_run` until terminal, then inspect every test outcome. Resolve the MCP connection once through the shared contract. Do not click **Run again** or use browser automation to operate SiteOS or re-read its saved status. If neither the supported CLI nor MCP can complete a step, report that specific capability/access blocker. Browser exploration of the tested website remains available for reproducing defects.
 11. Report local checks, deployment, remote Run ID and terminal result separately. A queued/running response is not a pass, and a manual pass does not establish scheduled recovery; confirm that from a subsequent eligible scheduled pass. If a write loses its response, reconcile current runs and reuse the original `--request-id` for the same request; never issue a fresh request as an automatic retry.
 
