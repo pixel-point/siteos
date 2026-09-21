@@ -2,7 +2,9 @@
 
 Read the installed `analytics --help` first; this source does not prove an npm/server/runtime release.
 Use the exact selected Project/environment and existing access. Do not call private APIs to bypass
-missing command support. These commands require an owner/admin and Analytics workspace-write grant.
+missing command support. `measurement show` requires an Analytics workspace-read grant.
+Measurement review, preparation, activation, discard and identity-key management require an
+owner/admin and Analytics workspace-write grant. A write grant does not imply read access.
 
 ## Review before applying
 
@@ -37,8 +39,13 @@ Use the requested/minimum necessary lifetime, not the maximum merely because it 
 
 `review` must be ready before activation. For Cookie it checks the exact published resource, scopes,
 recognition/history limits and optional identity fields. The Analytics browser review can prepare
-a matching **Cookie draft** while preserving its other settings. Review and publish it explicitly
-in Cookie, then repeat Analytics review. CLI callers use the Cookie skill and its own authorization;
+a matching **Cookie draft** while preserving its other settings. If only the native Analytics
+disclosure differs from the live policy, an owner/admin can review the differences and explicitly
+choose **Publish Cookie and apply** in the same dialog. Cookie publication is confirmed before
+Analytics is rechecked/applied. Other pending Cookie edits, first publication or incomplete
+responsibility review require the full Cookie editor. After partial success, check publication
+again and retry only the remaining Analytics step; do not claim the two writes are atomic.
+CLI callers use the Cookie skill and its own authorization;
 an Analytics grant cannot write or publish Cookie. A separately published website-details gate can
 remain even when an Analytics plan says independent; inspect `additionalWebsiteControl`.
 
