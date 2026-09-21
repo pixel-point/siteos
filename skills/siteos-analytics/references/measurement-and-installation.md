@@ -1,5 +1,13 @@
 # Measurement and installation
 
+The browser's explicit **Set up SiteOS Analytics** action enables first-time basic collection.
+Generic Project attachment and Google setup do not. The waiting/connected guide persists across
+navigation and reloads until a real accepted event and **Explore Analytics** acknowledgement.
+That button only completes onboarding; it never gates collection or grants consent. A paused
+configured resource stays paused when its guide is reopened. CLI callers use the existing
+revision-checked `settings set --enabled true` only when authorized; never call browser-only
+installation acknowledgement endpoints or generate synthetic traffic to clear onboarding.
+
 Use the common Project context and the selected environment's resource. Start with safe output:
 
 ```sh
@@ -164,7 +172,7 @@ independent collection or native Cookie control. Do not infer consent from tag e
 consent check or CMP script blocker can prevent initialization; inspect both layers. Native Cookie
 requires no GTM consent mapping and supplies its own matching regional/visitor state.
 
-Map only named, registered categorical values to custom events. For example, a site's `signup_completed` dataLayer event may trigger the corresponding Analytics event after signup actually succeeds. Never forward the whole dataLayer payload. Verify `business success → dataLayer → GTM trigger/tag → request → saved report` when this adapter is used.
+Map only registered property names to custom events: a declared List value or explicit public content for a Text property. Check deployed Text capability and its privacy/size limits in [events-and-reports.md](events-and-reports.md). For example, a site's `signup_completed` dataLayer event may trigger the corresponding Analytics event after signup actually succeeds. Never forward the whole dataLayer payload or visitor input. Verify `business success → dataLayer → GTM trigger/tag → request → saved report` when this adapter is used.
 
 ## Realtime and countries
 

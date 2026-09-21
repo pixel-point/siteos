@@ -18,7 +18,49 @@ Event definition example:
 }
 ```
 
-Names start with a lowercase letter and contain lowercase letters, digits or underscores (up to 64 characters). `pageview` and the `cookie_` namespace are reserved. Up to eight categorical properties are supported, each with one to twenty declared values. Omit unused properties with `{}`. Unknown events/properties/values are rejected, not automatically cataloged.
+Names start with a lowercase letter and contain lowercase letters, digits or underscores (up to 64 characters). `pageview` and the `cookie_` namespace are reserved. Register up to eight property names; each selects a List or Text type. List uses one to twenty declared ASCII values, up to 80 characters each. Omit unused properties with `{}`. Unknown events/property names and values outside a List are rejected, not automatically cataloged.
+
+## Text without a predefined list
+
+Check the installed CLI's `analytics --help` and the deployed server/runtime capability before using this newer contract. Text is general-purpose public content, not limited to any kind of website. Product labels, article categories, plans and website sections are examples, not a list of allowed use cases.
+
+```json
+{
+  "name": "product_opened",
+  "label": "Product opened",
+  "properties": {
+    "title": { "type": "public_text" },
+    "placement": ["catalog", "related"]
+  }
+}
+```
+
+Register this definition once. New title values do not require another catalog update:
+
+```js
+window.SiteOSAnalytics?.track("product_opened", {
+  title: "Team workspace — 新品",
+  placement: "catalog",
+});
+```
+
+Text accepts 1–256 Unicode code points after NFC normalization and trimming. It rejects control characters, obvious email-shaped values and full URLs; this validation is **not a personal-data detector**. Publishers must choose public, non-personal sources. Never pass visitor input, search queries, messages, form answers, emails, account IDs, tokens or entire DOM/dataLayer objects. People uses its separate backend and consent contract. The runtime never automatically reads page text. No cookies or consent changes are introduced by selecting Text.
+
+Reload the website after registration. The current runtime advertises `eventPropertiesVersion: 1` and requests configuration with `?eventProperties=1`. An older runtime requesting a text-enabled catalog receives `RUNTIME_UPGRADE_REQUIRED` rather than a configuration it cannot interpret. Upgrade the server, Edge (when used) and hosted runtime before opting catalogs into Text; test direct script/GTM delivery before changing a client's integration. The current GTM event tag already accepts explicitly mapped string values and loads the shared runtime; no additional Gallery field is needed.
+
+In **Events → select an event → Property values**, search received values and move through pages of 50. Selecting a value applies the report filter. Dates, countries, campaigns and visit filters define the report population; counts here are events, not pageviews or people. Filters and goal/funnel conditions can use an exact text value without registering that value first.
+
+To widen an existing List, open that property and choose **Allow text values**, then review and confirm. Existing facts stay intact. Renaming, deleting or narrowing a property is not part of this operation. From the CLI, first read `events list --json`, review the named property's current definition and `revision`, then create a small change file:
+
+```json
+{ "operation": "widen_property", "name": "product_opened", "property": "title", "revision": 1 }
+```
+
+```sh
+npx @siteoshq/cli analytics events widen --file <reviewed-change.json> --json
+```
+
+Use the actual returned revision, never a guessed value. This writes immediately; a stale revision fails without overwriting another edit. Read and review again after a conflict; do not blindly retry with an incremented revision. Only owner/admin event-management authority can widen a property. No customer catalog is widened automatically and measurement-policy revisions are not changed.
 
 Call the generated `window.SiteOSAnalytics?.track(name, properties)` snippet in the actual success callback. HTML attributes (`data-siteos-event` and `data-siteos-property-<key>`) are for explicit click events on a control; they do not prove successful completion of its underlying action. Inspect existing instrumentation to avoid firing both an attribute event and a callback event for the same action. Trace observes the same request, not an extra event source.
 

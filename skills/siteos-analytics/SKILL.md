@@ -56,7 +56,7 @@ mode and deploying the website are separate effects with separate authorization 
 
 ## Instrument useful events
 
-Read [events-and-reports.md](references/events-and-reports.md). Prefer a small catalog tied to meaningful outcomes: completed signup, successful form submission, plan selection. Register allowed categorical properties before writing instrumentation. Never send email, account IDs, free text, complete URLs or arbitrary dataLayer objects through events. Optional identity uses the separately authorized backend assertion contract, not event properties.
+Read [events-and-reports.md](references/events-and-reports.md). Prefer a small catalog tied to meaningful outcomes: completed signup, successful form submission, plan selection. Register event/property names before instrumentation. Choose List for a fixed set or Text (`public_text`) for explicit public content without enumerating values, after checking deployed capability. Text is general-purpose, not specific to FAQ or products. Never send visitor-entered text, email, account IDs, complete URLs or arbitrary dataLayer objects through events. Widen an existing List only after explicit review of its current catalog revision. Optional identity uses the separately authorized backend assertion contract, not event properties.
 
 Use `analytics events create --file <event.json>`, then `analytics events snippet <name>` for the installed API. Instrument the actual success callback; a click is not a completed signup or submission. Use one installation and one event adapter per action to avoid duplicates. Declare page/event goals and ordered funnels only after their underlying events exist.
 
