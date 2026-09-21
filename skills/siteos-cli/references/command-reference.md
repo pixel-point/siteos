@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.16.0`
+Package: `@siteoshq/cli@2.17.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -169,6 +169,11 @@ siteos analytics report [--days <1|7|28>] [--event <name>] [--country <ISO|unkno
 siteos analytics realtime [--country <ISO|unknown>] [--campaign <id>] [--filters <json>] [--environment <slug>] [--json]
 siteos analytics settings show [--environment <slug>] [--json]
 siteos analytics settings set --revision <number> [--enabled <true|false>] [--cookie-events <true|false>] [--minimal-realtime <true|false>] [--environment <slug>] [--json]
+siteos analytics measurement <show|review> [--environment <slug>] [--json]
+siteos analytics measurement <prepare|activate|discard> --file <change.json> [--environment <slug>] [--json]
+siteos analytics identity-keys list [--environment <slug>] [--json]
+siteos analytics identity-keys register --file <public-key.json> [--environment <slug>] [--json]
+siteos analytics identity-keys revoke <key-id> [--environment <slug>] [--json]
 siteos analytics events list [--environment <slug>] [--json]
 siteos analytics events create --file <event.json> [--environment <slug>] [--json]
 siteos analytics events snippet <name> [--environment <slug>] [--json]

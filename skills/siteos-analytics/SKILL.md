@@ -21,6 +21,14 @@ Complete the path from the site's business action to a saved Analytics report. C
 2. Resolve the target through the shared execution contract and inspect the Analytics attachment with `npx @siteoshq/cli project status --json`.
 3. If Analytics is absent, use `npx @siteoshq/cli project connect analytics` within the user's requested setup. This explicitly attaches Analytics only. Use `$siteos` for common Project or environment repair. Never inspect private binding or credential files.
 4. Read `npx @siteoshq/cli analytics status --json` and `npx @siteoshq/cli analytics installation --json`.
+   When returned, `measurement` describes baseline report semantics: `visitor_days` is not unique
+   people across days. Read `measurementStatus` separately for configured collector mode, enforced
+   lifetimes, readiness and accepted-event evidence. It is also included in `settings show` and
+   report reads, including MCP. Readiness is not visitor consent or installation proof. Historical
+   recognition does not prove current-policy recognition or live activity. Unknown/missing evidence
+   stays unknown; do not infer it from Cookie control or counts. Collector capabilities do not
+   prove that the installed CLI/runtime supports mode changes or website identity. See the
+   installation reference for field interpretation and release boundaries.
 5. A newly attached Analytics workspace may have no native source enabled. For the requested SiteOS installation, read `analytics settings show --environment <slug> --json` and explicitly enable collection with `analytics settings set --revision <current-revision> --enabled true --environment <slug>`. Read it back before installing. Connecting GA4 through Analytics Setup is independent and does not enable the SiteOS collector; do not install a native script for a GA4-only request.
 
 ## Read connected Google Analytics
@@ -34,22 +42,30 @@ different states. Preserve Google limitations and exact Project/environment/bind
 
 Read [measurement-and-installation.md](references/measurement-and-installation.md) before changing consent behavior, using GTM or diagnosing missing traffic.
 
+For a requested mode change, retention change, returning-browser report or optional account/contact
+identification, read [measurement-modes-and-identity.md](references/measurement-modes-and-identity.md).
+Check installed command/runtime support first. Preparing a plan, publishing Cookie, activating a
+mode and deploying the website are separate effects with separate authorization boundaries.
+
 - Analytics collects independently by default. Attaching Cookie does not change this behavior.
 - For native consent control, use `$siteos-cookie` to set `draft.integrations.siteosAnalytics: true` in the same Project environment, then explicitly publish the reviewed banner when authorized. The UI equivalent is Cookie → Services → SiteOS Analytics → Control with Cookie. Disabling it also requires publication. Never create a second Analytics consent policy or invent a `--consent-mode` flag.
-- With the published integration enabled, Analytics waits for the matching Cookie runtime and follows regional rules, choices and withdrawal. Strict opt-in waits for a grant; a reviewed opt-out/notice profile can permit collection without claiming consent. A draft save has no public effect.
-- External CMPs can opt into a gate before script initialization using `data-siteos-consent="required"`, or GTM's **Use external consent manager** option, then supply the actual consent state. No adapter or artificial grant is needed for independent collection.
+- Check the published integration's scopes. Website-details control waits for the matching Cookie runtime and follows regional rules, choices and withdrawal. Strict opt-in waits for a grant; a reviewed opt-out/notice profile can permit website details without claiming consent. Recognition-only control must not block an independently permitted cookieless base; recognition always needs affirmative permission and separate owner activation. A draft save has no public effect. Do not replace an existing scoped integration with an unreviewed policy.
+- External CMPs use the scoped installation and evidence contract in the installation reference: configure the expected binding/purpose/material policy before initialization, then forward the original choice and expiry. Do not use a boolean grant or renew timestamps on load. Check `SiteOSAnalyticsLoader.scopedConsentVersion === 1` before claiming this source contract is deployed. No adapter or artificial grant is needed for independent collection.
 - GPC, DNT and full opt-out stop measurement. Detailed Cookie interaction events always require that banner's explicit Analytics grant. Optional minimal realtime remains a separate counter independent of consent.
 - Read current Analytics settings, then change only intended fields with `analytics settings set --revision <number>`. Refetch after a revision conflict; do not overwrite concurrent edits. Read back the published Cookie integration and reload the website after changes.
 
 ## Instrument useful events
 
-Read [events-and-reports.md](references/events-and-reports.md). Prefer a small catalog tied to meaningful outcomes: completed signup, successful form submission, plan selection. Register allowed categorical properties before writing instrumentation. Never collect email, account IDs, free text, complete URLs or arbitrary dataLayer objects.
+Read [events-and-reports.md](references/events-and-reports.md). Prefer a small catalog tied to meaningful outcomes: completed signup, successful form submission, plan selection. Register allowed categorical properties before writing instrumentation. Never send email, account IDs, free text, complete URLs or arbitrary dataLayer objects through events. Optional identity uses the separately authorized backend assertion contract, not event properties.
 
 Use `analytics events create --file <event.json>`, then `analytics events snippet <name>` for the installed API. Instrument the actual success callback; a click is not a completed signup or submission. Use one installation and one event adapter per action to avoid duplicates. Declare page/event goals and ordered funnels only after their underlying events exist.
 
 ## Verify the outcome
 
-1. Inspect the real website integration and run its applicable checks.
+1. Inspect the real website integration and run its applicable checks. Review private route shapes
+   and registered event categories: built-in path minimisation cannot recognize every personal
+   slug. Use the pre-load path transformation described in the installation reference when needed,
+   and verify that private values do not leave in initial or SPA measurement requests.
 2. In the browser, verify configuration loading, the published integration and any external CMP gate, opt-out behavior and a successful measurement request. Exercise the real business action; don't send synthetic production conversions to prove setup.
 3. Read `analytics realtime --json` and `analytics report --days 1 --event <name> --json` to confirm accepted data in the exact environment. Inspect registered categories, page/source/country breakdowns and last-received time as relevant. A saved definition or snippet alone is not collection proof.
 4. If native control is enabled, test unknown, grant, refusal, revoke and delayed Cookie loading. With control off or Cookie absent, verify independent collection without a Cookie global. Diagnose browser blocking, origin mismatch and stale configuration before changing settings.

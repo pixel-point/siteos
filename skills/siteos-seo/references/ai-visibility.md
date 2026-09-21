@@ -104,8 +104,10 @@ context and up to five same-origin public pages.
 An owner or administrator explicitly selects **Generate action plan** in the application.
 This is separate paid work: it reserves up to $1 from the Organization's shared SEO balance,
 settles only confirmed successful generation cost and releases unused credit. A saved comparison
-does not authorize generating a plan. There is one immutable generation per report, including
-failed attempts; do not start a new paid comparison just to retry a plan without authorization.
+does not authorize generating a plan. A successful plan is immutable. After a failed attempt, the application offers **Retry action plan**
+with its cost disclosure and **Saved analysis inputs**. This explicitly starts a new recommendation
+attempt using the same report, custom context and pages; it does not rerun the comparison. It is
+separate paid work, never automatic. Do not start a new paid comparison just to retry a plan.
 Background activity follows generation and links back to that report's Recommendations tab.
 
 The current CLI/MCP surface does not generate or retrieve saved recommendation plans. Do not
