@@ -26,7 +26,11 @@ npx @siteoshq/cli analytics measurement activate --file <activation.json> --envi
     "mode": "visitor_recognition",
     "website": { "consent": "independent", "minimalPageviews": true },
     "consent": { "provider": "cookie" },
-    "retention": { "browserRecognitionDays": 30, "historyRetentionDays": 365, "renewOnActivity": false }
+    "retention": {
+      "browserRecognitionDays": 30,
+      "historyRetentionDays": 365,
+      "renewOnActivity": false
+    }
   }
 }
 ```
@@ -111,6 +115,23 @@ must confirm the same account; stale tabs stay unlinked. Before logout/account o
 changes call `await SiteOSAnalytics.resetIdentity()`; false means cleanup is not confirmed and must
 not be reported as success. Do not prevent logout, invent success or identify the next account from
 stale state. Missing/denied permission yields no identity, with independently permitted base intact.
+
+For a form without a trusted contact session, the website may return a short-lived authenticated,
+opaque proof after validating its accepted submission. Check the initialized SDK's numeric
+`identityProofVersion === 1` before calling `identify("submitted_contact", { proof })`.
+The same-origin backend must authenticate/decrypt that proof and derive the subject/selected fields;
+an ordinary receipt ID is insufficient. Read `identityPermission("submitted_contact")` before
+requesting a proof and again before identify. Keep proof memory-only, never in storage, URLs,
+logs, events or a queue waiting for later consent. Reset a prior identity first and stop if cleanup
+is incomplete. After initial linking, the compatible runtime/server can continue an existing
+submitted-contact link across visits using the same recognition cookie and current separate
+permission. No new website proof, email transfer, cookie or deadline renewal is needed. This means
+the browser that submitted the contact, not the authenticated current human; accounts still require
+website-session confirmation on each document. Expired, revoked or erased links cannot resume, and
+anonymous history is never joined. Removing the signer stops new links, not valid contact
+continuation; stop those through reviewed policy/permission or privacy cleanup. This additive runtime
+option changes no GTM template input. See the public
+[People setup guide](https://siteos.sh/docs/analytics/people); verify deployed capability before use.
 
 Identity requires an explicit choice made **after owner activation**, including reactivation. For
 native Cookie, invite the visitor to reopen preferences (`SiteOSCookie.openPreferences()`) when the
