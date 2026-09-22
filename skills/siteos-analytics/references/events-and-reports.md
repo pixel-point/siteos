@@ -87,7 +87,7 @@ Call the generated `window.SiteOSAnalytics?.track(name, properties)` snippet in 
 
 ## Campaigns, goals and funnels
 
-Use `analytics campaigns|goals|funnels list` before creating entries. Creation uses `--file`; only goals and funnels support archive. The API returns saved IDs for subsequent filters/archive operations.
+Use `analytics campaigns|goals|funnels list` before creating entries. Creation uses `--file`. The API returns saved IDs for subsequent filters/archive operations. Goals and funnels support archive; campaigns support both archive and restore.
 
 Campaign definition:
 
@@ -96,6 +96,8 @@ Campaign definition:
 ```
 
 These are registered `utm_source`, `utm_medium`, `utm_campaign` triples. The runtime resolves them to a catalog ID; raw query strings do not leave the browser. Attribution is fixed at visit entry. Unregistered triples do not create campaign categories automatically.
+
+Campaign archiving only organizes the working list: it preserves statistics and keeps measuring future visits from already shared links. It does not stop ads, disable collection, or free a catalog slot. Use `analytics campaigns list --status all --json` before creation to avoid duplicating an archived UTM triple; the default list shows active entries. Use `--status archived` for the archive. After user authorization, run `analytics campaigns archive <id> --json` or `analytics campaigns restore <id> --json` for the exact selected environment. Both commands use `analytics:reports:write` and verify the saved ID and state. The UI offers the same actions under each campaign’s menu, with a confirmation and Active / Archived / All campaigns filters.
 
 Goal definition:
 

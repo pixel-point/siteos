@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.20.0`
+Package: `@siteoshq/cli@2.21.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -179,8 +179,10 @@ siteos analytics events create --file <event.json> [--environment <slug>] [--jso
 siteos analytics events widen --file <change.json> [--environment <slug>] [--json]
 siteos analytics events delete <name> --revision <number> --confirm <name> [--property <property>] [--environment <slug>] [--json]
 siteos analytics events snippet <name> [--environment <slug>] [--json]
-siteos analytics campaigns list [--environment <slug>] [--json]
+siteos analytics campaigns list [--status <active|archived|all>] [--environment <slug>] [--json]
 siteos analytics campaigns create --file <campaign.json> [--environment <slug>] [--json]
+siteos analytics campaigns archive <id> [--environment <slug>] [--json]
+siteos analytics campaigns restore <id> [--environment <slug>] [--json]
 siteos analytics goals list [--environment <slug>] [--json]
 siteos analytics goals create --file <goal.json> [--environment <slug>] [--json]
 siteos analytics goals archive <id> [--environment <slug>] [--json]
