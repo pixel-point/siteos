@@ -62,6 +62,26 @@ npx @siteoshq/cli analytics events widen --file <reviewed-change.json> --json
 
 Use the actual returned revision, never a guessed value. This writes immediately; a stale revision fails without overwriting another edit. Read and review again after a conflict; do not blindly retry with an incremented revision. Only owner/admin event-management authority can widen a property. No customer catalog is widened automatically and measurement-policy revisions are not changed.
 
+To remove an obsolete custom event or property, use **Events → select the event → Delete event**
+or **Property values → select the property → Delete property**. Review the warning and type its
+exact name. Historical statistics and property values remain until their normal retention expires;
+new collection stops. Deletion is permanent and the old name remains reserved. Automatic pageview
+and Cookie events are not deletable through the custom catalog.
+
+For CLI deletion, first read `events list --json` in the explicit Project/environment. Obtain the
+user's authorization for the named event/property deletion and pass the exact reviewed revision:
+
+```sh
+npx @siteoshq/cli analytics events delete <event> --revision <reviewed-revision> --confirm <event> --environment <slug> --json
+npx @siteoshq/cli analytics events delete <event> --property <property> --revision <reviewed-revision> --confirm <property> --environment <slug> --json
+```
+
+An obsolete property mentioned in an audit does not itself authorize deleting it. Never infer
+confirmation, delete a whole event when asked only to remove a property, or retry a conflict with
+a guessed revision. Remove the obsolete website call/property too. New occurrences cannot match
+goals/funnels using the deleted entry; their historical reports stay intact. `events list` exposes
+tombstones for inspection, and generated snippets omit deleted entries.
+
 Call the generated `window.SiteOSAnalytics?.track(name, properties)` snippet in the actual success callback. HTML attributes (`data-siteos-event` and `data-siteos-property-<key>`) are for explicit click events on a control; they do not prove successful completion of its underlying action. Inspect existing instrumentation to avoid firing both an attribute event and a callback event for the same action. Trace observes the same request, not an extra event source.
 
 ## Campaigns, goals and funnels
