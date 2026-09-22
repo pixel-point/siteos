@@ -42,6 +42,8 @@ different states. Preserve Google limitations and exact Project/environment/bind
 
 Read [measurement-and-installation.md](references/measurement-and-installation.md) before changing consent behavior, using GTM or diagnosing missing traffic.
 
+For developer visits, monitoring or missing traffic, check its [traffic exclusions](references/measurement-and-installation.md#traffic-exclusions) before changing collection or consent. Browser exclusion is a local preference confirmed on the measured website; ordinary automated checks must disable Analytics before navigation.
+
 For a requested mode change, retention change, returning-browser report or optional account/contact
 identification, read [measurement-modes-and-identity.md](references/measurement-modes-and-identity.md).
 Check installed command/runtime support first. Preparing a plan, publishing Cookie, activating a

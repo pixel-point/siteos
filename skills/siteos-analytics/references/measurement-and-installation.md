@@ -50,6 +50,51 @@ listed below; do not invent a mode/retention flag, call private activation endpo
 source documentation and successful local tests do not prove a public release. Identified
 accounts/email and People reports are not implied by the recognition capability.
 
+## Traffic exclusions
+
+Open **Analytics → Settings → Traffic exclusions** in the selected Project environment. Verify the
+installed runtime supports these controls before claiming an exclusion is active.
+
+- **Your browser:** use **Check my browser** (or **Check or change**) to open the measured website
+  and confirm, exclude or include that browser. The card shows **Not checked**, **Excluded** or
+  **Not excluded**, with the last website-confirmed time. Opening Settings does not contact the
+  website or poll it. A click alone is not confirmation; a blocked tab, missing script or storage
+  failure must not be reported as success. A saved status can become stale after website data is
+  cleared; recheck explicitly. The preference belongs to that browser, website origin and Analytics
+  resource. It leaves past statistics and consent choices intact. An agent's browser does not
+  establish the user's browser preference, and no CLI/report read can prove it.
+- **Allowed website:** one exact origin, including scheme and port, comes from Project settings.
+  Other subdomains, preview, staging and localhost cannot use this environment's key. Use a
+  separate environment for another website address. There is no hostname wildcard/alias list or
+  IP exclusion setting; do not loosen this binding to diagnose missing data.
+- **Known bots → How filtering works:** the server and Edge use a manually maintained list of
+  recognized crawler/monitoring User-Agent names. The UI links provider documentation; it does not
+  download a live provider database. This is not sender authentication or complete bot detection.
+  IP addresses, VPN use, behavior and headless mode alone do not trigger this filter. Excluded
+  collection responses expose `X-SiteOS-Analytics-Excluded: known_bot` and `excluded: "known_bot"`;
+  these expected exclusions do not indicate a delivery failure. There is no exclusion history or
+  counter in this Settings card.
+
+For ordinary Playwright checks, install this flag in the shared context fixture **before the first
+navigation**, including pages opened later in that context:
+
+```js
+await context.addInitScript(() => {
+  window.SiteOSAnalyticsDisabled = true;
+});
+await page.goto(websiteUrl);
+```
+
+This prevents Analytics initialization, configuration and measurement requests for the installed
+runtime. Do not rely on bot recognition or a remembered browser exclusion in fresh test contexts.
+Keep consent UI checks working normally. Tests intended to verify Analytics collection omit this
+flag and use an isolated test environment, never synthetic production conversions. For Pulse,
+follow its [shared fixture and publication workflow](../../siteos-pulse/references/playwright-authoring.md#keep-monitoring-out-of-analytics).
+
+When traffic is missing, check this flag, the browser preference, exact origin and `known_bot`
+diagnostics alongside script loading and consent. Do not disable privacy controls or widen the
+accepted website to manufacture successful collection.
+
 ## Website collection and consent
 
 Analytics starts independently. There is no Analytics consent-mode CLI flag. Native control belongs to the published Cookie banner in the same Project environment. Use `$siteos-cookie` to preserve the current draft, including any scoped `siteosAnalyticsConsent`, set `integrations.siteosAnalytics` and save it with the current draft version. Review and publish only within the user's authorization, then read back active publication and Analytics configuration. Find **Cookie → Services → SiteOS Analytics**; the control label reflects the configured scope. A draft save or service attachment alone has no effect, and enabling this integration does not activate recognition.
@@ -115,7 +160,8 @@ If the CMP exposes only a boolean/category, it cannot supply this evidence witho
 that preserves the original explicit purpose choice, material version and expiry. Do not invent
 them. Fresh affirmative `granted` evidence must match every configured key and resource/scope.
 Regionally `permitted` is not a grant for this required external gate. Evidence is copied into
-memory and rechecked at actions/flush (the browser flush interval is two seconds). An activated
+memory and rechecked at actions/flush. A pending batch schedules a bounded two-second flush;
+an empty queue does not keep a repeating flush timer. An activated
 layered policy also sends its bounded scope evidence to the collector for server validation; no
 permission payload or identity claims go to Trace. An in-flight committed event cannot be undone
 by browser abort.

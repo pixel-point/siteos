@@ -62,9 +62,10 @@ npx @siteoshq/cli analytics events widen --file <reviewed-change.json> --json
 
 Use the actual returned revision, never a guessed value. This writes immediately; a stale revision fails without overwriting another edit. Read and review again after a conflict; do not blindly retry with an incremented revision. Only owner/admin event-management authority can widen a property. No customer catalog is widened automatically and measurement-policy revisions are not changed.
 
-To remove an obsolete custom event or property, use **Events → select the event → Delete event**
-or **Property values → select the property → Delete property**. Review the warning and type its
-exact name. Historical statistics and property values remain until their normal retention expires;
+To remove an obsolete custom event, use **Events → select the event → header actions (⋯) → Delete event…**.
+Review the warning and type its exact name. This removes the whole event from future collection,
+including its properties. Individual property deletion is available through the CLI below, not a
+separate button in the event panel. Historical statistics and property values remain until their normal retention expires;
 new collection stops. Deletion is permanent and the old name remains reserved. Automatic pageview
 and Cookie events are not deletable through the custom catalog.
 

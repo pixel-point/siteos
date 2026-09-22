@@ -40,6 +40,43 @@ A Pulse Check should prove a stable, user-observable outcome and remain safe whe
 
 Split broad coverage into focused Checks that fit the configured suite wall-time. Increasing an individual Playwright timeout does not extend the Pulse runner's wall-time limit.
 
+## Keep monitoring out of Analytics
+
+For ordinary website checks using SiteOS Analytics, install the explicit disable flag in the
+existing shared fixture before any navigation. Make the fixture automatic so every Check that
+imports it, including newly opened pages in the same context, receives the protection:
+
+```ts
+import { test as base, expect } from "@playwright/test";
+
+export const test = base.extend<{ suppressAnalytics: void }>({
+  suppressAnalytics: [
+    async ({ context }, use) => {
+      await context.addInitScript(() => {
+        (window as Window & { SiteOSAnalyticsDisabled?: boolean }).SiteOSAnalyticsDisabled = true;
+      });
+      await use();
+    },
+    { auto: true },
+  ],
+});
+export { expect };
+```
+
+Merge this into the existing fixture instead of replacing its safety, authentication or evidence
+hooks. Browser specs must import that fixture, not `test` directly from `@playwright/test`. Install
+the same initializer explicitly for any separately created browser contexts. This disables Analytics
+configuration and collection before initialization; it does not disable Cookie UI or alter consent.
+Do not rely on headless mode, known-bot filtering or a local-storage preference in fresh contexts.
+
+Checks specifically testing Analytics collection need their own isolated test environment and
+omit the flag. A server-side delivery-health Check does not need to generate visitor events.
+Do not suppress Analytics globally in the Pulse runner or silently change other customers' suites.
+
+For existing Checks, validate and build the package, compare its checksum with the active deployment
+and publish within the requested scope only when it differs. Verify a fresh remote run separately;
+a local edit, deployment receipt or manual pass does not prove scheduled execution.
+
 ## Preserve runner compatibility
 
 Pulse bundles the selected specs and their local imports for an isolated Chromium run.
