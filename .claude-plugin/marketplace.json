@@ -3,15 +3,15 @@
   "owner": {
     "name": "Pixel Point"
   },
-  "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations and analytics.",
+  "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations, Analytics and Storage.",
   "metadata": {
-    "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations and analytics."
+    "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations, Analytics and Storage."
   },
   "plugins": [
     {
       "name": "siteos",
       "source": "./",
-      "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations and analytics."
+      "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations, Analytics and Storage."
     }
   ]
 }

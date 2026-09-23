@@ -1,7 +1,7 @@
 {
   "name": "siteos",
-  "version": "2.33.0",
-  "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations and analytics.",
+  "version": "2.34.0",
+  "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations, Analytics and Storage.",
   "author": {
     "name": "Pixel Point",
     "email": "info@pixelpoint.io",
@@ -25,7 +25,8 @@
     "trace",
     "seo",
     "geo",
-    "integrations"
+    "integrations",
+    "storage"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"

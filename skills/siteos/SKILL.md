@@ -1,6 +1,6 @@
 ---
 name: siteos
-description: Use for SiteOS setup, common Project and environment selection, an unspecified SiteOS request, or work spanning multiple services. Routes one repository and website Project to focused CLI, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations and analytics workflows.
+description: Use for SiteOS setup, common Project and environment selection, an unspecified SiteOS request, or work spanning multiple services. Routes one repository and website Project to focused CLI, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations, Analytics and Storage workflows.
 ---
 
 # SiteOS
@@ -29,6 +29,7 @@ The following workflow applies when the task needs CLI Project operations.
    - `$siteos-seo`: the requested SEO/GEO audit, research or AI Visibility comparison, using saved evidence and authorized CLI checks. Other saved reports can support the selected workflow; a full SEO/GEO pass applies only when requested.
    - `$siteos-integrations`: shared provider connections and notification destinations.
    - `$siteos-analytics`: website measurement, installation, optional Cookie/external consent control, events, conversions and realtime.
+   - `$siteos-storage`: project files, private uploads/downloads, immutable public website assets and expiring share links.
 6. For environment work, load [references/projects-and-environments.md](references/projects-and-environments.md). Report which Project, environments and services were changed and distinguish configuration, publication and verified runtime behavior.
 
 ## Ownership and state

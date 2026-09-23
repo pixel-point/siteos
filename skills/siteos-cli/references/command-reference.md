@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.22.0`
+Package: `@siteoshq/cli@2.23.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -15,6 +15,7 @@ siteos project --help
 siteos cookie --help
 siteos trace --help
 siteos analytics --help
+siteos storage --help
 siteos seo --help
 siteos integrations --help
 siteos pulse --help
@@ -43,13 +44,13 @@ siteos project create --name <name> --slug <slug> [--organization <id>] [--url <
 siteos project use <id-or-slug> [--organization <id>] [--environment <slug>] [--json]
 siteos project update [--name <name>] [--slug <slug>] [--url <production-url>] [--json]
 siteos project status [--json]
-siteos project connect <pulse|cookie|forms|search|trace|seo|analytics> [--resource <id>] [--json]
+siteos project connect <pulse|cookie|forms|search|trace|seo|analytics|storage> [--resource <id>] [--json]
 siteos project environment list [--json]
 siteos project environment create --name <name> --slug <slug> [--url <url>] [--json]
 siteos project environment use <slug> [--json]
 siteos project environment update <slug> [--name <name>] [--url <url>] [--json]
-siteos project environment resources <pulse|cookie|forms|search|trace|seo|analytics> [--json]
-siteos project environment connect <pulse|cookie|forms|search|trace|seo|analytics> --environment <slug> [--resource <id>] [--json]
+siteos project environment resources <pulse|cookie|forms|search|trace|seo|analytics|storage> [--json]
+siteos project environment connect <pulse|cookie|forms|search|trace|seo|analytics|storage> --environment <slug> [--resource <id>] [--json]
 ```
 
 ## Cookie
@@ -301,6 +302,28 @@ siteos search indexing-credential list --environment <slug> [--json]
 siteos search indexing-credential issue --environment <slug> --install [--name <name>] [--json]
 siteos search indexing-credential rotate --environment <slug> --install [--name <name>] [--json]
 siteos search indexing-credential revoke --environment <slug> --credential <credential-id> [--json]
+```
+
+## Storage
+
+```text
+siteos storage status [--json]
+siteos storage list [--folder <folder-id>] [--search <text>] [--cursor <id>] [--trash] [--json]
+siteos storage inspect <file-id> [--json]
+siteos storage folders list [--folder <parent-id>] [--cursor <id>] [--json]
+siteos storage folders create --name <name> [--folder <parent-id>] [--json]
+siteos storage folders delete <folder-id> --revision <revision> [--json]
+siteos storage upload <local-file> [--folder <folder-id>] [--name <name>] [--idempotency-key <key>] [--resume <upload-id>] [--replace <file-id> --revision <revision>] [--json]
+siteos storage upload-status <upload-id> [--json]
+siteos storage download <file-id> --version <version-id> --output <new-local-file> [--json]
+siteos storage rename <file-id> --name <name> --revision <revision> [--folder <folder-id>] [--json]
+siteos storage trash <file-id> --revision <revision> [--json]
+siteos storage restore <file-id> --revision <revision> [--json]
+siteos storage versions <file-id> [--cursor <id>] [--json]
+siteos storage publish <file-id> --version <version-id> [--media-type <type>] [--idempotency-key <key>] [--json]
+siteos storage share <file-id> --version <version-id> --expires-in <seconds> [--idempotency-key <key>] [--json]
+siteos storage deliveries [--cursor <id>] [--json]
+siteos storage revoke <delivery-id> --revision <revision> [--json]
 ```
 
 ## State and overrides

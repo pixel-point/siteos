@@ -2,14 +2,14 @@
 
 This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Analytics, and Integrations.
 
-Release: 2.33.0.
+Release: 2.34.0.
 
 ## Install
 
 ### Codex
 
 ```sh
-codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v2.33.0
+codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v2.34.0
 codex plugin add siteos@siteos
 ```
 
@@ -79,6 +79,11 @@ Inspect an external project, configure managed search sources and synchronizatio
 ### Forms (`$siteos-forms`)
 
 Add, migrate, connect, or debug SiteOS-managed forms, including definition registration, synchronization, and submission workflows.
+
+### Storage (`$siteos-storage`)
+
+- Private Project files, verified uploads/downloads, immutable publications and expiring shares through `siteos storage`.
+- Read-only MCP catalog metadata; content and mutations use separately authorized CLI grants. Check installed command and server availability before use.
 
 ### Analytics (`$siteos-analytics`)
 

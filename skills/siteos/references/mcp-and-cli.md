@@ -14,7 +14,7 @@ product-specific requirements, not another connection or context policy.
 | Identity, membership, sessions and authorization flows | Auth and the supported host/provider flow |
 | Product operations, domain rules, scopes and result interpretation | The owning module and focused skill |
 
-Pulse, Cookie, Forms, Search, Trace, SEO and Analytics use common Project/environment context.
+Pulse, Cookie, Forms, Search, Trace, SEO, Analytics and Storage use common Project/environment context.
 Search additionally selects a logical index: discover with `siteos_search_list_indices`, then
 pass `indexId` on Search MCP reads and `--index ID` on hosted CLI operations. Named index creation
 is CLI/UI-owned. An omitted selector addresses the legacy default only.
@@ -36,7 +36,7 @@ both interfaces merely to confirm their connection.
    Project ID. Choose an explicit Environment from its catalog; no Production fallback is allowed.
 4. Use `siteos_get_overview` for the configured services and observed state. Use Pulse Check diagnostics (published settings, overrides, effective scheduling, package and incident state) and run reads,
    Trace coverage/events/issues, incident details, observations, GTM summaries, GA4 configuration/report reconciliation and notification history, SEO audits, Cookie configuration/aggregates, Forms definitions/inbox,
-   Search queries/published content/crawler previews/relevance/installation/consented visitor reports/diagnostics or Analytics reports/realtime when the outcome needs their evidence.
+   Storage file/folder/version metadata, Search queries/published content/crawler previews/relevance/installation/consented visitor reports/diagnostics or Analytics reports/realtime when the outcome needs their evidence.
    Preserve filters
    and context while following cursors. Missing data does not establish health or successful setup.
 5. Include origin, Organization, Project, Environment and evidence time in the result when relevant.

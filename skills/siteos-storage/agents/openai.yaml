@@ -1,0 +1,4 @@
+interface:
+  display_name: "SiteOS Storage"
+  short_description: "Manage Project files and website assets"
+  default_prompt: "Use $siteos-storage to manage files in the selected Project environment and verify the requested upload, download or publication."
