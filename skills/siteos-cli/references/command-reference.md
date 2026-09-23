@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.21.0`
+Package: `@siteoshq/cli@2.22.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -28,6 +28,7 @@ siteos forms --help
 siteos auth start --email <email> [--json]
 siteos auth complete --token <token> [--json]
 siteos auth status [--json]
+siteos auth access --organization <organization-id> [--json]
 siteos auth organizations [--json]
 siteos auth organizations create --display-name <display-name> [--json]
 siteos auth select --organization <organization-id> [--json]

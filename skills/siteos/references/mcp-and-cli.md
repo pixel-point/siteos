@@ -68,6 +68,27 @@ Existing single-Organization credentials retain their selection and can be edite
  Arguments do not expand permissions. Invalid credentials never
 fall back to browser cookies, CLI sessions or a different Organization.
 
+Organization selection is not service permission. When `siteos_get_context` includes an
+Organization's `serviceAccess`, use its current `interfaceActions` for MCP operations; a listed tool
+only describes supported functionality. An empty action list means no access. Re-read context after
+membership changes. For CLI permission discovery or a denied operation, use
+`siteos auth access --organization <organization-id> --json` with CLI 2.22.0 or newer and a matching server.
+This read leaves the global Organization and repository selection unchanged and issues no grant.
+Discovery describes current capabilities; the server authorizes every operation again and intersects
+CLI grants with their original action ceiling, audience and scopes.
+
+Service assignments apply throughout the Organization's Projects and Environments. Viewer, Editor
+and Manager are service levels; a Member with Manager access still cannot invite members or delete
+a common Project. Private People and personal notification channels require the supported browser
+session and Organization authority. Choosing an already-shared provider resource does not permit
+private discovery, reconnecting the provider or expanding its sharing.
+
+Treat a denied service as unavailable, not as an unconfigured service. Do not attach it, create a
+replacement Project, broaden scopes, change Organization, reauthenticate or switch interfaces to
+bypass the denial. A supported CLI write can follow a read-only MCP workflow only with current CLI
+authority for that operation. Cross-service writes need permission in each affected service.
+Skills explain these boundaries; they never grant authority or substitute for server checks.
+
 MCP does not write or read the private CLI binding files. For an exact target already identified
 by the user's task, supply those IDs to MCP without asking for selection again. If that Organization
 is outside this connection's authorized list, request its inclusion through the existing connection
