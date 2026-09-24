@@ -78,7 +78,9 @@ and unchanged settings. Batches can partially succeed. Poll with bounded backoff
 means ready to compare, not saved. Explain actual sizes/dimensions and increases. `images preview ID`
 returns a private 60-second capability for transient viewing only; never persist or repeat it in chat.
 `images save ID` saves the exact candidate as a new file by default; `images cancel ID` discards it.
-Candidates expire after one hour; reserved bytes release only after confirmed cleanup.
+Candidates expire after one hour. Customer capacity is released when cancellation, rejection or
+expiry is confirmed by the server; inspect status rather than assuming local time proves expiry.
+Empty trash also frees capacity immediately, while restorable trash and retained versions count.
 
 Use `--as-version --format keep` at creation only when the task authorizes replacing the current
 version. This preserves older versions and existing public links. Explicit `--version ID --revision N`
