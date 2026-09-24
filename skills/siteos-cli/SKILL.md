@@ -12,14 +12,16 @@ Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once p
 Use the single public package and binary:
 
 ```sh
-npx @siteoshq/cli --help
+npx --yes @siteoshq/cli@latest --help
 npm install --global @siteoshq/cli
 siteos --version
 ```
 
-Node.js 22 or newer is required. Prefer the `npx` package form in portable skill instructions and the `siteos` binary after a confirmed global installation.
+Node.js 22 or newer is required. Confirm the executable version and the needed subcommand in the task's working directory. A newer installation elsewhere does not update a different `siteos` resolved by PATH.
 
-Run `npx @siteoshq/cli health-check --json` for read-only local diagnostics. It reports CLI/repository/reference readiness without contacting product APIs or reading runtime credentials.
+If a command is missing, use `command -v siteos` (or `Get-Command siteos` on PowerShell) and `siteos --version`, then run `npx --yes @siteoshq/cli@latest --version` and the needed `--help`. Keep the working directory, origin and `SITEOS_HOME` unchanged and use that same verified invocation for subsequent commands. Bare `npx @siteoshq/cli` may resolve an older local installation. If npm reports cache `EACCES`, pass `--cache <new-user-owned-temporary-directory>` to npm/npx and keep it for this task; do not use sudo or change ownership of the shared cache as part of a file workflow.
+
+Run `npx --yes @siteoshq/cli@latest health-check --json` for read-only local diagnostics. It reports CLI/repository/reference readiness without contacting product APIs or reading runtime credentials.
 
 Load [references/command-reference.md](references/command-reference.md) whenever exact commands, flags, exit codes, state files, or environment overrides matter. That file is generated from the current CLI help and must not be edited manually.
 
