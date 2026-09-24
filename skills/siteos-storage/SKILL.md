@@ -28,10 +28,21 @@ the library view inside Storage. Management stays on the shared application orig
 
 1. Inspect existing files/folders and keep their stable IDs. Virtual folders are catalog metadata;
    names never become physical R2 keys. New Storage IDs use standard secure Nano ID identities.
-2. Upload a regular local file with `npx @siteoshq/cli storage upload <local-file> --json`, optionally
-   `--folder ID`. For a new version, inspect the file and use `--replace FILE_ID --revision N`.
-   Use one stable `--idempotency-key` for one intended upload. Save the receipt's upload ID and key,
-   not presigned URLs or credentials. Bytes go directly to private R2 in bounded parts.
+2. Upload regular local files with `npx @siteoshq/cli storage upload <local-file...> --json`, optionally
+   `--folder ID` (maximum 100 files). First use `--dry-run` to inspect exact folder name matches.
+   The default stops before transferring any bytes when conflicts exist. Use `--on-conflict skip`
+   to keep existing files or `--on-conflict replace` only when replacement is authorized. A general
+   request to upload files does not implicitly authorize replacement. If the task already specifies
+   skip/replace, use that choice without asking again. Report the matched and unavailable counts.
+   Duplicate names within the selection and names already uploading are skipped for either policy.
+   Replacement saves a new version using the inspected revision; preserve the existing name and ID.
+   For a specific new version, inspect the file and use `--replace FILE_ID --revision N --name NAME`
+   with its `--folder ID` when nested. These explicit single-file intents, `--resume`, and a stable
+   `--idempotency-key` bypass name planning; do not combine them with `--on-conflict` or `--dry-run`.
+   Save each receipt's upload ID and idempotency key, never presigned URLs or credentials. Batches
+   run sequentially and are not atomic: on failure, inspect per-file ready/failed/not_started
+   receipts and resume only the interrupted upload. Never rerun a partially completed replacement
+   batch blindly. Bytes go directly to private R2 in bounded parts.
 3. If interrupted, inspect `npx @siteoshq/cli storage upload-status <upload-id> --json`. Resume with
    the original local file and `--resume UPLOAD_ID`; do not start another upload blindly. Processing,
    conflict, rejected and ready are distinct states. Poll with backoff and a bounded wait; a queued

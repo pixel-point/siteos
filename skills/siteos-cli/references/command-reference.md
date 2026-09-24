@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.23.0`
+Package: `@siteoshq/cli@2.24.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -313,7 +313,7 @@ siteos storage inspect <file-id> [--json]
 siteos storage folders list [--folder <parent-id>] [--cursor <id>] [--json]
 siteos storage folders create --name <name> [--folder <parent-id>] [--json]
 siteos storage folders delete <folder-id> --revision <revision> [--json]
-siteos storage upload <local-file> [--folder <folder-id>] [--name <name>] [--idempotency-key <key>] [--resume <upload-id>] [--replace <file-id> --revision <revision>] [--json]
+siteos storage upload <local-file...> [--on-conflict error|skip|replace] [--dry-run] [--folder <folder-id>] [--name <name>] [--idempotency-key <key>] [--resume <upload-id>] [--replace <file-id> --revision <revision>] [--json]
 siteos storage upload-status <upload-id> [--json]
 siteos storage download <file-id> --version <version-id> --output <new-local-file> [--json]
 siteos storage rename <file-id> --name <name> --revision <revision> [--folder <folder-id>] [--json]
