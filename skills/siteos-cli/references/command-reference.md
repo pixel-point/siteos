@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.24.1`
+Package: `@siteoshq/cli@2.25.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -324,6 +324,12 @@ siteos storage publish <file-id> --version <version-id> [--media-type <type>] [-
 siteos storage share <file-id> --version <version-id> --expires-in <seconds> [--idempotency-key <key>] [--json]
 siteos storage deliveries [--cursor <id>] [--json]
 siteos storage revoke <delivery-id> --revision <revision> [--json]
+siteos storage images list [--json]
+siteos storage images create <file-id...> [--format keep|png|jpeg|webp] [--quality 40-100] [--lossless] [--max-width 1-4096] [--max-height 1-4096] [--background '#ffffff'] [--as-version] [--version <id> --revision <n>] [--idempotency-key <key>] [--json]
+siteos storage images inspect <job-id> [--json]
+siteos storage images preview <job-id> [--json]
+siteos storage images save <job-id> [--json]
+siteos storage images cancel <job-id> [--json]
 ```
 
 ## State and overrides

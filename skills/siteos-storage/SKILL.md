@@ -1,6 +1,6 @@
 ---
 name: siteos-storage
-description: Use for general Project file storage, moving large media out of a repository, uploading or downloading private files, publishing immutable website assets, or creating and revoking expiring shared links through SiteOS Storage. Uses exact Project environments, read-only MCP metadata and separately authorized CLI transfers.
+description: Use for general Project file storage, moving large media out of a repository, uploading or downloading private files, optimizing or converting stored images, publishing immutable website assets, or creating and revoking expiring shared links through SiteOS Storage. Uses exact Project environments, read-only MCP metadata and separately authorized CLI transfers.
 ---
 
 # SiteOS Storage
@@ -53,6 +53,29 @@ the library view inside Storage. Management stays on the shared application orig
 5. Rename keeps the current folder unless `--folder ID` is supplied. Mutations need the inspected
    revision. Trash revokes all links containing the file; restoring does not reactivate them.
    Empty-folder deletion refuses child folders, retained files and unfinished uploads.
+
+## Optimize or convert existing images
+
+Discover `storage images` in installed CLI help and inspect `images list` before promising it.
+This feature requires separate server enablement. Use `images create FILE_ID... --format webp --json`
+for private candidates (up to 20 files); it pins inspected source versions/revisions and preserves
+originals. Static PNG/JPEG/WebP only, up to 20 MiB and 16 MP. PNG stays lossless; WebP offers
+`--lossless`; JPEG transparency requires an explicit `--background '#ffffff'` color. Never imply
+that quality settings guarantee smaller files or visual equivalence.
+
+Keep per-file job IDs, source version/revision and idempotency keys. On uncertainty, inspect
+`images list` / `images inspect ID`; retry one file with the original key, explicit version/revision
+and unchanged settings. Batches can partially succeed. Poll with bounded backoff. `processed`
+means ready to compare, not saved. Explain actual sizes/dimensions and increases. `images preview ID`
+returns a private 60-second capability for transient viewing only; never persist or repeat it in chat.
+`images save ID` saves the exact candidate as a new file by default; `images cancel ID` discards it.
+Candidates expire after one hour; reserved bytes release only after confirmed cleanup.
+
+Use `--as-version --format keep` at creation only when the task authorizes replacing the current
+version. This preserves older versions and existing public links. Explicit `--version ID --revision N`
+and `--idempotency-key KEY` apply to one file. Saving and publication are separate actions: publish
+the new file/version only if public website access is requested. MCP remains read-only metadata;
+image processing uses separately authorized CLI content-read and upload-write grants.
 
 ## Publish or share deliberately
 
