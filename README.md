@@ -1,15 +1,15 @@
 # <img src="assets/siteos-logo.svg" alt="SiteOS logo" height="42" align="absbottom"> SiteOS
 
-This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Analytics, and Integrations.
+This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Analytics, Storage, and Integrations.
 
-Release: 2.35.0.
+Release: 2.35.1.
 
 ## Install
 
 ### Codex
 
 ```sh
-codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v2.35.0
+codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v2.35.1
 codex plugin add siteos@siteos
 ```
 
@@ -100,6 +100,7 @@ $siteos-auth authenticate and select my Organization
 $siteos-pulse configure Playwright monitoring for this project
 $siteos-search inspect this project and configure managed search
 $siteos-forms add a managed contact form to this project
+$siteos-storage upload website assets, review duplicate names and publish the selected versions
 $siteos-analytics configure website analytics and verify a custom event
 $siteos-seo complete SEO/GEO setup, research and verified improvements for this website
 ```
@@ -113,8 +114,26 @@ $siteos-seo complete SEO/GEO setup, research and verified improvements for this 
 /siteos:siteos-pulse configure Playwright monitoring for this project
 /siteos:siteos-search inspect this project and configure managed search
 /siteos:siteos-forms add a managed contact form to this project
+/siteos:siteos-storage upload website assets, review duplicate names and publish the selected versions
 /siteos:siteos-analytics configure website analytics and verify a custom event
 ```
+
+### Storage CLI
+
+Install or update the CLI, select the exact Project and environment, then inspect files before uploading. Connect Storage explicitly only if the Project environment has no library yet.
+
+```sh
+npm install --global @siteoshq/cli@latest
+siteos project use '<project-id-or-slug>' --organization '<organization-id>' --environment production --json
+siteos storage status --json
+siteos storage list --json
+siteos storage folders list --json
+siteos storage upload ./hero.png ./intro.mp4 --dry-run --json
+siteos storage upload ./hero.png ./intro.mp4 --on-conflict skip --json
+siteos storage --help
+```
+
+Use `--on-conflict replace` only when you intend to save new versions of matching files. Private uploads do not become public automatically. Use `siteos storage publish '<file-id>' --version '<version-id>' --media-type image/png --json` for an immutable website asset, or `siteos storage share '<file-id>' --version '<version-id>' --expires-in 3600 --json` for an expiring link. Read the [Storage workflow](skills/siteos-storage/SKILL.md) and [complete CLI command reference](skills/siteos-cli/references/command-reference.md#storage) for downloads, resume, versions, folders, trash and revocation.
 
 ## Architecture and contribution boundary
 

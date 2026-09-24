@@ -46,6 +46,16 @@ before authentication. This selects a separate SiteOS installation, not a Projec
 - Common Projects and the Cookie, Trace and Integrations commands require CLI 1.1.0 or newer and the matching SiteOS server. Check the installed help before using them; a source checkout does not prove the public package has been released.
 - If a command is absent from the generated reference, run the appropriate `--help`; do not invent it or call a private API as a substitute.
 
+## Storage files and website assets
+
+Use `siteos storage --help` for private files, folders, verified transfers, versions, publication,
+expiring shares and trash. After selecting the exact Project environment, start with
+`siteos storage status --json` and `siteos storage list --json`. CLI 2.24.0 adds batch uploads,
+`--dry-run` and explicit duplicate-name policies through `--on-conflict error|skip|replace`.
+Upgrade older installations before using those flags. Follow the [Storage workflow](../siteos-storage/SKILL.md)
+for conflict review, resumable upload receipts and separately authorized publication; a private
+upload never becomes a public website asset automatically.
+
 ## Search crawler source review
 
 CLI 2.11.0 adds `search crawl preview`, `--decisions` and `--review-token` for reviewing
