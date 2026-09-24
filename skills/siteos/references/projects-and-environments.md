@@ -7,6 +7,13 @@ authorization to select that existing context. Verify access and identity; do no
 because the CLI was last used for another website. Check `project --help` for `--organization`;
 use `$siteos-cli` if the installed version lacks it.
 
+Before `project connect` or `project update`, verify CLI 2.25.2 or newer with `siteos --version`
+(or `npx @siteoshq/cli@latest --version`). Earlier versions can use the global Auth Organization
+for these writes even after successful repository selection. Upgrade the CLI or run the current
+published package with `npx @siteoshq/cli@latest`; keep the repository binding and global Auth
+default unchanged. After the command, compare its safe context and service attachment with the
+requested target. Do not create another Project or environment to work around this version defect.
+
 Establish the requested application origin first. With exact IDs and environment supplied, run
 `project use` directly, then verify its status and service attachment. Use `project list` for
 discovery when needed; reading the previously selected Project is not a prerequisite.
