@@ -109,3 +109,14 @@ npx @siteoshq/cli pulse deploy --dry-run --json
 ```
 
 These commands prove local configuration, synchronization intent, Playwright execution, and bundle construction respectively. They do not prove remote deployment or scheduled execution.
+
+
+## Reuse between monitoring and PR previews
+
+Use the runner-supplied `baseURL` and relative navigation such as `page.goto("/pricing")` when a
+Check is intended for both a fixed environment URL and a PR preview. Do not hard-code the
+production hostname in a preview Check. Configure its schedule and PR participation independently
+in `siteos.config.json` v3; a shared Check uses the same published assertions and version in both
+contexts. If production-only assertions, real deliveries, or variable/Secret requirements differ,
+keep those in a separate Check excluded from PR verification. The PR feature does not execute
+unpublished test changes from the PR branch.

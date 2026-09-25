@@ -1,6 +1,6 @@
 ---
 name: siteos-integrations
-description: Use when inspecting or connecting SiteOS Organization providers, discovering Slack channels or configuring notification destinations shared by Project services.
+description: Use for shared SiteOS Organization provider connections, including selected GitHub repositories, Slack channel discovery and notification destinations used by Project services.
 ---
 
 # SiteOS Integrations
@@ -24,3 +24,15 @@ Google connection inside SiteOS does not authorize a separate MCP server in the 
 6. Configure notifications in the requested service's settings, using the selected Project context. Load only that service's skill and available CLI help. If no command supports its notification settings, use the SiteOS service UI; do not invent an API or direct database operation. Send a test notification only when the user requested or authorized that message, then verify its actual delivery state.
 
 Keep provider credentials, OAuth state, encrypted values, internal delivery tokens and raw SDK responses out of tool output and reports. Report the Organization, provider, safe destination name and actual delivery outcome. Disconnecting a shared provider can affect multiple Projects; identify that scope before performing a user-requested disconnect.
+
+## GitHub repositories
+
+GitHub is a shared Organization connection in **Services → GitHub** when the deployment includes the GitHub integration and its App configuration. If the card is missing or says it is not configured, report that release/configuration boundary; do not claim the connection is live.
+
+Resolve the exact Organization, open its SiteOS Services page, install the App on the user's selected repositories, authorize the GitHub account, and explicitly connect the verified installation. GitHub account ownership or organization administrator access is required in addition to SiteOS Integrations management access. App installation alone does not connect the SiteOS Organization. Read back the connected account and repository catalog.
+
+The current `integrations connect` CLI command is the Slack flow. Do not invent a GitHub CLI command or treat `siteos_integrations_get_connection` as GitHub installation evidence. GitHub setup and management use the authenticated SiteOS browser flow; do not request OAuth tokens, client secrets or private keys in chat.
+
+Projects owns repository bindings per environment, so Production and Staging may use different repositories. Services controls the shared provider; Pulse controls its own PR policy and Check selection. From Pulse configuration, **Manage GitHub in Services** retains the Project/environment return destination. Connecting GitHub does not attach Pulse, publish a Check bundle or enable automatic checks. Other services can consume this shared connection only when their own supported workflow exists.
+
+For PR execution and preview requirements after connection, load [Pulse GitHub verification](../siteos-pulse/references/github-pull-requests.md). A connected repository is not a general source-code indexing or arbitrary CI execution capability.

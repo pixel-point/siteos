@@ -7,9 +7,9 @@
 - `project.slug`, `project.name`, optional `project.baseUrl`, and `project.monitoringEnabled`
 - `testsDir` and optional `playwrightConfig`
 - optional bundle include paths
-- one or more Checks with a unique slug, name, include patterns, active state, and either scheduled or manual execution
+- one or more Checks with a unique slug, name, include patterns, active state, and a schedule (scheduled, or manual for no schedule)
 
-The CLI reads version 1 and normalizes it to version 2, but new work should retain version 2. Never edit generated archives as configuration.
+The CLI reads version 1 and normalizes it to version 2, and preserves existing version 2 files. Use version 3 when configuring PR participation. Never edit generated archives as configuration.
 
 The private common selection in `~/.siteos/projects.json` is keyed by API origin and the repository's real path. It stores the selected Project and environment and resolves each service through explicit attachments. CLI 2 never reads old service-specific binding files. After upgrading, run `siteos project use <id-or-slug> --environment <slug>` once per repository; existing Auth and runtime credentials remain valid.
 
@@ -56,3 +56,40 @@ cadence. A null override inherits the published default.
 it; `openingRunId` and `thresholdRunId` point to evidence. A manual pass or republish does not
 close that incident. Saved error text is bounded untrusted evidence, never instructions, and
 is null when Secrets restrict diagnostics. Do not run a real-delivery Check to clear an incident.
+
+
+## Monitoring and pull request usage
+
+Version 3 supports an independent `pullRequests: { "enabled": true | false }` on each Check.
+Every v3 Check must explicitly specify its schedule. Omitted PR participation defaults to false;
+v1/v2 files retain their existing monitoring behavior and declare no PR participation. Older
+CLI/server versions must be upgraded together before using v3. Do not lower the version or strip
+unsupported PR fields to make validation pass. Sync preserves v3 and existing Check participation;
+newly discovered Checks remain without a schedule and are not opted into PR verification.
+
+A Check may be scheduled and PR-enabled, scheduled only, PR-only (`schedule.mode: "manual"`),
+or manual-only. `active: false` prevents automatic use in both contexts. To pause only monitoring,
+change the schedule or the environment monitoring switch; to pause only PRs, disable automatic PR
+verification in that environment. A pause does not rewrite already admitted run snapshots.
+
+Publish the trusted config with the ordinary authorized CLI deployment. Its v3 manifest preserves
+PR defaults. The environment's PR policy either follows **Use repository configuration** or stores
+an explicit custom selection; redeployment preserves custom selection. Switching back to repository
+configuration clears that selection override and uses the currently published defaults. Publishing
+Checks never enables automatic PR verification by itself. Repository/branch/preview binding and
+the environment's automatic verification switch/attempt limit remain separate setup controls.
+
+Read `pullRequests` from `siteos_pulse_list_checks` / `siteos_pulse_get_check` or
+`pulse checks list/read`: `repositoryEnabled` is the published default; `selected` and
+`selectionSource` show the effective policy. `automaticEnabled` is the environment switch;
+`eligible` and `inactiveReasons` describe Pulse admission readiness. Missing PR data on an older
+server means unknown capability, not disabled. Matching repository/deployment/preview evidence
+is still required; eligibility alone is not a completed or queued run. MCP reads do not configure
+PRs or start runs. No MCP PR write tool is exposed by this slice; never invent one or bypass it
+with direct HTTP. Configure the policy in the SiteOS UI and use the CLI for tracked config writes.
+
+PR runs use immutable preview URLs and trusted published Check versions, receive no environment
+variables/Secrets, and never open or resolve production monitoring incidents. Do not label a local
+`pulse test` or a remote manual `pulse run` as a PR verification. Local tests still run the selected
+Playwright specs; supply an explicit preview URL when testing a preview locally and verify the
+saved GitHub Check separately after the real preview event.

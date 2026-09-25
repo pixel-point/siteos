@@ -12,6 +12,7 @@ product-specific requirements, not another connection or context policy.
 | SiteOS initialization, validation, deployment, CI and operations absent from MCP | Unified CLI |
 | Local source inspection, edits and local tests | Repository tools |
 | Identity, membership, sessions and authorization flows | Auth and the supported host/provider flow |
+| GitHub connection, repository binding and automatic PR policy setup | Supported SiteOS browser flow; see the Integrations and Pulse skills |
 | Product operations, domain rules, scopes and result interpretation | The owning module and focused skill |
 
 Pulse, Cookie, Forms, Search, Trace, SEO, Analytics and Storage use common Project/environment context.
@@ -114,6 +115,12 @@ an MCP/CLI adapter is missing, outdated or denied. Inspect supported CLI help/ve
 available authorized operation; otherwise report the capability or access blocker. Never click a
 write action to bypass that boundary. This does not prohibit the supported interactive sign-in or
 provider authorization flow, or browser testing of the user's website when the task needs it.
+
+GitHub has an explicit browser-only setup contract: Services installation/authorization/connection,
+Project environment repository binding and Pulse PR policy/Check selection. Use that supported flow
+when requested, including its connection and PR-attempt readback, without treating it as a fallback
+for a denied CLI/MCP operation. Run and Check diagnostics exposed through MCP/CLI retain their
+normal read path. No GitHub setup command or PR mutation tool is currently exposed by those adapters.
 
 ## Installation and release
 

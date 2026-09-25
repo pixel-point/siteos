@@ -1,7 +1,7 @@
 interface:
   display_name: "SiteOS Integrations"
-  short_description: "Connect providers and notification destinations"
-  default_prompt: "Use $siteos-integrations to inspect Organization connections and configure the requested destination."
+  short_description: "Connect GitHub repositories and shared providers"
+  default_prompt: "Use $siteos-integrations to connect the requested provider or selected GitHub repositories to the SiteOS Organization and verify its supported connection state."
 
 policy:
   allow_implicit_invocation: true
