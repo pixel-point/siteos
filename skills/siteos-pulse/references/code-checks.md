@@ -1,6 +1,6 @@
 # PR code Checks
 
-Requires CLI 2.29.0 or newer and a matching server with a configured code executor.
+Requires CLI 2.29.1 or newer and a matching server with a configured code executor.
 
 Use this for Vitest/unit tests, lint, formatting or typechecking on SiteOS infrastructure. It
 requires a CLI/server that support config version 4 and an operator-enabled code executor. Check

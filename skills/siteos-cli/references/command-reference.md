@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.29.0`
+Package: `@siteoshq/cli@2.29.1`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
