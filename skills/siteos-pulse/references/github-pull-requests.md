@@ -7,9 +7,9 @@ configuration and config-v3 CLI release; missing UI or unsupported v3 is a relea
 ## Connect and configure
 
 1. Resolve the exact Organization, common Project and environment. Use the Integrations skill for
-   **Services → GitHub**: install on selected repositories, authorize the GitHub account and
-   explicitly connect the verified installation. Installation alone is not a SiteOS connection.
-   Read back the account and repository catalog in that browser flow; current Integrations MCP
+   **Services → GitHub → Connect GitHub**: confirm the GitHub account and connect the verified
+   installation; install on selected repositories first if none is available. Installation alone is not a SiteOS connection.
+   Read back the account and repository catalog through **Manage resources**; current Integrations MCP
    reads cover Slack/Google, not GitHub. Keep private keys and OAuth secrets out of chat.
 2. In **Pulse → Pull requests → Configure PR checks**, bind the selected repository, target branch,
    GitHub deployment environment and allowed preview hostname to the exact Project environment.
@@ -67,3 +67,8 @@ same head, and private failure evidence from one deliberate failed assertion. Th
 and verify its separate attempt. Use the exact observed Check name for branch protection only after
 this round trip succeeds. A local pass or manual `pulse run` is not PR verification. PR passes and
 failures never open or resolve scheduled monitoring incidents.
+
+For Vercel deployment URLs, use a fixed project and team pattern such as
+`siteos-website-*-pixelpoint.vercel.app`. The wildcard matches only the deployment portion
+of one DNS label; it cannot match another project, team or domain. Protected previews still
+require an explicitly approved access configuration; a hostname match does not bypass login.
