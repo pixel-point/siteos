@@ -51,3 +51,50 @@ No additional client installation or GitHub Actions workflow is needed.
 An App comment combines both kinds. Separate GitHub Checks keep a successful unit run from hiding
 an unfinished browser run. Neither kind updates scheduled monitoring health. Never enable branch
 protection until the observed Check has completed a real per-head round trip.
+
+## Secret scanning
+
+CLI 2.30.0+ and the matching server/executor accept this built-in code Check:
+
+```json
+{
+  "type": "code",
+  "slug": "secrets",
+  "name": "Secret scan",
+  "command": ["gitleaks", "dir", "."],
+  "timeoutSeconds": 120,
+  "schedule": { "mode": "manual" },
+  "pullRequests": { "enabled": true }
+}
+```
+
+Use the exact command above, without custom flags. `workingDirectory` keeps the usual binding-relative
+scope. The executor uses pinned Gitleaks with its trusted default rules; it does not install dependencies,
+run repository scripts, require a package manager/lockfile, or access the network. Repository Gitleaks
+configuration, ignore files and `gitleaks:allow` comments cannot disable this policy. Findings expose only
+file, line and rule; never copy key values into a PR comment or chat.
+
+Use the same validate/deploy/PR setup and MCP readers. `pulse test --check secrets` scans the selected
+directory from local Git **HEAD**, excluding untracked/unstaged files; commit intended changes before
+using it. On macOS/Linux x64/arm64 the CLI downloads and checksum-verifies the pinned scanner temporarily;
+no separate tool installation is required. A missing download/tool is an error, never a pass.
+
+This checks the current source snapshot, not earlier commits or a complete security audit. Encoded values,
+unrecognized formats and default scanner exclusions can escape detection. A finding requires removing and
+revoking the real credential; deleting it in a later commit does not revoke it. Keep browser acceptance
+and other security checks separate.
+
+For a reviewed false positive only, add `secretScanExceptions` to that Check. Each entry has exact
+`file` (relative to the scan directory), `rule`, and `contentSha256`, taken from the safe diagnostic.
+The digest covers the complete matching line range joined with LF, without a final newline. Confirm
+the value is public or synthetic before publishing; never exempt a real credential. Exceptions are
+pinned with the published Check, not loaded from PR config. A changed value/line stops matching, even
+at the same location. There are no wildcard paths or whole-rule exclusions; at most 50 entries.
+
+Capacity is operated centrally: a slot runs one code Check, and the available pool is shared across
+Organizations. Per-Organization quotas and fair dispatch prevent one client monopolizing that pool;
+they do not guarantee zero wait. More slots do not change Project configuration, CLI or MCP commands.
+
+Secret scans verify archive paths and Git blob hashes against the complete committed tree.
+Git export exclusions/substitutions, links, submodules or an oversized/truncated inventory fail
+closed instead of producing a successful partial scan. This scans the selected tree, not Git history.
