@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.28.0`
+Package: `@siteoshq/cli@2.29.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -224,7 +224,7 @@ siteos integrations destination create --channel <provider-channel-id> [--organi
 siteos pulse init [--project <slug>] [--suite <slug>] [--tests-dir <path>] [--base-url <url>]
 siteos pulse validate [--json]
 siteos pulse sync [--check] [--json]
-siteos pulse test [--headed] [--project <name>] [--base-url <url>] [-- <playwright-options>]
+siteos pulse test [--check <slug>] [--headed] [--project <name>] [--base-url <url>] [-- <playwright-options>]
 siteos pulse deploy [--dry-run] [--output <path>] [--json]
 siteos pulse checks list [--cursor <check-id>] [--json]
 siteos pulse checks read --check <check-id> [--json]

@@ -21,7 +21,7 @@ The following workflow applies when the task needs CLI Project operations.
 3. Follow [Projects and environments](references/projects-and-environments.md) to verify or select the repository's exact Organization, Project and environment without changing the global Auth default. Use `project list --organization <id> --json` for discovery and `project use <project-id> --organization <id> --environment <slug> --json` for an identified target. Create a Project only when the task requests a new website/product; never create one to recover a stale selection. Ask only if the target remains ambiguous or inaccessible.
 4. Read the service attachments from Project status. `project use` never creates service resources. Configure only the service requested by the user with `npx @siteoshq/cli project connect <service> --json`. To retain an existing service resource and its keys, use `--resource <id>` explicitly; never infer identity from a matching name or slug.
 5. Route the work:
-   - `$siteos-pulse`: Playwright monitoring, GitHub PR preview verification, independent Check usage, local validation and deployments.
+   - `$siteos-pulse`: Playwright monitoring, GitHub PR browser/code verification, independent Check usage, local validation and deployments.
    - `$siteos-cookie`: consent banner drafts, installation, publication and consent analytics.
    - `$siteos-forms`: form definitions, submission runtime and inbox verification.
    - `$siteos-search`: content sources, indexing, queries, search UI, health and usage reports.

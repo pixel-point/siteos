@@ -1,6 +1,6 @@
 ---
 name: siteos-pulse
-description: "Use for SiteOS Pulse Playwright Checks, scheduled monitoring and GitHub PR preview verification: configure independent usage, validate and publish bundles, and inspect saved Check/run evidence through supported CLI and MCP tools."
+description: "Use for SiteOS Pulse browser/code Checks, scheduled monitoring and GitHub PR verification: configure independent usage, validate and publish bundles, and inspect saved Check/run evidence through supported CLI and MCP tools."
 ---
 
 # SiteOS Pulse
@@ -18,11 +18,12 @@ Hosted reads: `siteos_pulse_list_checks` and `siteos_pulse_get_check` expose pub
 1. Resolve the target through the shared execution contract.
 2. Inspect the Pulse attachment with `npx @siteoshq/cli project status --json`.
 3. If Pulse is not attached, run `npx @siteoshq/cli project connect pulse --json` within the requested monitoring setup. Attach an existing resource with `--resource <id>` when preserving an existing deployment. Read the resource ID and environment bindings from `project status --json`; do not select a second Project.
-4. Inspect the repository's existing Playwright configuration, fixtures, helpers, and specs before creating monitoring files. Reuse suitable tests and conventions instead of creating a parallel suite.
+4. Inspect existing package scripts and Playwright configuration, fixtures, helpers, and specs before creating monitoring files. Reuse suitable tests and conventions instead of creating a parallel suite.
 5. Select the intended common environment with `npx @siteoshq/cli project environment use <slug> --json`. Initialize missing Pulse monitoring files with `npx @siteoshq/cli pulse init`. Do not replace an existing Playwright setup or Pulse configuration.
    The common Project supplies the name/slug and selected environment URL. Manage addresses in Project settings or `project environment update`; deployment and dry runs resolve that environment, and local tests use its URL unless explicitly overridden.
-6. Edit `siteos.config.json` and Playwright tests according to the requested behavior. For every Check, establish whether it belongs in scheduled monitoring, PR verification, both, or manual use only. Preserve project-local conventions.
-   - PR participation requires config version 3 and `checks[].pullRequests.enabled`. Set each Check’s schedule explicitly; `mode: "manual"` means no schedule and still permits selected PR runs. `active: false` disables both uses.
+6. Edit `siteos.config.json` and the appropriate tests according to the requested behavior. For every Check, establish whether it belongs in scheduled monitoring, PR verification, both, or manual use only. Preserve project-local conventions.
+   - For Vitest, lint or typechecking, read [PR code Checks](references/code-checks.md). Version 4 adds `type: "code"` with the same CLI workflow; code-only setup does not need Playwright or a preview.
+   - Browser PR participation requires config version 3 or 4 and `checks[].pullRequests.enabled`. Set each Check’s schedule explicitly; `mode: "manual"` means no schedule and still permits selected PR runs. `active: false` disables both uses.
    - Read the workflow reference below before changing version or execution usage. Preserve existing PR selection and schedule choices during sync. Do not infer PR participation from filenames, folders, or a repository connection.
    - PR previews require a base-URL-relative Check and cannot receive environment variables/Secrets. Reuse a Check in both contexts when its assertions are the same; use separate Checks when their behavior differs.
    - Load [references/playwright-authoring.md](references/playwright-authoring.md) before creating, extending, or repairing Playwright tests.
@@ -38,7 +39,7 @@ Hosted reads: `siteos_pulse_list_checks` and `siteos_pulse_get_check` expose pub
    ```
 
 8. Run `npx @siteoshq/cli pulse deploy --json` only when the user requested deployment. A successful dry run proves bundle construction, not remote deployment. Verify published state with `siteos_pulse_list_checks` / `siteos_pulse_get_check`, or `pulse checks list` / `pulse checks read --check <id>` when available. Compare published defaults, preserved overrides, effective scheduling, `pullRequests.repositoryEnabled/selected/selectionSource/automaticEnabled/eligible/inactiveReasons`, and active version/checksum; an upload response alone does not prove the effective schedule.
-9. When remote verification is requested or follows an authorized repair/deployment, run `npx @siteoshq/cli pulse run --check <check-id> --json` (CLI 2.13.0+ and the matching server). Use the exact Check ID from Check reads, deployment output or verified saved run evidence in the selected Project/environment. This starts one manual run of the deployed Check; it does not upload local changes.
+9. For browser Checks, when remote verification is requested or follows an authorized repair/deployment, run `npx @siteoshq/cli pulse run --check <check-id> --json` (CLI 2.13.0+ and the matching server). Use the exact Check ID from Check reads, deployment output or verified saved run evidence in the selected Project/environment. This starts one manual run of the deployed Check; it does not upload local changes.
 10. Read the returned Run ID with `siteos_pulse_get_run` until terminal, then inspect every test outcome. Resolve the MCP connection once through the shared contract. Do not click **Run again** or use browser automation to re-read saved run status available through MCP/CLI. The GitHub CLI setup workflow is described in the PR reference. If neither the supported CLI nor MCP can complete a step, report that specific capability/access blocker. Browser exploration of the tested website remains available for reproducing defects.
 11. Report local checks, deployment, remote Run ID and terminal result separately. A queued/running response is not a pass, and a manual pass does not establish scheduled recovery; confirm that from a subsequent eligible scheduled pass. If a write loses its response, reconcile current runs and reuse the original `--request-id` for the same request; never issue a fresh request as an automatic retry.
 

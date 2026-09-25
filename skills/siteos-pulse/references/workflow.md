@@ -93,3 +93,9 @@ variables/Secrets, and never open or resolve production monitoring incidents. Do
 `pulse test` or a remote manual `pulse run` as a PR verification. Local tests still run the selected
 Playwright specs; supply an explicit preview URL when testing a preview locally and verify the
 saved GitHub Check separately after the real preview event.
+
+## Repository code Checks
+
+Config v4 supports PR-only `type: "code"` Checks using existing package scripts.
+Use `pulse test --check <slug>` to select one Check; validate, sync and deploy remain unchanged.
+See [code Check setup](../../siteos-pulse/references/code-checks.md) for commands, prerequisites and execution limits.

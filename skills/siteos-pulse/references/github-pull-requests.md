@@ -50,7 +50,12 @@ configuration and config-v3 CLI release; missing UI or unsupported v3 is a relea
 The equivalent Services/Project/Pulse browser flow remains available to users. Never bypass a
 CLI/MCP denial with browser cookies, private HTTP or database calls.
 
-## Preview admission
+For code-only usage, omit both `previewEnvironment` and `previewHostname`; they must be set
+together for browser Checks. Read [PR code Checks](code-checks.md) for v4 commands and isolation.
+Code starts on an open/update PR observation without waiting for a deployment. Both kinds consume
+the rolling attempt budget separately.
+
+## Browser preview admission
 
 The preview provider must emit a successful GitHub Deployment Status with the PR's exact **head
 SHA**, matching configured deployment environment and `environment_url`. A merge SHA, ordinary
@@ -58,12 +63,12 @@ commit status, Actions success or PR open event does not supply a usable preview
 no credentials, query/fragment or non-default port, and a public hostname. This release supports
 same-repository PRs on trusted previews; fork PRs and environment Secrets are not supported.
 
-The platform runs the already published trusted Check bundle, not code or test changes from the
-PR. It does not build a repository, index its source, execute arbitrary CI commands or provide AI
-code review/navigation. Do not assume a repository connection authorizes any of those capabilities.
+Browser verification runs the already published trusted Check bundle, not browser test changes
+from the PR. Code verification is an explicit v4 capability: it runs published commands against
+the exact PR source in a separate executor. It does not provide AI code review/navigation. Do not assume a repository connection authorizes any of those capabilities.
 
-Existing PRs are not backfilled. After setup or a repaired denial, redeploy the preview for the
-current head. Review the attempt before intentionally retriggering it. A new commit requires its
+Existing PRs are not backfilled. After setup or a repaired denial, update the PR for code Checks or redeploy the preview for
+browser Checks at the current head. Review the attempt before intentionally retriggering it. A new commit requires its
 own preview; duplicate events for the same admission do not justify a new manual run.
 
 ## Diagnose and accept
