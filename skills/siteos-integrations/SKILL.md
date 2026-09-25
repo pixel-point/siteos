@@ -29,9 +29,27 @@ Keep provider credentials, OAuth state, encrypted values, internal delivery toke
 
 GitHub is a shared Organization connection in **Services → GitHub** when the deployment includes the GitHub integration and its App configuration. If the card is missing or says it is not configured, report that release/configuration boundary; do not claim the connection is live.
 
-Resolve the exact Organization, open **Services → GitHub → Connect GitHub**, and continue with GitHub to confirm the account. Choose the verified installation. If no installation is available, install the App on the user's selected repositories and use **Check installation** before connecting. GitHub account ownership or organization administrator access is required in addition to SiteOS Integrations management access. App installation alone does not connect the SiteOS Organization. Read back the connected account and open **Manage resources** for its repository catalog. Loading has a progress toast; a ready empty catalog means no repositories are selected. For a failed or stalled refresh, inspect GitHub access and use **Reload repositories**. Resource selection is managed by the GitHub App installation, not by a second SiteOS checkbox list.
+Use CLI 2.28.0+ and a matching server. Read saved metadata through
+`siteos_integrations_get_connection` with `provider: "github"` or
+`siteos integrations github status --organization <id> --json`. An unavailable integration is a
+release/configuration boundary. A ready empty catalog differs from loading or a failed refresh.
 
-The current `integrations connect` CLI command is the Slack flow. Do not invent a GitHub CLI command or treat `siteos_integrations_get_connection` as GitHub installation evidence. GitHub setup and management use the authenticated SiteOS browser flow; do not request OAuth tokens, client secrets or private keys in chat.
+For an authorized connection, run `siteos integrations github authorize --organization <id> --json`
+and give its URL to the user for GitHub consent. If no App installation exists, use the `installUrl`
+from status to install on the selected repositories, then authorize again. The callback verifies
+GitHub account ownership/organization administration for the initiating SiteOS user and Organization;
+it does not connect automatically and does not depend on the browser's selected SiteOS Organization.
+Read `github candidates`, select the verified installation ID, then run
+`github connect --installation <id> --organization <id> --json`. Read status until the selected
+installation's catalog is ready. Do not treat queued refresh as success. `github refresh` queues
+catalog discovery; after changing App repository access on GitHub, refresh once and read its state.
+`github disconnect --installation <id> --organization <id> --confirm` requires the user's requested
+scope because other services may use the connection. OAuth/management use the dedicated
+`integrations:github:write` grant; never request secrets or extract browser credentials.
+
+The Services **Manage resources** flow remains available for users who prefer the web interface.
+MCP only reads connected installations and repository metadata; it does not start authorization,
+show pending candidates, refresh catalogs or mutate connections.
 
 Projects owns repository bindings per environment, so Production and Staging may use different repositories. Services controls the shared provider; Pulse controls its own PR policy and Check selection. From Pulse configuration, **Manage GitHub in Services** retains the Project/environment return destination. Connecting GitHub does not attach Pulse, publish a Check bundle or enable automatic checks. Other services can consume this shared connection only when their own supported workflow exists.
 

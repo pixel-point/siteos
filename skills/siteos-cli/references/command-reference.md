@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.27.0`
+Package: `@siteoshq/cli@2.28.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -44,6 +44,8 @@ siteos project create --name <name> --slug <slug> [--organization <id>] [--url <
 siteos project use <id-or-slug> [--organization <id>] [--environment <slug>] [--json]
 siteos project update [--name <name>] [--slug <slug>] [--url <production-url>] [--json]
 siteos project status [--json]
+siteos project repository show [--environment <slug>] [--json]
+siteos project repository save --input <binding.json> [--environment <slug>] [--json]
 siteos project connect <pulse|cookie|forms|search|trace|seo|analytics|storage> [--resource <id>] [--json]
 siteos project environment list [--json]
 siteos project environment create --name <name> --slug <slug> [--url <url>] [--json]
@@ -204,6 +206,12 @@ siteos analytics ga4 saved remove <id> --revision <number> [--environment <slug>
 ## Integrations
 
 ```text
+siteos integrations github status [--organization <id>] [--json]
+siteos integrations github authorize [--organization <id>] [--json]
+siteos integrations github candidates [--organization <id>] [--json]
+siteos integrations github connect --installation <id> [--organization <id>] [--json]
+siteos integrations github refresh --installation <id> [--organization <id>] [--json]
+siteos integrations github disconnect --installation <id> --confirm [--organization <id>] [--json]
 siteos integrations status [--provider <slack|telegram>] [--organization <id>] [--json]
 siteos integrations connect [--provider <slack|telegram>] [--organization <id>] [--json]
 siteos integrations channels [--query <name>] [--cursor <cursor>] [--organization <id>] [--json]
@@ -220,6 +228,9 @@ siteos pulse test [--headed] [--project <name>] [--base-url <url>] [-- <playwrig
 siteos pulse deploy [--dry-run] [--output <path>] [--json]
 siteos pulse checks list [--cursor <check-id>] [--json]
 siteos pulse checks read --check <check-id> [--json]
+siteos pulse pull-requests list [--environment <slug>] [--cursor <id>] [--json]
+siteos pulse pull-requests policy show [--environment <slug>] [--json]
+siteos pulse pull-requests policy save --input <policy.json> [--environment <slug>] [--json]
 siteos pulse run --check <check-id> [--request-id <id>] [--json]
 ```
 

@@ -12,7 +12,7 @@ product-specific requirements, not another connection or context policy.
 | SiteOS initialization, validation, deployment, CI and operations absent from MCP | Unified CLI |
 | Local source inspection, edits and local tests | Repository tools |
 | Identity, membership, sessions and authorization flows | Auth and the supported host/provider flow |
-| GitHub connection, repository binding and automatic PR policy setup | Supported SiteOS browser flow; see the Integrations and Pulse skills |
+| GitHub connection, repository binding and automatic PR policy setup | Scoped CLI writes and GitHub consent by link; see the Integrations and Pulse skills |
 | Product operations, domain rules, scopes and result interpretation | The owning module and focused skill |
 
 Pulse, Cookie, Forms, Search, Trace, SEO, Analytics and Storage use common Project/environment context.
@@ -116,11 +116,14 @@ available authorized operation; otherwise report the capability or access blocke
 write action to bypass that boundary. This does not prohibit the supported interactive sign-in or
 provider authorization flow, or browser testing of the user's website when the task needs it.
 
-GitHub has an explicit browser-only setup contract: Services installation/authorization/connection,
-Project environment repository binding and Pulse PR policy/Check selection. Use that supported flow
-when requested, including its connection and PR-attempt readback, without treating it as a fallback
-for a denied CLI/MCP operation. Run and Check diagnostics exposed through MCP/CLI retain their
-normal read path. No GitHub setup command or PR mutation tool is currently exposed by those adapters.
+GitHub setup uses CLI 2.28.0+ with the matching server: `integrations github` manages the shared
+connection, `project repository` binds an exact environment, and `pulse pull-requests policy`
+configures independent PR selection. Provider consent and installation use a user-opened GitHub
+link; the user does not need to configure SiteOS through its web interface. MCP reads GitHub
+catalogs (`siteos_integrations_get_connection`, provider `github`), environment bindings
+(`siteos_get_repository`), and saved policies/attempts (`siteos_pulse_list_pull_requests`). These are
+read-only tools; CLI owns mutations. Detect missing commands/server capabilities rather than
+inventing them or bypassing an authorization denial.
 
 ## Installation and release
 
