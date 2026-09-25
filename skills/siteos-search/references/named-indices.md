@@ -69,5 +69,5 @@ and the corresponding Blog config. Live sync omits `--dry-run` only after review
 The runtime smoke helper accepts `--index INDEX_ID` with its existing `--environment` flag.
 
 Verify both searches, a reload, an empty result, and separate Suggestions. If collecting visitor
-analytics, verify each consented query/click against its own index. Never use internal MCP or
+analytics, verify each permitted query/click against its own index. Never use internal MCP or
 Playground queries as evidence of visitor traffic.

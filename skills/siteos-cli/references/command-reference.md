@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.25.2`
+Package: `@siteoshq/cli@2.26.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -289,7 +289,7 @@ siteos search relevance apply --environment <slug> --revision <id> [--json]
 siteos search installation status --environment <slug> [--json]
 siteos search installation verify --environment <slug> --url <website-query-endpoint> --query <text> [--json]
 siteos search visitors report --environment <slug> [--days <7|30|90>] [--json]
-siteos search visitors configure --environment <slug> --enabled <true|false> --retention-days <7|30|90> [--json]
+siteos search visitors configure --environment <slug> --enabled <true|false> --retention-days <7|30|90> [--collection-mode <independent|consent_required>] [--json]
 siteos search analytics --environment <slug> [--json]
 siteos search diagnostics --environment <slug> [--json]
 siteos search doctor --environment <slug> [--json]

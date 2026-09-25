@@ -8,17 +8,20 @@ styles and build pipeline; do not introduce React or Next.js into a different fr
 `assets/ui-runtime/src/lib/siteos-project-search.ts` exports the framework-neutral
 `createSiteOSSearchClient`. Copy/adapt this owned source into the project. It only handles bounded
 Search response validation, requests, cancellation signals, safe local result links and optional
-consented receipts. It does not render UI or load another script at runtime. In a JavaScript-only
+signed analytics receipts. It does not render UI or load another script at runtime. In a JavaScript-only
 host, transpile it with the existing build or deliver an equivalent local JavaScript module.
 
 ```ts
 const search = createSiteOSSearchClient({
   endpoint: "/api/search/query",
-  canRecordAnalytics: () => consentManager.hasConsent("analytics"),
+  analyticsMode: "independent",
 });
 
 const controller = new AbortController();
-const result = await search.search("tokens", { signal: controller.signal, limit: 10 });
+const interactionId = search.canRecordAnalytics() ? crypto.randomUUID() : undefined;
+const result = await search.search("tokens", { signal: controller.signal, limit: 10, interactionId });
+if (result.success) await search.record(result.analyticsReceipt);
+// On a result click: search.record(result.analyticsReceipt, hit.id).
 ```
 
 Two delivery paths share this client. For a configured Cloudflare Search environment, use the
@@ -28,12 +31,12 @@ public endpoint and publishable key returned by Search → Connection or `siteos
 const search = createSiteOSSearchClient({
   endpoint: "https://search.example.com/api/search/public/query",
   publicKey: "spk_PUBLISHABLE_KEY_FROM_SITEOS",
-  canRecordAnalytics: () => consentManager.hasConsent("analytics"),
+  analyticsMode: "independent",
 });
 ```
 
 No per-site server proxy is needed with Edge. Origin admission and bounded queries run in the
-Worker; consented events receive 202 only after R2 persistence. Enable this path only after
+Worker; accepted events receive 202 only after R2 persistence. Enable this path only after
 operator deployment and a successful query/event readback. The code in a branch does not imply
 that a hosted Worker is available. Check `siteos search delivery status` in the exact environment.
 Only explicitly public documents may use this delivery path.
@@ -49,9 +52,15 @@ Preserve these interactions when adapting:
 - Render result text and highlight segments as text; never inject provider HTML.
 - Preserve engine order, support pagination, and distinguish zero results from a failed request.
 - Result navigation uses validated local paths and real anchors. Keep mobile controls reachable.
-- Analytics needs current consent plus backend enablement. GPC and DNT disable it. Generate a
-  per-interaction ID only after consent; keep it across pagination, and discard it on consent
-  withdrawal. Send query and click receipts only through `record` with a live consent callback.
+- Read the index collection settings and match `analyticsMode`. Independent collection needs no
+  consent callback; `consent_required` uses `canRecordAnalytics` with actual current consent.
+  Existing callbacks without an explicit mode retain their consent-required behavior.
+- Generate an in-memory interaction ID only when `search.canRecordAnalytics()` allows it; pass it
+  to `search.search`. Record the settled result receipt, including zero results, via `search.record`.
+  Record result clicks with their document ID and receipt before navigation. Keep the ID across
+  typing/pagination; clear it on close, clearing the query or permission withdrawal.
+- GPC, DNT, `window.SiteOSSearchDisabled` and `isAnalyticsDisabled` stop events. Recheck at send
+  time. Do not add storage/visitor profiles or report a fabricated consent grant.
 
 For existing Next.js delivery, the `searchSiteOSProject` convenience function and consent helper
 retain the current `/api/search/query` endpoint. Other frameworks can use the factory directly.

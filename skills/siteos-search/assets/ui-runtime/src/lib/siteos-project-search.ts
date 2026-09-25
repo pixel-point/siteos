@@ -66,7 +66,10 @@ export type SiteOSSearchClientConfig = {
   /** A host-owned proxy, or an explicitly published Search Edge query URL. */
   endpoint: string;
   publicKey?: string;
+  /** Defaults to independent. An existing consent callback retains consent-required behavior. */
+  analyticsMode?: "independent" | "consent_required" | "off";
   canRecordAnalytics?: () => boolean;
+  isAnalyticsDisabled?: () => boolean;
 };
 export type SiteOSSearchQueryOptions = {
   limit?: number;
@@ -85,16 +88,23 @@ export function createSiteOSSearchClient(config: SiteOSSearchClientConfig) {
       (config.publicKey !== undefined && !/^spk_[A-Za-z0-9_-]{20,100}$/u.test(config.publicKey)))
     throw new Error("Use a query endpoint and a publishable Search key; private credentials stay on the server.");
   const consent = () => {
+    try { return config.canRecordAnalytics?.() === true; } catch { return false; }
+  };
+  const canRecord = () => {
     try {
-      return typeof navigator !== "undefined" && navigator.doNotTrack !== "1" &&
+      const mode = config.analyticsMode ?? (config.canRecordAnalytics ? "consent_required" : "independent");
+      return mode !== "off" && config.isAnalyticsDisabled?.() !== true &&
+        !(typeof window !== "undefined" && (window as unknown as { SiteOSSearchDisabled?: boolean }).SiteOSSearchDisabled === true) &&
+        typeof navigator !== "undefined" && navigator.doNotTrack !== "1" &&
         (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl !== true &&
-        config.canRecordAnalytics?.() === true;
+        (mode === "independent" || consent());
     } catch { return false; }
   };
   const headers = (): Record<string, string> => config.publicKey ? { "X-SiteOS-Search-Key": config.publicKey } : {};
   return {
+    canRecordAnalytics: canRecord,
     search(query: string, options: SiteOSSearchQueryOptions = {}) {
-      return querySiteOSProject(query, { ...options, interactionId: consent() ? options.interactionId : undefined }, config);
+      return querySiteOSProject(query, { ...options, interactionId: canRecord() ? options.interactionId : undefined }, config);
     },
     async suggestions(signal?: AbortSignal): Promise<{ configured: boolean; items: SiteOSSearchSuggestion[] } | null> {
       const url = config.endpoint.endsWith("/query") ? config.endpoint.slice(0, -6) + "/suggestions" : config.endpoint.replace(/\/$/u, "") + "/suggestions";
@@ -114,12 +124,12 @@ export function createSiteOSSearchClient(config: SiteOSSearchClientConfig) {
       } catch { return null; }
     },
     async record(receipt: string | undefined, clickedResultId?: string): Promise<boolean> {
-      if (!receipt || !consent()) return false;
+      if (!receipt || !canRecord()) return false;
       try {
         const response = await fetch(config.endpoint, {
           method: "POST", credentials: "omit", cache: "no-store", keepalive: true, redirect: "error", referrerPolicy: "no-referrer",
           headers: { "Content-Type": "application/json", ...headers() },
-          body: JSON.stringify({ receipt, ...(config.publicKey ? { consent: true } : {}), ...(clickedResultId ? { clickedResultId } : {}) }),
+          body: JSON.stringify({ receipt, consent: consent(), ...(clickedResultId ? { clickedResultId } : {}) }),
         });
         return response.ok;
       } catch { return false; }
@@ -127,7 +137,7 @@ export function createSiteOSSearchClient(config: SiteOSSearchClientConfig) {
   };
 }
 export function loadSiteOSSearchSuggestions(signal?: AbortSignal) {
-  return createSiteOSSearchClient(siteosSearchDelivery).suggestions(signal);
+  return createSiteOSSearchClient({ endpoint: "/api/search/query" }).suggestions(signal);
 }
 export function searchSiteOSProject(query: string, options: SiteOSSearchQueryOptions = {}) {
   return querySiteOSProject(query, options, { endpoint: "/api/search/query" });

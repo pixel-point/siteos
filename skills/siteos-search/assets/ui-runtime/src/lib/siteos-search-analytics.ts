@@ -1,4 +1,7 @@
-// Optional visitor analytics. No persistent visitor identifier, storage or cookies.
+// Aggregate search analytics. No persistent visitor identifier, storage or cookies.
+export type SiteOSSearchAnalyticsMode = "independent" | "consent_required" | "off";
+let collectionMode: SiteOSSearchAnalyticsMode = "independent";
+let optedOut = false;
 type Consent = {
   categories?: string[];
   decision?: string;
@@ -19,12 +22,24 @@ export function setSiteOSSearchAnalyticsConsent(granted: boolean | null): void {
 }
 export function canRecordSiteOSSearch(): boolean {
   if (
-    typeof window === "undefined" ||
+    typeof window === "undefined" || optedOut || collectionMode === "off" ||
+    (window as unknown as { SiteOSSearchDisabled?: boolean }).SiteOSSearchDisabled === true ||
     navigator.doNotTrack === "1" ||
     (navigator as Navigator & { globalPrivacyControl?: boolean })
       .globalPrivacyControl === true
   )
     return false;
+  return collectionMode === "independent" || hasSiteOSSearchAnalyticsConsent();
+}
+export function setSiteOSSearchAnalyticsMode(mode: SiteOSSearchAnalyticsMode): void {
+  collectionMode = mode;
+  if (typeof window !== "undefined") window.dispatchEvent(new Event("siteos-search:consent"));
+}
+export function setSiteOSSearchAnalyticsDisabled(disabled: boolean): void {
+  optedOut = disabled;
+  if (typeof window !== "undefined") window.dispatchEvent(new Event("siteos-search:consent"));
+}
+export function hasSiteOSSearchAnalyticsConsent(): boolean {
   if (consentOverride !== null) return consentOverride;
   try {
     const state = cookie()?.getConsent();
@@ -71,6 +86,7 @@ export function recordSiteOSSearch(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       receipt,
+      consent: hasSiteOSSearchAnalyticsConsent(),
       ...(clickedResultId ? { clickedResultId } : {}),
     }),
   }).catch(() => undefined);

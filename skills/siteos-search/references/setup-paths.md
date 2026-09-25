@@ -50,7 +50,7 @@ status. Choose Edge only when configured and externally verified; public configu
 not a successful query. The private-key host proxy remains an available path.
 
 Verify the real website query path, keyboard/focus, empty/error states and mobile controls. Check
-consented query/click delivery separately if collection is enabled. Finish with the selected
+query/click delivery under the selected collection mode separately if collection is enabled. Finish with the selected
 environment, evidence of a working query and one unresolved action if any. Keep package installation
 and agent-host preparation separate from the customer task prompt.
 

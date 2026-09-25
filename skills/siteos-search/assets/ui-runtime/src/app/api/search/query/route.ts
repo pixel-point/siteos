@@ -52,7 +52,9 @@ export async function GET(request: Request): Promise<Response> {
       signal: AbortSignal.any([request.signal, AbortSignal.timeout(15_000)]),
       headers: {
         Accept: "application/json",
+        "X-SiteOS-Search-Analytics": "2",
         [SITEOS_RUNTIME_QUERY_CREDENTIAL_HEADER]: queryCredential,
+        ...privacyHeaders(request),
       },
     });
     const payload = await readJsonResponse(response);
@@ -166,6 +168,8 @@ export async function POST(request: Request): Promise<Response> {
   // A same-origin endpoint keeps the server credential out of visitor code.
   if (!isSameOrigin(request))
     return createJsonResponse({ accepted: false }, 403);
+  if (request.headers.get("Sec-GPC") === "1" || request.headers.get("DNT") === "1")
+    return createJsonResponse({ accepted: false }, 403);
   const credential = readSiteOSSearchCredential();
   if (!credential) return createJsonResponse({ accepted: false }, 503);
   if (Number(request.headers.get("content-length") ?? 0) > 17_000)
@@ -180,8 +184,9 @@ export async function POST(request: Request): Promise<Response> {
       typeof value.receipt !== "string" ||
       value.receipt.length > 16_000 ||
       Object.keys(value).some(
-        (key) => !["receipt", "clickedResultId"].includes(key),
+        (key) => !["receipt", "consent", "clickedResultId"].includes(key),
       ) ||
+      (value.consent !== undefined && typeof value.consent !== "boolean") ||
       (value.clickedResultId !== undefined &&
         (typeof value.clickedResultId !== "string" ||
           value.clickedResultId.length > 255))
@@ -198,6 +203,7 @@ export async function POST(request: Request): Promise<Response> {
       headers: {
         "Content-Type": "application/json",
         [SITEOS_RUNTIME_QUERY_CREDENTIAL_HEADER]: credential,
+        ...privacyHeaders(request),
       },
       body: JSON.stringify(value),
     });
@@ -208,6 +214,11 @@ export async function POST(request: Request): Promise<Response> {
   } catch {
     return createJsonResponse({ accepted: false }, 503);
   }
+}
+
+function privacyHeaders(request: Request): Record<string, string> {
+  return Object.fromEntries(["Sec-GPC", "DNT"].flatMap((name) =>
+    request.headers.get(name) === "1" ? [[name, "1"]] : []));
 }
 
 function isSameOrigin(request: Request): boolean {

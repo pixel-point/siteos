@@ -48,19 +48,50 @@ Run verification after the updated website proxy is reachable. The CLI obtains a
 
 Complete browser verification separately: trigger, focus, typing, late response cancellation, empty results, errors, pagination, result clicks, keyboard and mobile. Resuming setup starts from `installation status` plus diagnostics; do not recreate working credentials or resync unchanged content to restart the checklist.
 
-## Visitor analytics and consent
+## Visitor analytics and collection mode
+
+Read `siteos search visitors report --environment <slug> --index <index-id> --days 30 --json`
+before installing events. Check `settings.enabled`, `settings.collectionMode` and retention.
+New indices default to enabled independent collection with 30-day retention. Existing indices
+preserve their settings and consent-required policy. Missing `collectionMode` means an older
+server: retain consent-required behavior and do not claim independent delivery is supported.
+
+For an authorized mode change (not a reporting-only request):
 
 ```sh
-siteos search visitors report --environment production --days 30 --json
-# Enable only with the user's authorization and a connected website consent flow:
-siteos search visitors configure --environment production --enabled true --retention-days 30 --json
+siteos search visitors configure --environment production --index <index-id> --enabled true --retention-days 30 --collection-mode independent --json
 ```
 
-Collection defaults off. The delivered `siteos-search-analytics.ts` adapter recognizes explicit SiteOS Cookie analytics consent (`accept_all` or `custom` plus the analytics category). With another CMP, call `setSiteOSSearchAnalyticsConsent(true|false)` on its initial state and every change. `null` returns to the SiteOS Cookie adapter. Missing consent, GPC or DNT prevents collection. Granting consent initiates a fresh query; revocation cancels pending collection. Never infer consent from continued browsing.
+Independent collection requires CLI 2.26.0 or newer and a server that reports `collectionMode`.
+Confirm the flag with `search visitors configure --help` first; use `siteos-cli` to upgrade an
+older CLI before changing the mode. Read back the same index. Omitting
+`--collection-mode` preserves the current policy. Never change an existing index's disabled
+setting, mode or retention merely to install the search UI.
+
+Match the editable client to the server mode. Independent collection needs no banner or consent
+callback. Consent-required delivery uses `analyticsMode: "consent_required"` and a real live
+`canRecordAnalytics` callback. The Next.js helper defaults to independent; call
+`setSiteOSSearchAnalyticsMode("consent_required")` before using it for a consent-controlled index.
+It recognizes explicit SiteOS Cookie analytics consent (`accept_all` or `custom` plus the
+analytics category). Another CMP calls `setSiteOSSearchAnalyticsConsent(true|false)` on initial
+state and every change; `null` restores the SiteOS Cookie adapter. Merely attaching Cookie does
+not change independent collection. Never substitute a fabricated consent grant.
+
+GPC, DNT and `window.SiteOSSearchDisabled = true` stop events in either mode. The helper also
+provides `setSiteOSSearchAnalyticsDisabled(boolean)`; the factory accepts `isAnalyticsDisabled`.
+For live host preference changes, dispatch `siteos-search:consent` so the dialog cancels pending
+work and refreshes permission. Consent-required collection waits for a grant and stops on
+withdrawal. Search results must keep working when collection is unavailable or off.
+
+Install the event wiring with the UI: assign an in-memory interaction ID, pass it to `search`,
+record the settled query receipt (including zero results), and record a returned result ID on
+navigation. Verify actual event requests and the same index's visitor report. A successful GET
+alone does not establish analytics installation. Backend/Edge/client publication are separate;
+old installed components require an explicit update.
 
 The website uses an in-memory interaction UUID and signed result receipts. A settled query records one search; later typing within the same interaction updates it. Result clicks use the corresponding receipt and count at most once per interaction. Clearing or closing search starts a new interaction. There are no persistent visitor identifiers, user profiles or session stitching. Playground, relevance comparison, installation verification and CLI/MCP query operations are excluded.
 
-Reports provide completed searches, no-result searches, searches with a click, daily totals, popular queries and zero-result queries. Click-through rate is searches with a click divided by completed searches. They cover only consenting users of the updated integration. Keep environment, actual retention-limited period and last event time visible. Do not equate counts with unique people or conversions.
+Reports provide completed searches, no-result searches, searches with a click, daily totals, popular queries and zero-result queries. Click-through rate is searches with a click divided by completed searches. They cover retained interactions admitted under the mode active when collected. A mode change governs new events and does not relabel or remove historical counts. Keep environment, actual retention-limited period and last event time visible. Do not equate counts with unique people or conversions.
 
 Query text is normalized. Common sensitive patterns (email, URL, long numbers and credential-like assignments) are withheld while aggregate counts remain. This heuristic is not a PII classifier. Retention is 7, 30 or 90 days; expired rows are excluded immediately and require the configured explicit Search maintenance job for physical deletion. Disabling collection stops new events and does not erase retained history. Do not silently enable collection or extend retention for a reporting request.
 
@@ -117,7 +148,7 @@ privacy filtered, as in visitor analytics.
 Appearances count an article in a completed search's latest signed result list, once per
 interaction/document. They are not screen impressions or all possible engine matches. Clicks count
 those interactions with a verified article click; CTR is clicks / appearances. Events use existing
-analytics consent and collection settings. Read `activity.collectedSince` and the effective report
+the selected collection mode and collection settings. Read `activity.collectedSince` and the effective report
 period before interpreting zero activity: historical search totals cannot reconstruct article
 appearances. Collection may be paused, and missing/private query text is excluded from query lists.
 Top queries are limited to ten per article. Do not infer that a low-click article is irrelevant or
