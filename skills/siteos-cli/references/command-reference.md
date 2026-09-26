@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.33.0`
+Package: `@siteoshq/cli@2.34.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -110,7 +110,7 @@ siteos trace tracking-plan publish --expected-draft-version <number> [--environm
 
 ```text
 siteos seo status [--environment <slug>] [--json]
-siteos seo audit run [--environment <slug>] [--json]
+siteos seo audit run [--url <url>...] [--audit <baseline-id>] [--resource <expected-id>] [--environment <slug>] [--json]
 siteos seo audit list [--environment <slug>] [--json]
 siteos seo audit show <id> [--environment <slug>] [--json]
 siteos seo audit cancel <id> [--environment <slug>] [--json]
