@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.30.0`
+Package: `@siteoshq/cli@2.31.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -171,6 +171,12 @@ siteos analytics status [--environment <slug>] [--json]
 siteos analytics installation [--environment <slug>] [--json]
 siteos analytics report [--days <1|7|28>] [--event <name>] [--country <ISO|unknown>] [--campaign <id>] [--filters <json>] [--environment <slug>] [--json]
 siteos analytics realtime [--country <ISO|unknown>] [--campaign <id>] [--filters <json>] [--environment <slug>] [--json]
+siteos analytics domains list [--environment <slug>] [--json]
+siteos analytics domains add <origin> --revision <number> [--environment <slug>] [--json]
+siteos analytics domains remove <origin> --revision <number> --confirm <origin> [--environment <slug>] [--json]
+siteos analytics domains linking --enabled <true|false> --revision <number> [--environment <slug>] [--json]
+siteos analytics domains consent-review --file <json> [--environment <slug>] [--json]
+siteos analytics domains consent-set --file <json> [--environment <slug>] [--json]
 siteos analytics settings show [--environment <slug>] [--json]
 siteos analytics settings set --revision <number> [--enabled <true|false>] [--cookie-events <true|false>] [--minimal-realtime <true|false>] [--environment <slug>] [--json]
 siteos analytics measurement <show|review> [--environment <slug>] [--json]

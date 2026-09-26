@@ -56,6 +56,10 @@ mode and deploying the website are separate effects with separate authorization 
 - GPC, DNT and full opt-out stop measurement. Detailed Cookie interaction events always require that banner's explicit Analytics grant. Optional minimal realtime remains a separate counter independent of consent.
 - Read current Analytics settings, then change only intended fields with `analytics settings set --revision <number>`. Refetch after a revision conflict; do not overwrite concurrent edits. Read back the published Cookie integration and reload the website after changes.
 
+For a requested journey across related domains or subdomains, read
+[linked-websites.md](references/linked-websites.md). It uses explicit per-environment membership and
+independent local permission; never infer shared consent or merge separate Projects.
+
 ## Instrument useful events
 
 Read [events-and-reports.md](references/events-and-reports.md). Prefer a small catalog tied to meaningful outcomes: completed signup, successful form submission, plan selection. Register event/property names before instrumentation. Choose List for a fixed set or Text (`public_text`) for explicit public content without enumerating values, after checking deployed capability. Text is general-purpose, not specific to FAQ or products. Never send visitor-entered text, email, account IDs, complete URLs or arbitrary dataLayer objects through events. Widen an existing List only after explicit review of its current catalog revision. Optional identity uses the separately authorized backend assertion contract, not event properties.

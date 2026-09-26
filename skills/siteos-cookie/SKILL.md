@@ -188,3 +188,11 @@ To restore a published revision into the draft, prepare `{"revision":1,"expected
 Report separately: draft saved, publication activated, installation observed, scenarios verified, unresolved issues and untested scope. CLI 1.2.0 adds schema, validation, regional resolution, browser verification and draft restoration. There is no standalone diff, receipt-export or server-hosted continuous-scanning command. Discovery runs locally through the CLI; MCP reads catalog and saved evidence only. Do not invent these or the obsolete `cookie:pilot:preflight`.
 
 The public installation key and snippet are browser safe. Auth grants, internal delivery credentials and receipt data are not. Never inspect private CLI state or `.env`, reuse browser sessions for API management, or export individual consent receipts as part of routine analytics. Do not fabricate runtime activity when no observations are available.
+
+For Analytics across related websites, use the Analytics skill's
+[linked website workflow](../siteos-analytics/references/linked-websites.md). Each hostname must be
+in Cookie's published scope; Analytics registration alone does not publish or authorize Cookie.
+Preserve the banner's existing consent-sharing setting. A valid shared choice on its published
+subdomains remains valid without an extra Analytics prompt; Analytics does not enable sharing.
+Different banners keep independent choices. Anonymous Analytics on both sites needs no Cookie
+connection unless a separate published website gate already applies.
