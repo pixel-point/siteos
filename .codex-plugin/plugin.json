@@ -1,6 +1,6 @@
 {
   "name": "siteos",
-  "version": "2.45.0",
+  "version": "2.45.1",
   "description": "One SiteOS plugin for common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Integrations, Analytics and Storage.",
   "author": {
     "name": "Pixel Point",
@@ -34,6 +34,9 @@
     "shortDescription": "Operate SiteOS with MCP, CLI and focused skills",
     "longDescription": "Select one website Project and work across SiteOS with remote MCP reads, a CLI for local workflows and CI, and focused skills with explicit configuration, publication and runtime verification.",
     "developerName": "Pixel Point",
+    "websiteURL": "https://siteos.sh",
+    "privacyPolicyURL": "https://siteos.sh/privacy",
+    "termsOfServiceURL": "https://siteos.sh/terms",
     "brandColor": "#000000",
     "composerIcon": "./assets/siteos-logo.svg",
     "logo": "./assets/siteos-logo.svg",
