@@ -48,8 +48,7 @@ Load [references/workflow.md](references/workflow.md) for configuration versions
 For costs or waiting Checks, read `npx @siteoshq/cli pulse usage --json` in the selected context,
 or `siteos_billing_get_usage` for its Organization. `mode: "preview"` / `state: "preview"` means
 an estimate with no deductions or budget blocking. Per-run and PR `usage.cost` can be null;
-never interpret missing measurements as free. Technical concurrency, rolling 24-hour PR attempts
-and monthly money estimates are independent. Read [usage and capacity](references/usage.md)
+never interpret missing measurements as free. `mode: "enforced"` reserves and settles the shared monthly execution budget. There is no daily PR count quota. Concurrency and available runner capacity remain separate from money. Read [usage and capacity](references/usage.md)
 when explaining these values or diagnosing a queue.
 
 ## Boundaries
