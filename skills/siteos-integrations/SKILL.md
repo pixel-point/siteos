@@ -29,7 +29,7 @@ Keep provider credentials, OAuth state, encrypted values, internal delivery toke
 
 GitHub is a shared Organization connection in **Services → GitHub** when the deployment includes the GitHub integration and its App configuration. If the card is missing or says it is not configured, report that release/configuration boundary; do not claim the connection is live.
 
-Use CLI 2.28.0+ and a matching server. Read saved metadata through
+Use CLI 2.32.0+ and a matching server. Read saved metadata through
 `siteos_integrations_get_connection` with `provider: "github"` or
 `siteos integrations github status --organization <id> --json`. An unavailable integration is a
 release/configuration boundary. A ready empty catalog differs from loading or a failed refresh.
@@ -37,14 +37,21 @@ release/configuration boundary. A ready empty catalog differs from loading or a 
 For an authorized connection, run `siteos integrations github authorize --organization <id> --json`
 and give its URL to the user for GitHub consent. If no App installation exists, use the `installUrl`
 from status to install on the selected repositories, then authorize again. The callback verifies
-GitHub account ownership/organization administration for the initiating SiteOS user and Organization;
+repository access for the initiating SiteOS user and Organization;
 it does not connect automatically and does not depend on the browser's selected SiteOS Organization.
-Read `github candidates`, select the verified installation ID, then run
-`github connect --installation <id> --organization <id> --json`. Read status until the selected
+Read `github candidates`, select explicit repository IDs from the current user's candidates, then run
+`github connect --installation <id> --repositories <id,id> --organization <id> --json`. Read status until the selected
 installation's catalog is ready. Do not treat queued refresh as success. `github refresh` queues
-catalog discovery; after changing App repository access on GitHub, refresh once and read its state.
+catalog refresh; it never shares newly discovered repositories automatically. To add repositories,
+repeat authorize → candidates → connect with the new selection. One GitHub installation can serve
+several SiteOS Organizations. Each has independent selected repositories; different managers can
+contribute from their own GitHub accounts. Candidates are the intersection of human and App access,
+private to that user and Organization. Adding preserves existing shared repositories.
+Use `github remove --installation <id> --repositories <id,id> --organization <id> --confirm` for
+explicit Organization-only removal. Stale consent or changed selection requires new authorization;
+do not retry by broadening access or copying another user's candidates.
 `github disconnect --installation <id> --organization <id> --confirm` requires the user's requested
-scope because other services may use the connection. OAuth/management use the dedicated
+scope because other services in this Organization may use the connection. It does not uninstall the App or disconnect another SiteOS Organization. OAuth/management use the dedicated
 `integrations:github:write` grant; never request secrets or extract browser credentials.
 
 The Services **Manage resources** flow remains available for users who prefer the web interface.
