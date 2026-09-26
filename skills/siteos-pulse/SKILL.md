@@ -45,6 +45,13 @@ Hosted reads: `siteos_pulse_list_checks` and `siteos_pulse_get_check` expose pub
 
 Load [references/workflow.md](references/workflow.md) for configuration versions, file ownership, sync/deploy behavior, migration safeguards, and error handling.
 
+For costs or waiting Checks, read `npx @siteoshq/cli pulse usage --json` in the selected context,
+or `siteos_billing_get_usage` for its Organization. `mode: "preview"` / `state: "preview"` means
+an estimate with no deductions or budget blocking. Per-run and PR `usage.cost` can be null;
+never interpret missing measurements as free. Technical concurrency, rolling 24-hour PR attempts
+and monthly money estimates are independent. Read [usage and capacity](references/usage.md)
+when explaining these values or diagnosing a queue.
+
 ## Boundaries
 
 - The common Project selects Pulse through an explicit attachment. Pulse retains its resource IDs, checks, deployment state and runtime data.

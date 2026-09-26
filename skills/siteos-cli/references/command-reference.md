@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.31.0`
+Package: `@siteoshq/cli@2.32.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -215,8 +215,9 @@ siteos analytics ga4 saved remove <id> --revision <number> [--environment <slug>
 siteos integrations github status [--organization <id>] [--json]
 siteos integrations github authorize [--organization <id>] [--json]
 siteos integrations github candidates [--organization <id>] [--json]
-siteos integrations github connect --installation <id> [--organization <id>] [--json]
+siteos integrations github connect --installation <id> --repositories <id,id> [--organization <id>] [--json]
 siteos integrations github refresh --installation <id> [--organization <id>] [--json]
+siteos integrations github remove --installation <id> --repositories <id,id> --confirm [--organization <id>] [--json]
 siteos integrations github disconnect --installation <id> --confirm [--organization <id>] [--json]
 siteos integrations status [--provider <slack|telegram>] [--organization <id>] [--json]
 siteos integrations connect [--provider <slack|telegram>] [--organization <id>] [--json]
@@ -232,6 +233,7 @@ siteos pulse validate [--json]
 siteos pulse sync [--check] [--json]
 siteos pulse test [--check <slug>] [--headed] [--project <name>] [--base-url <url>] [-- <playwright-options>]
 siteos pulse deploy [--dry-run] [--output <path>] [--json]
+siteos pulse usage [--json]
 siteos pulse checks list [--cursor <check-id>] [--json]
 siteos pulse checks read --check <check-id> [--json]
 siteos pulse pull-requests list [--environment <slug>] [--cursor <id>] [--json]
