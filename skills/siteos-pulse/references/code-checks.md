@@ -1,6 +1,6 @@
 # PR code Checks
 
-Requires CLI 2.29.1 or newer and a matching server with a configured code executor.
+Requires CLI 2.33.0 or newer and a matching server with a configured code executor.
 
 Use this for Vitest/unit tests, lint, formatting or typechecking on SiteOS infrastructure. It
 requires a CLI/server that support config version 4 and an operator-enabled code executor. Check
@@ -96,5 +96,24 @@ Organizations. Per-Organization quotas and fair dispatch prevent one client mono
 they do not guarantee zero wait. More slots do not change Project configuration, CLI or MCP commands.
 
 Secret scans verify archive paths and Git blob hashes against the complete committed tree.
-Git export exclusions/substitutions, links, submodules or an oversized/truncated inventory fail
+Git export exclusions/substitutions, unsafe links, submodules or an oversized/truncated inventory fail
 closed instead of producing a successful partial scan. This scans the selected tree, not Git history.
+
+## Source compatibility before publication
+
+CLI 2.33.0 checks the committed Git HEAD during `pulse validate` and bundle/deploy preparation
+when active code Checks exist. It validates archive paths, size, internal links, package-manager
+identity and lockfile presence. An uncommitted edit is not the remote source; commit intended
+changes and validate again. A directory outside Git reports that source compatibility is unknown.
+Local command execution still uses installed dependencies and does not simulate the hosted sandbox.
+
+Relative symbolic links to existing files/directories inside the repository are supported. Absolute
+or escaping links, missing targets, cycles, hardlinks, submodules and files beneath link paths are
+unsupported. Do not remove valid project links or omit files to make a security scan appear complete.
+Secret scanning verifies file and link-target blobs against the full immutable tree and scans
+canonical files plus link text. Aliases are not traversed repeatedly.
+
+If preparation fails, report the exact safe path/reason from the saved run and its head SHA. A
+source error means tests never started; it is not a lint/type failure. Check automatic policy after
+a repair; it may have been intentionally paused. Re-enable within authorization and verify one
+new exact-head PR event instead of repeatedly publishing the same configuration.

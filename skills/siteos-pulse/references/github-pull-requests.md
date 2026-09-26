@@ -37,13 +37,13 @@ configuration and config-v3 CLI release; missing UI or unsupported v3 is a relea
 4. Read `siteos pulse pull-requests policy show --json`, then save only the editable policy fields:
 
    ```json
-   {"enabled": true, "useRepositoryChecks": true, "checkIds": [], "dailyAttemptLimit": 20}
+   {"enabled": true, "useRepositoryChecks": true, "checkIds": []}
    ```
 
    Run `siteos pulse pull-requests policy save --input <policy.json> --json`, then read back.
    `useRepositoryChecks: true` follows published defaults; `false` uses the exact `checkIds` selected
    from this environment's Check catalog and preserves them through future publication. Enabling
-   automatic verification and its rolling 24-hour limit is separate from connection/publication.
+   automatic verification is separate from connection/publication. All checks share the Organization’s monthly Pulse budget; there is no daily PR attempt quota.
    Maximum 100 attempts/day and ten Checks/attempt; normal Pulse credits apply. Policy writes never
    change schedules. CLI writes require current scoped authority; MCP remains read-only.
 
