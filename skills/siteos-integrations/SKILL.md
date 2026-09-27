@@ -11,8 +11,7 @@ Hosted reads: `siteos_integrations_get_connection` for the requested Organizatio
 
 Integrations manages Organization provider connections and destinations. The first supported provider is Slack. The common plugin includes this workflow; do not install a separate SiteOS provider plugin.
 
-For Google Analytics connection, exact property/web-stream selection and reconciliation, use
-`$siteos-trace`. For optional Google Analytics MCP access from the agent, read its
+For Google Analytics reporting use the [new Project connection workflow](../siteos/references/guided-onboarding.md) and `$siteos-analytics`. For tracking reconciliation use `$siteos-trace`. For optional Google Analytics MCP access from the agent, read its
 [Google MCP workflow](../siteos-trace/references/google-analytics-mcp.md). The Organization's
 Google connection inside SiteOS does not authorize a separate MCP server in the agent's host.
 
