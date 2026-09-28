@@ -43,17 +43,18 @@ configuration and config-v3 CLI release; missing UI or unsupported v3 is a relea
    Run `siteos pulse pull-requests policy save --input <policy.json> --json`, then read back.
    `useRepositoryChecks: true` follows published defaults; `false` uses the exact `checkIds` selected
    from this environment's Check catalog and preserves them through future publication. Enabling
-   automatic verification is separate from connection/publication. All checks share the Organization’s monthly Pulse budget; there is no daily PR attempt quota.
-   Maximum 100 attempts/day and ten Checks/attempt; normal Pulse credits apply. Policy writes never
-   change schedules. CLI writes require current scoped authority; MCP remains read-only.
+   automatic verification is separate from connection/publication. All Checks share the Organization's
+   monthly Pulse execution budget; there is no daily PR attempt quota. Select at most ten Checks
+   per attempt. Policy writes never change schedules. CLI writes require current scoped authority;
+   MCP remains read-only. Read [usage and queue diagnostics](usage.md) for accounting modes.
 
 The equivalent Services/Project/Pulse browser flow remains available to users. Never bypass a
 CLI/MCP denial with browser cookies, private HTTP or database calls.
 
 For code-only usage, omit both `previewEnvironment` and `previewHostname`; they must be set
 together for browser Checks. Read [PR code Checks](code-checks.md) for v4 commands and isolation.
-Code starts on an open/update PR observation without waiting for a deployment. Both kinds consume
-the rolling attempt budget separately.
+Code starts on an open/update PR observation without waiting for a deployment. Code and browser
+attempts are admitted separately; their measured execution uses the same Organization budget.
 
 ## Browser preview admission
 
