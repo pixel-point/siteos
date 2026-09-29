@@ -1,6 +1,6 @@
 ---
 name: siteos-seo
-description: Use for complete SiteOS SEO/GEO setup and improvement, or focused technical audits, verified fixes, keywords, competitors, backlinks, GSC Insights and AI visibility. Study the website, read evidence and run authorized checks for an exact Project environment; distinguish these from autonomous agent-readiness tests.
+description: Use for SiteOS SEO/GEO setup and improvement, Sanity Studio plugin setup, technical audits, verified fixes, keywords, competitors, backlinks, GSC Insights and AI visibility. Study the target, read evidence and run authorized checks for an exact Project environment; distinguish these from autonomous agent-readiness tests.
 ---
 
 # SiteOS SEO/GEO
@@ -29,6 +29,10 @@ it would resolve a concrete uncertainty. Explain its benefit without preparing e
 launching it or starting unrelated fixes unless the user includes that work in the scope. A genuine
 prerequisite, such as a source audit for Performance, needs its exact next step; optional context
 does not. Use Complete SEO/GEO only for an explicitly broad request.
+
+For Sanity plugin installation, start with the existing Studio configuration and supported package
+version; follow [Sanity Studio setup](references/content-checks.md#sanity-studio-plugin-setup).
+Installing the plugin does not authorize a website audit, an AI Text check or a Studio deployment.
 
 When choosing keywords, competitors or AI questions, first follow
 [Project research](references/project-research.md). Inspect the target website and its repository
@@ -66,6 +70,7 @@ or stop after reading a technical audit. Keep focused requests on their selected
 | Complete SEO/GEO setup, review and improvements | Coordinate the supported paths below for one Project environment | [Complete SEO/GEO](references/complete-seo-geo.md) |
 | Public HTML audit, canonical/robots/sitemap, technical GEO, verify fixes | SEO CLI and Site Audit | [Technical audit](references/technical-audit.md) |
 | Independent AI metadata, unfinished copy, spelling and grammar checks | Read-only content MCP; explicit paid content CLI operations | [Content checks](references/content-checks.md) |
+| Install or configure the SiteOS Sanity Studio plugin | Existing Studio code, published package and explicit team connection | [Sanity Studio setup](references/content-checks.md#sanity-studio-plugin-setup) |
 | Ignore/restore, weekly audits, notifications, export | SEO CLI and Site Audit/settings | [Audit operations](references/audit-operations.md) |
 | Selected-page Lighthouse checks | SEO CLI and Site Audit / Performance | [Performance](references/performance.md) |
 | Keyword research with trends and saved SERPs, Domain Overview (keywords/pages/competitors), rank tracking, backlinks, GSC Insights | SEO research/GSC CLI, interface or exports | [Search research](references/search-research.md) |
