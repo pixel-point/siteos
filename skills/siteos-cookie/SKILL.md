@@ -196,3 +196,26 @@ Preserve the banner's existing consent-sharing setting. A valid shared choice on
 subdomains remains valid without an extra Analytics prompt; Analytics does not enable sharing.
 Different banners keep independent choices. Anonymous Analytics on both sites needs no Cookie
 connection unless a separate published website gate already applies.
+
+## Cloud cookie scans
+
+CLI 2.36.0 and a compatible hosted application expose `cookie scans list`, `run`, `inspect --id`,
+`cancel --id`, and `schedule --input`. Use the selected Project/environment. A manager can run/cancel
+and save schedules through `cookie:scans:manage`; workspace viewers can read reports.
+Read `cookie scans list --json` first: `available=false` means a published banner or hosted executor
+is missing. Do not treat an accepted queue response as a completed scan.
+
+For an authorized scan, use `cookie scans run --idempotency-key <uuid> --json`; retain that UUID if
+retrying an uncertain response. Read the returned ID with `cookie scans inspect --id <id> --json`
+until terminal. Review pages, incomplete scenarios, issues and unclassified observations separately.
+The browser exercises first visit, rejection, acceptance, withdrawal and GPC; synthetic visits may
+appear in analytics/consent records. Values and payloads are excluded. Unknown storage/origins need
+review and do not prove a consent violation. Partial evidence cannot establish recovery.
+
+Scheduling is an explicit write. Build its JSON from the returned settings using `expectedRevision`
+and these fields: `enabled`, `cadence` (`weekly`/`monthly`), `weekday` (1–7), `time` (HH:mm), `timeZone`
+(IANA), `priorityPaths`, `excludedPaths`, `maxPages` (1–50). Monthly means the first day. Remove
+read-only `revision`, `origin`, `nextRunAt`, `pausedReason`. Preserve the inspected environment;
+never enable another site's schedule or enlarge its scope implicitly. Read back the saved settings.
+Notifications use configured Integrations destinations in the Scans UI; CLI has no destination-write
+command. A manual pass does not prove scheduled execution, delivery or legal compliance.

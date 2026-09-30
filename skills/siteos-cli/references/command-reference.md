@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.35.0`
+Package: `@siteoshq/cli@2.36.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -75,6 +75,11 @@ siteos cookie draft get [--json]
 siteos cookie draft save --input <draft.json> [--json]
 siteos cookie publish --input <publication.json> [--json]
 siteos cookie analytics [--range-days <7|30|90>] [--json]
+siteos cookie scans list [--json]
+siteos cookie scans run [--idempotency-key <uuid>] [--json]
+siteos cookie scans inspect --id <scan-id> [--json]
+siteos cookie scans cancel --id <scan-id> [--json]
+siteos cookie scans schedule --input <settings.json> [--json]
 ```
 
 ## Trace
