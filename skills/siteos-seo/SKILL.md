@@ -48,8 +48,12 @@ for the required capability.
 
 ## Execute through MCP and CLI
 
-When technical audit evidence is relevant, use the available `siteos_seo_get_audit` read; this is not a
-mandatory first step for research. Research history/show/export, plan/run/wait, audits, Performance
+For a request to show or review a saved technical Site Audit in Codex or another MCP App host,
+prefer `siteos_open_project_panel` for the authorized Organization and Project: Production is
+automatic. Keep chat to key findings and next steps instead of repeating the displayed report.
+Follow the shared contract for text/export requests, unsupported hosts and explicitly requested
+non-Production environments. For supporting technical evidence or headless analysis, use
+`siteos_seo_get_audit`; neither path is a mandatory first step for research. Research history/show/export, plan/run/wait, audits, Performance
 and GSC use the SEO CLI where those operations are absent from MCP.
 CLI requests use the authenticated SiteOS API and its workers, with the same scope and accounting
 as the application. Do not use computer-use or browser clicks in SiteOS to run or read these checks.
@@ -140,3 +144,20 @@ annotations are independent of answer collection.
 For recurring audits, use `siteos_seo_get_automation` for hosted schedule/notification reads and
 CLI 2.7.0 `seo schedule set --days daily|weekdays|1,3,5` for authorized writes. Follow
 [audit operations](references/audit-operations.md); preserve revisions and the exact environment.
+
+## Wait for a technical audit
+
+When the user asks to be notified or to analyze an audit on completion, a host exposing MCP Events
+can subscribe to `siteos.seo.audit.finished` for the exact Organization, Project, environment and
+audit ID. The host manages its callback and subscription. State the requested follow-up and use
+only the discovered event capability; never invent a subscription tool or callback. On delivery,
+read the saved audit with current access. For a Production audit, open its panel where supported;
+for another environment, use its exact headless report and link without substituting Production.
+Explain completed versus partial/failed/cancelled evidence. Receipt alone authorizes no paid check, fix or
+publication. Opening a panel or starting an audit does not silently subscribe.
+
+Events are documented for Work web chats, desktop Work with Cloud selected, and dots. Do not claim
+local Codex background delivery without host support. If Events are absent, explain the limit;
+the open panel still refreshes active audits. Do not create a recurring watcher without the user's
+request. **Enable audit access** opens host consent where supported; connecting only enables the
+separate **Start audit** action. An older read-only client may need reconnecting in the host.
