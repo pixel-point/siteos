@@ -176,8 +176,36 @@ product names and aliases must identify one product. Product and question IDs mu
 }
 ```
 
-Use the existing `research plan --input`, authorized `run --input`, `wait`, `show`, `export`, and
-`saved` commands. No paid scorer or automatic paid retry is added. Terminal provider failures release customer reservations; unknown supplier costs remain internal.
+Use a persistent question set for the monitoring workspace. First read `research saved list
+--kind ai-rankings` and the category history, including the bounded first sample from guided Project
+creation. Reuse the selected set and its question IDs; do not start a duplicate check just to fill
+an empty page. Older unlinked reports remain in History.
+
+Check installed `siteos seo --help` for the flags below and follow the CLI skill's update workflow
+when unavailable. Do not invent raw API calls or automate the SiteOS UI as a fallback.
+For a new set, save a separate `visibility-settings.json` with `revision: 0` and `questions` matching
+`category.questions` by id/text/frame. Optional `topic`, `tags` and `archived` belong in that file.
+Edits use the current visibility revision and preserve existing IDs; archive removed questions.
+
+```sh
+npx @siteoshq/cli seo research plan --input ./research-request.json --json
+npx @siteoshq/cli seo research saved save --input ./research-request.json --name "Website analytics" --id <stable-set-id> --visibility ./visibility-settings.json --json
+npx @siteoshq/cli seo research run --input ./research-request.json --set <saved-id> --revision <returned-revision> --idempotency-key <stable-run-key> --json
+```
+
+Saving does not collect answers. Run requires the approved scope and credits; preserve its key
+through an uncertain response. Read the revision returned by save and verify `run.visibility.setId`
+after admission. A stale revision requires rereading and reviewing the exact scope. Continue with
+`wait` and `show`, then link to `/projects/<project-id>/seo/ai-rankings?env=<slug>&set=<saved-id>&run=<run-id>`.
+Overview shows the selected check; Trends compares compatible saved checks; Questions and Sources
+lead to answer evidence, and Actions tracks follow-up work. Report matched sample coverage and
+improvement/decline in percentage points. Brand position is tracked-brand mention order, not a
+universal AI rank. Tone is a separate paid Jev assessment; missing results remain unavailable.
+Daily/weekly schedules and tone analysis are explicit application actions with their own budget
+and authorization; this CLI flow never enables them. A standalone `run --input` remains supported
+for one-off reports in History.
+
+Use `wait`, `show`, `export`, and `saved` commands for readback. No paid scorer or automatic paid retry is added. Terminal provider failures release customer reservations; unknown supplier costs remain internal.
 A collected readable answer can still vary in quality. Saving or launching queues free favicon discovery;
 reading reports and cached images never fetches competitor sites.
 

@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.36.0`
+Package: `@siteoshq/cli@2.37.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -149,7 +149,7 @@ siteos seo research status --kind <kind> [--environment <slug>] [--json]
 siteos seo research history --kind <kind> [--environment <slug>] [--json]
 siteos seo research show <run-id> [--environment <slug>] [--json]
 siteos seo research plan --input <request.json> [--environment <slug>] [--json]
-siteos seo research run --input <request.json> [--idempotency-key <key>] [--environment <slug>] [--json]
+siteos seo research run --input <request.json> [--set <saved-id> --revision <revision>] [--idempotency-key <key>] [--environment <slug>] [--json]
 siteos seo research retry <run-id> [--idempotency-key <key>] [--environment <slug>] [--json]
 siteos seo research wait <run-id> [--timeout <seconds>] [--environment <slug>] [--json]
 siteos seo research cancel <run-id> [--environment <slug>] [--json]
@@ -159,7 +159,7 @@ siteos seo research serp ensure <run-id> --keyword <word> [--environment <slug>]
 siteos seo research serp wait <run-id> --keyword <word> [--timeout <seconds>] [--environment <slug>] [--json]
 siteos seo research serp export <run-id> --keyword <word> --format <json|csv> --output <new-file> [--environment <slug>] [--json]
 siteos seo research saved list --kind <kind> [--environment <slug>] [--json]
-siteos seo research saved save --input <request.json> --name <name> [--id <saved-id>] [--environment <slug>] [--json]
+siteos seo research saved save --input <request.json> --name <name> [--id <saved-id>] [--visibility <settings.json>] [--environment <slug>] [--json]
 siteos seo research saved remove <saved-id> [--environment <slug>] [--json]
 siteos seo gsc status [--environment <slug>] [--json]
 siteos seo gsc report [--dataset <pages|queries>] [--query <text>] [--filter <all|issues|declining>] [--sort <clicks|change|impressions>] [--page <number>] [--url <page-url>] [--environment <slug>] [--json]

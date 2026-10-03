@@ -243,3 +243,8 @@ than treating every low CTR as a title problem. Cross-reference audit findings o
 GSC alone does not prove conversions or revenue. If the user requests that connection, use independently
 measured Analytics evidence and explain attribution limits. Never substitute synthetic or example data
 for a missing report.
+
+For persistent AI Visibility sets, follow [AI Visibility](ai-visibility.md#ai-visibility):
+`saved save --visibility <settings.json>` saves the question catalog and revision, then
+`run --set <saved-id> --revision <revision>` links the authorized observation to that set.
+Saving never enables a recurring schedule or runs a check.
