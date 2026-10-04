@@ -48,13 +48,17 @@ for the required capability.
 
 ## Execute through MCP and CLI
 
-For a request to show or review a saved technical Site Audit in Codex or another MCP App host,
-prefer `siteos_open_project_panel` for the authorized Organization and Project: Production is
-automatic. Keep chat to key findings and next steps instead of repeating the displayed report.
-Follow the shared contract for text/export requests, unsupported hosts and explicitly requested
-non-Production environments. For supporting technical evidence or headless analysis, use
-`siteos_seo_get_audit`; neither path is a mandatory first step for research. Research history/show/export, plan/run/wait, audits, Performance
-and GSC use the SEO CLI where those operations are absent from MCP.
+For every saved SEO/GEO check in Codex or another MCP App host, prefer `siteos_open_project_panel`
+with the exact Organization, Project, `section` and known check ID. Use the
+[section and report-ID mapping](../siteos/references/mcp-and-cli.md#show-saved-reports-beside-the-conversation):
+technical audit, content, Performance, Search Console/indexing, keywords, rankings, domain,
+backlinks, AI Visibility, Prompt checks, Brand lookup and saved recommendations share one panel.
+Production is automatic. After an authorized CLI check finishes, open its exact result in the
+matching section. Keep chat to key findings and next steps instead of repeating the displayed report.
+Follow the shared contract for text/export requests, unsupported hosts and non-Production targets.
+Supporting technical reads use `siteos_seo_get_audit`; panel reads are not a mandatory first step
+before research. Plan/run/wait, setup, paid launches, settings and exports still use the existing
+SEO CLI or documented application capability when absent from MCP.
 CLI requests use the authenticated SiteOS API and its workers, with the same scope and accounting
 as the application. Do not use computer-use or browser clicks in SiteOS to run or read these checks.
 
@@ -79,7 +83,7 @@ or stop after reading a technical audit. Keep focused requests on their selected
 | Selected-page Lighthouse checks | SEO CLI and Site Audit / Performance | [Performance](references/performance.md) |
 | Keyword research with trends and saved SERPs, Domain Overview (keywords/pages/competitors), rank tracking, backlinks, GSC Insights | SEO research/GSC CLI, interface or exports | [Search research](references/search-research.md) |
 | AI Visibility: compare products on shared questions | Category history/saved inputs: `--kind ai-rankings`; plan/run: `kind: ai-visibility` plus `category` | [AI Visibility comparison](references/ai-visibility.md#ai-visibility) |
-| Work from a saved AI Visibility action plan | User-supplied full AI brief or application report export; generation is application-only | [Saved recommendations](references/ai-visibility.md#saved-recommendations) |
+| Work from a saved AI Visibility action plan | Saved recommendations panel, full AI brief or application report export; generation is application-only | [Saved recommendations](references/ai-visibility.md#saved-recommendations) |
 | Prompt checks: inspect a sampled question across platforms | History: `--kind ai-visibility`; plan/run: `kind: ai-visibility` plus `prompt` | [AI evidence](references/ai-visibility.md) |
 | Brand lookup: corpus mentions and citations | History and plan/run: `brand` | [AI evidence](references/ai-visibility.md) |
 
@@ -159,5 +163,6 @@ publication. Opening a panel or starting an audit does not silently subscribe.
 Events are documented for Work web chats, desktop Work with Cloud selected, and dots. Do not claim
 local Codex background delivery without host support. If Events are absent, explain the limit;
 the open panel still refreshes active audits. Do not create a recurring watcher without the user's
-request. **Enable audit access** opens host consent where supported; connecting only enables the
-separate **Start audit** action. An older read-only client may need reconnecting in the host.
+request. Audit permission is requested during connection setup. An older read-only client may
+need reconnecting in the host; the panel has no separate access-enablement button. The separate
+**Start audit** action still requires the granted scope and current SEO authority.

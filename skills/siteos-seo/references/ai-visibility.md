@@ -113,9 +113,10 @@ attempt using the same report, custom context and pages; it does not rerun the c
 separate paid work, never automatic. Do not start a new paid comparison just to retry a plan.
 Background activity follows generation and links back to that report's Recommendations tab.
 
-The current CLI/MCP surface does not generate or retrieve saved recommendation plans. Do not
-invent a command or operate the SiteOS UI to fill this gap. Work from a supplied **Copy full AI brief**
-handoff or application report export; individual **Copy AI brief** actions remain available.
+Use `siteos_open_project_panel` with `section: "recommendations"` and the source research run ID
+as `reportId` to read a saved plan beside the conversation. Generation remains application-only;
+do not invent a CLI command or operate the SiteOS UI through automation. A supplied **Copy full AI brief**
+handoff or application report export is also supported; individual **Copy AI brief** actions remain available.
 The full brief retains all actions, steps, verification, cited evidence and limitations.
 The branded PDF and JSON export include the saved plan. Viewing, copying and exporting do not
 generate or charge for another plan.

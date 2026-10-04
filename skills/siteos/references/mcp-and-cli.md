@@ -54,27 +54,49 @@ observations never stand in for Analytics counts or verified business conversion
 
 ## Show saved reports beside the conversation
 
-In Codex or another host with MCP App rendering, prefer `siteos_open_project_panel` when the user
-asks to show or review a saved **technical SEO Site Audit**. Resolve the authorized Organization
-and Project, then pass their IDs and an optional saved `auditId`; the panel selects **Production**
-automatically. If the target is not yet known, open the tool without arguments so the user can
-choose the Organization and Project. Do not ask for an Environment for this panel.
+In Codex or another host with MCP App rendering, prefer `siteos_open_project_panel` for every
+saved **SEO/GEO** report. It opens one **SiteOS · SEO/GEO** panel with internal sections. Resolve the
+authorized Organization and Project, pass their IDs and the workflow's `section`, then pin a known
+saved check using the identifier below. Production is automatic. With no IDs the panel offers the
+Project selector; do not ask for an Environment for this panel.
 
-The panel is Production-only. For an explicitly requested Staging/preview report, keep that exact
-environment and use `siteos_seo_get_audit` plus its SiteOS link instead. Never substitute Production
-for an explicit different target. If Production or its SEO binding is unavailable, explain the
-returned state; do not provision a service, switch environments or start an audit to fill the panel.
+| Requested result | `section` | Optional exact selection |
+| --- | --- | --- |
+| Overall saved evidence | `overview` | No check ID |
+| Technical audit / repair verification | `site-audit` | `auditId` |
+| AI content / metadata / copy checks | `content` | `reportId`: content scan ID |
+| Lighthouse Performance | `performance` | `reportId`: batch ID; `device`: `mobile` or `desktop` |
+| Google search queries/pages | `search-console` | `dataset`: `queries` or `pages`; `reportId` guards the current saved report |
+| Google indexing | `indexing` | `reportId` guards the current inspection run |
+| Keyword research | `keywords` | `reportId`: research run ID |
+| Rank tracking | `rankings` | `reportId`: research run ID |
+| Domain Overview / competitors | `domain` | `reportId`: research run ID |
+| Backlinks | `backlinks` | `reportId`: research run ID |
+| Category AI Visibility | `ai-visibility` | `reportId`: category research run ID (CLI history kind `ai-rankings`) |
+| Individual Prompt checks | `prompt-checks` | `reportId`: single-prompt run ID (CLI history kind `ai-visibility`) |
+| Indexed Brand lookup | `brand` | `reportId`: research run ID |
+| Saved AI Visibility recommendations | `recommendations` | `reportId`: **source research run** ID, not the recommendation job ID |
 
-After the panel returns, keep chat to the key findings, coverage/date limitations and the next
-useful action. Do not duplicate the panel's issue list or full report in chat. Read additional
-saved evidence when the requested analysis needs details beyond the bounded panel. An explicit
-request for a text report or export still takes precedence. If the host cannot render the panel,
-the tool is absent, or rendering fails, use the supported read result and canonical link for a
-concise text report; do not claim a panel opened without evidence of host support.
+`page` reads another bounded page of saved evidence. Search Console and indexing currently expose
+the native current saved view: an obsolete ID is rejected, never replaced silently. Research,
+content and Performance have saved check selection. Report metadata and limitations belong to the
+selected source, not an aggregate across different markets, models or dates.
 
-This render tool covers technical Site Audit only. Analytics, Trace, Pulse, paid content checks,
-Performance, GSC and SEO research retain their existing tools and reporting paths. Do not route
-those reports into the technical-audit panel or invent an unsupported service view.
+After an authorized CLI check finishes, open the matching section with its returned ID. Also use
+this mapping when the user asks to inspect an existing result; do not open the technical audit for
+an unrelated SEO workflow. Keep chat to interpretation, coverage/date limitations and next steps,
+without repeating the full displayed report. For AI recommendation work, read additional saved
+evidence or the complete export when the bounded panel omits details.
+
+The panel is Production-only. For an explicitly requested Staging/preview report, keep the exact
+environment and use its existing headless tools/CLI and canonical link. Never substitute Production.
+Missing Production, permissions, a Google connection or saved evidence does not authorize setup,
+account linking, synchronization or a new paid check. The existing CLI remains the path for
+explicitly authorized operations not exposed as panel actions. Do not use UI automation for them.
+
+An explicit text/export request takes precedence. If the tool is absent or the host cannot render
+it, use the supported read result and canonical link for a concise report; do not claim the panel
+opened without host evidence. Analytics, Trace and Pulse still use their existing reporting paths.
 
 Opening a report performs reads only. **Start audit** is a user action in the panel, requires
 `siteos:mcp:seo-audits:write` plus current SEO authority, and only starts a technical HTML audit
