@@ -97,9 +97,12 @@ model and search settings independently; an aggregate score must not hide an una
 ### Saved recommendations
 
 Completed or partial `category-mentions-v3` reports offer a **Recommendations** tab. Generation
-reuses the saved questions, answers, product and market context and reviews the homepage by
-default. There is no need to enter the questions again. **Customize analysis** optionally adds
-context and up to five same-origin public pages.
+reuses the saved questions, answers, product and market context and reviews the homepage plus up
+to four pages suggested from the latest site audit by matching the report's questions. There is no
+need to enter the questions again. **Pages to review** lets the user change that selection or add
+same-origin public pages, up to five in total; **Add context (optional)** adds context. Each saved
+action names its kind (update page, create content, off-site or a final measurement) and, for page
+updates, the reviewed target page.
 
 An owner or administrator explicitly selects **Generate action plan** in the application.
 This is separate paid work: it reserves up to $1 from the Organization's shared SEO balance,
