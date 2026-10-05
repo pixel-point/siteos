@@ -2,14 +2,14 @@
 
 This repository distributes the public SiteOS Agent plugin: one installation with an orchestrator and focused skills for the unified CLI, common Projects, Auth, Pulse, Cookie, Forms, Search, Trace, SEO/GEO, Analytics, Storage, and Integrations.
 
-Release: 2.53.0.
+Release: 2.53.1.
 
 ## Install
 
 ### Codex
 
 ```sh
-codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v2.53.0
+codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v2.53.1
 codex plugin add siteos@siteos
 ```
 
@@ -31,6 +31,31 @@ npx skills add pixel-point/siteos --all
 ```
 
 This installs the complete suite in one command so the orchestrator can route to every sibling skill.
+
+## Update
+
+The plugin's skills are installed files. Hosted MCP tools and panels are delivered by the SiteOS server; a server deployment does not replace installed skills or update the separately installed `@siteoshq/cli`.
+
+### Codex
+
+The installation above pins a release tag. Refreshing that marketplace keeps the same tag; it does not select the next release. To move an existing installation to the release documented here, replace its SiteOS marketplace registration and install the refreshed package:
+
+```sh
+codex plugin marketplace remove siteos
+codex plugin marketplace add https://github.com/pixel-point/siteos.git --ref v2.53.1
+codex plugin add siteos@siteos
+```
+
+If you deliberately configured the marketplace with `--ref main`, refresh that branch's snapshot before installing:
+
+```sh
+codex plugin marketplace upgrade siteos --json
+codex plugin add siteos@siteos --json
+```
+
+Run `codex plugin list --json` and verify the expected SiteOS version is installed and enabled. Start a new Codex session to load the updated skills. A new session loads the installed bundle; it does not itself update that bundle.
+
+When a workflow requires a newer CLI, update it separately with `npm install --global @siteoshq/cli@latest`, then check `siteos --version` and the required subcommand's `--help`. See the [CLI skill](skills/siteos-cli/SKILL.md) for PATH and installation checks.
 
 ## Skills
 

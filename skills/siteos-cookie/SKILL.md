@@ -264,12 +264,39 @@ snippet, then run another scan to verify.
 
 ## Automatic blocking
 
-For a direct installation, `draft.blocking = {"mode":"auto"}` makes catalogued scripts, iframes and
-pixels of the selected services wait for consent without marking them in code. After publishing,
-use `snippet` (it switches to the blocking loader) or `delivery.blockingSnippet` from
-`cookie installation --json` and place it first in `<head>`. It does not
-block inline code, server-side tags or fetch/beacon calls, and GTM channels cannot use it. Verify
-with a cloud scan; publishing without `blocking` restores the ordinary loader.
+For a direct installation, `draft.blocking = {"mode":"auto"}` compiles rules from selected catalog
+services and enabled custom services with configured origins and `activationStrategy: "after-consent"`.
+Matching scripts, iframes and image pixels are held for activation until the runtime permits the
+service under the regional policy and visitor choices, including applicable GPC. Necessary services,
+native SiteOS Analytics and the known Google services in Advanced Consent Mode are excluded.
+The Google rules target `gtag/js` with the service's ID prefixes, not the GTM container.
+
+Confirmed scan inventory can supply origins when `apply` creates a **new** custom vendor service:
+it copies up to 20 unique HTTPS origins from that vendor's confirmed request items into
+`lifecycle.scriptOrigins`. Cookies or storage items alone supply no request origins. Existing custom
+services are not enriched; review and edit their lifecycle origins separately when needed. Confirm
+the vendor and purpose with the owner, review `plan`, then apply to the draft. A scan, proposal or
+inventory application alone does not publish or enable blocking. Review shared hosts carefully:
+ordinary rules cover every path on the exact hostname; other subdomains do not match.
+
+After reviewing and publishing the draft, use the top-level `snippet` from
+`cookie installation --json`. Its selection follows the current draft, so receiving a blocking
+snippet does not prove that blocking rules are published. Verify the active published revision.
+Keep the synchronous blocking loader early in `<head>`, before vendor resources, without `async`
+or `defer`. Preserve any prepended GPP stub: raw `delivery.blockingSnippet` omits that stub.
+GTM installations and the inline recovery snippet do not deliver the blocker.
+
+This is bounded browser interception. It cannot undo executed scripts or control inline code,
+server-side tags, fetch/beacon calls or pixels created with `new Image()`. Explicit
+`data-siteos-cookie-ignore` resources bypass it. Parser preload can download a script before its
+execution is held, and parser-created iframe/image requests may start before interception; do not
+promise zero requests before consent or classify a script request alone as an execution leak.
+
+Cookie Edge returns the ordinary loader if published rules or the blocker asset cannot be loaded,
+so a visible banner does not prove blocking is active. Verify on a fresh page with a cloud scan
+and browser execution/storage evidence before and after the relevant visitor choices. Loader
+responses can be cached for five minutes. Publishing without `blocking` removes the blocker from
+subsequent loader responses after cache refresh; it does not remove interception from an open page.
 
 ## US privacy signals (IAB GPP)
 
