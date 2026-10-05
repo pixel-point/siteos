@@ -53,11 +53,15 @@ Project creation, offer the report setup rather than silently buying research.
 Use `$siteos-seo` and its supported CLI commands. First inspect saved audits/research: the web wizard
 may already have queued the initial reports. Read/wait on those IDs instead of duplicating them.
 For a new CLI-created Project with no preparation, explicitly connect SEO, enqueue one technical audit,
-study the public homepage, and prepare one competitor request for that domain and an evidenced market.
-Prepare up to three neutral website-derived questions and one `category-mentions-v3` AI Visibility
-sample on ChatGPT with at most three competitors from the returned evidence. Validate the request
+study the public homepage and up to four key pages it links to (pricing, features, solutions, about,
+docs), and prepare one competitor request for that domain and an evidenced market. Prepare up to five
+website-derived questions: at least three neutral discovery questions and at most two comparison
+questions that never name the user's own brand. Choose up to four direct competitors a customer would
+compare, with real names, official domains and aliases; prefer those also found by the competitor
+request, drop the own domain, duplicates and sites that do not respond publicly. Run one
+`category-mentions-v3` AI Visibility sample on ChatGPT, Perplexity and Gemini. Validate the request
 through `research plan`, then run under stable idempotency keys and read its saved results. Follow
-SEO's exact current request schema; do not invent an onboarding endpoint or launch extra platforms,
+SEO's exact current request schema; do not invent an onboarding endpoint or launch other platforms,
 backlinks, Performance, content scans, schedules or outreach. Inaccessible evidence stays unknown.
 
 Return a short useful summary: audited-page coverage, the most actionable finding, leading observed

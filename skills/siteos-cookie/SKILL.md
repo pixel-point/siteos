@@ -145,7 +145,7 @@ For standard shared-origin delivery the generated direct snippet contains only `
 
 Install one loader through the site's chosen direct/framework/GTM channel. Remove a replaced CMP only as part of the authorized migration and verify that it no longer loads. Published design changes arrive through configuration. Use the server-generated snippet: current direct installs use the stable `cookie-loader.js` address without a customer-managed version. The loader selects the runtime cache generation internally; HTTP headers set the five-minute cache. Older `cookie-loader.js?v=12` installs remain supported. Cookie → Installation → Loading recovery provides an optional complete inline replacement that also handles the first external runtime request failing. Replace the short snippet; never install both. Without inline recovery, a failed external-loader download cannot retry itself. Keep optional scripts inert or explicitly consent-gated in both variants. GTM templates retain their native recovery and consent-default handling. Old runtime installations cached under the previous one-year policy need a one-time upgrade to the generated snippet. Do not claim that deploying a new runtime updates every browser that cached an older URL.
 
-Read the deployed catalog with `npx @siteoshq/cli cookie services list --json`; it includes Google, advertising, analytics and CRM presets plus project custom services. Use `npx @siteoshq/cli cookie discover --json` and the [service discovery workflow](references/service-discovery.md) during setup. Selecting a service describes its policy; it does not provision its tracking IDs, install its vendor code, or block every independently loaded script. Inventory and gate each optional resource before execution. Runtime cleanup covers managed resources and reviewed adapters; code that has already run can require a controlled reload on withdrawal. Preserve necessary forms, authentication and explicitly requested support actions separately from optional tracking.
+Read the deployed catalog with `npx @siteoshq/cli cookie services list --json`; it includes Google, advertising, analytics and CRM presets plus project custom services. Use `npx @siteoshq/cli cookie discover --json` and the [service discovery workflow](references/service-discovery.md) during setup. Selecting a service describes its policy; it does not provision its tracking IDs, install its vendor code, or block every independently loaded script. Inventory and gate each optional resource before execution. Runtime cleanup covers managed resources and reviewed adapters; runtime 11.11+ also stops Meta Pixel, TikTok Pixel, Microsoft Clarity, Microsoft Ads, HubSpot tracking, PostHog and Mixpanel through their documented consent APIs. Other code that has already run can require a controlled reload on withdrawal. Preserve necessary forms, authentication and explicitly requested support actions separately from optional tracking.
 
 For native **SiteOS Analytics**, set `draft.integrations.siteosAnalytics: true` while preserving `googleConsentMode` and all other draft fields. This is the **Cookie → Services → SiteOS Analytics → Control with Cookie** switch. Publish the reviewed change only when authorized; read back the active revision. Both services must be explicitly attached to the same Project environment. The switch controls detailed pageviews/custom events according to the resolved regional policy and visitor choice, including withdrawal. It does not install Analytics or enable it merely by attaching Cookie. With the switch off (the default), Analytics collects independently. With control enabled, its description is automatically included under each region’s enabled Analytics purpose; no duplicate custom service is needed. Its separately enabled minimal page counter remains independent of consent; detailed Cookie interaction events always require an explicit Analytics grant. Use `$siteos-analytics` for installation, custom events and reports, and verify both script load orders.
 
@@ -163,7 +163,7 @@ For GTM:
 
 1. Prefer the importable SiteOS custom template from the application origin's `/integrations/gtm/siteos-cookie.tpl`. Copy its public key, runtime, config, analytics and receipts URLs from `cookie installation`. Do not claim a Community Template Gallery listing unless it has been verified.
 2. Set **Consent Initialization – All Pages**. The template sets denied defaults synchronously with `setDefaultConsentState` and forwards runtime updates with `updateConsentState`; do not replace those APIs with queued `gtag` consent updates in Custom HTML.
-3. Configure consent checks and triggers for each Google and non-Google tag. Blocked tags must be able to fire on the same page after consent; merely changing a consent state does not guarantee every blocked tag is retriggered. Verify actual events and requests in Tag Assistant.
+3. Configure consent checks and triggers for each Google and non-Google tag. `cookie installation --json` returns `gtmRecipes` for GTM channels: the custom event and, for non-Google tags, the `siteosServicePermissions.<service>.allowed` Data Layer Variable for each configured service. Follow them instead of inventing trigger names. Blocked tags must be able to fire on the same page after consent; merely changing a consent state does not guarantee every blocked tag is retriggered. Verify actual events and requests in Tag Assistant.
 4. Audit optional scripts outside GTM too. The container cannot retroactively prevent an earlier script from executing. Test fresh and returning visits, delayed/blocked CMP loading, GPC, refusal and withdrawal before publishing the container.
 
 A template installation and a container publication are separate actions. This CLI does not inspect or edit GTM containers; use an available authorized GTM tool or provide exact manual instructions. Do not publish a container without user authorization. Gallery distribution is separate from Google CMP certification/IAB TCF support; do not claim either from a working Consent Mode integration.
@@ -208,6 +208,8 @@ is missing. Do not treat an accepted queue response as a completed scan.
 For an authorized scan, use `cookie scans run --idempotency-key <uuid> --json`; retain that UUID if
 retrying an uncertain response. Read the returned ID with `cookie scans inspect --id <id> --json`
 until terminal. Review pages, incomplete scenarios, issues and unclassified observations separately.
+Report `classifications` are advisory: use their source, confidence and reference details to
+research unknown storage, never as proof of a vendor, purpose or consent outcome.
 The browser exercises first visit, rejection, acceptance, withdrawal and GPC; synthetic visits may
 appear in analytics/consent records. Values and payloads are excluded. Unknown storage/origins need
 review and do not prove a consent violation. Partial evidence cannot establish recovery.
@@ -219,3 +221,35 @@ read-only `revision`, `origin`, `nextRunAt`, `pausedReason`. Preserve the inspec
 never enable another site's schedule or enlarge its scope implicitly. Read back the saved settings.
 Notifications use configured Integrations destinations in the Scans UI; CLI has no destination-write
 command. A manual pass does not prove scheduled execution, delivery or legal compliance.
+
+## Cookie inventory
+
+CLI 2.38.0 and a compatible hosted application expose `cookie inventory list`, `review --input`
+and `apply --expected-draft-version`. The inventory combines finished scans of the selected
+Project environment into cookies, storage and third-party service requests with an advisory
+`proposal`. Workspace viewers can read it; reviewing and applying need Cookie draft authority.
+
+Review input is `{"items":[{"id":"…","expectedVersion":1,"action":"confirm"}]}` with up to 100
+items. `confirm` may set `serviceKey` (a listed option or `null`), `vendor` for a new service and
+`purposeKey`; `ignore` and `reset` take no extra fields. Confirm only what the evidence and the
+website owner support; never confirm a vendor or purpose from a name alone.
+
+`apply` uses the `draftVersion` from `list` and saves only service-level changes: missing catalog
+presets and new custom services for confirmed vendors with an HTTPS privacy URL. It never
+publishes; review and publish the draft separately. A conflict means the draft changed.
+
+## Cookie Declaration
+
+Confirmed inventory items become rows of the public Cookie Declaration when applied to the draft;
+draft rows live in `declaration.items` and never request a new visitor choice. After publication,
+`cookie installation --json` returns `declarationSnippet`: place it on the privacy page where the
+table should appear. It loads the published rows from Cookie Edge and adds a button that reopens
+preferences. Do not invent row descriptions; use the evidence or leave them for the owner.
+
+## Automatic blocking
+
+For a direct installation, `draft.blocking = {"mode":"auto"}` makes catalogued scripts, iframes and
+pixels of the selected services wait for consent without marking them in code. After publishing,
+use `blockingSnippet` from `cookie installation --json` and place it first in `<head>`. It does not
+block inline code, server-side tags or fetch/beacon calls, and GTM channels cannot use it. Verify
+with a cloud scan; publishing without `blocking` restores the ordinary loader.
