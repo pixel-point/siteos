@@ -230,9 +230,11 @@ Project environment into cookies, storage and third-party service requests with 
 `proposal`. Workspace viewers can read it; reviewing and applying need Cookie draft authority.
 
 Review input is `{"items":[{"id":"…","expectedVersion":1,"action":"confirm"}]}` with up to 100
-items. `confirm` may set `serviceKey` (a listed option or `null`), `vendor` for a new service and
-`purposeKey`; `ignore` and `reset` take no extra fields. Confirm only what the evidence and the
-website owner support; never confirm a vendor or purpose from a name alone.
+items. `confirm` may set `serviceKey` (a listed option or `null`), `vendor` for a new service,
+`privacyUrl` (the vendor's HTTPS privacy policy, which a new service needs when the proposal has
+none) and `purposeKey`; `ignore` and `reset` take no extra fields. Take the link from the vendor's
+own website, never guess it. Confirm only what the evidence and the website owner support; never
+confirm a vendor or purpose from a name alone.
 
 `apply` uses the `draftVersion` from `list` and saves the inventory plan to the draft: missing
 catalog presets, new custom services for confirmed vendors with an HTTPS privacy URL, and Cookie
@@ -268,3 +270,14 @@ use `snippet` (it switches to the blocking loader) or `delivery.blockingSnippet`
 `cookie installation --json` and place it first in `<head>`. It does not
 block inline code, server-side tags or fetch/beacon calls, and GTM channels cannot use it. Verify
 with a cloud scan; publishing without `blocking` restores the ordinary loader.
+
+## US privacy signals (IAB GPP)
+
+For US advertising partners such as Google AdSense, set `draft.gpp = {"mspa":"not-signatory"}`
+and publish when authorized. It reports sale/sharing, targeted advertising and GPC through the IAB
+GPP `__gpp` API (US National section) and never asks visitors to choose again. Use
+`"opt-out-option"` or `"service-provider"` only when the owner confirms their company signed the
+IAB MSPA. With the website script, use the `snippet` from `cookie installation --json`: it starts
+with `cookie-gpp-stub.js`, which must stay before advertising tags. GTM installations need that stub
+added to the page head outside GTM. Verify with `__gpp("ping", console.log)` on a US visit. GPP does
+not cover EEA advertising, which needs IAB TCF and a Google-certified CMP; SiteOS does not claim either.
