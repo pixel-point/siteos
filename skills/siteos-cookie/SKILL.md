@@ -234,22 +234,37 @@ items. `confirm` may set `serviceKey` (a listed option or `null`), `vendor` for 
 `purposeKey`; `ignore` and `reset` take no extra fields. Confirm only what the evidence and the
 website owner support; never confirm a vendor or purpose from a name alone.
 
-`apply` uses the `draftVersion` from `list` and saves only service-level changes: missing catalog
-presets and new custom services for confirmed vendors with an HTTPS privacy URL. It never
-publishes; review and publish the draft separately. A conflict means the draft changed.
+`apply` uses the `draftVersion` from `list` and saves the inventory plan to the draft: missing
+catalog presets, new custom services for confirmed vendors with an HTTPS privacy URL, and Cookie
+Declaration rows for confirmed cookies and storage. Read `plan` from `list` first to see what will
+change. It never publishes; review and publish the draft separately. A conflict means the draft
+changed.
 
 ## Cookie Declaration
 
 Confirmed inventory items become rows of the public Cookie Declaration when applied to the draft;
-draft rows live in `declaration.items` and never request a new visitor choice. After publication,
-`cookie installation --json` returns `declarationSnippet`: place it on the privacy page where the
-table should appear. It loads the published rows from Cookie Edge and adds a button that reopens
-preferences. Do not invent row descriptions; use the evidence or leave them for the owner.
+draft rows live in `declaration.items` (at most 300) and never request a new visitor choice. Each
+row has `key` (`d-` plus lowercase letters, digits and hyphens, unique), `storage` (`cookie`,
+`local-storage`, `session-storage` or `indexed-db`), `name`, `match` (`exact` or `prefix`),
+optional `domain` (cookies only), `party` (`first` or `third`), `lifetime`, `serviceKey` (a selected
+service or `null`), `purposeKey` and optional `description` by locale. Preserve existing rows when
+editing; add rows from inventory evidence rather than guesses.
+
+After publication, `cookie installation --json` returns `delivery.declarationSnippet`: place it on
+the cookie or privacy policy page where the table should appear, and link that page from the
+banner's privacy policy URL. It loads the published rows from Cookie Edge, follows the page
+language and adds a button that reopens preferences. Do not invent row descriptions; use the
+evidence or leave them for the owner.
+
+End-to-end from chat: run and inspect a cloud scan, read `cookie inventory list`, confirm or ignore
+items with the owner, `apply`, review the draft diff, publish when authorized, place the declaration
+snippet, then run another scan to verify.
 
 ## Automatic blocking
 
 For a direct installation, `draft.blocking = {"mode":"auto"}` makes catalogued scripts, iframes and
 pixels of the selected services wait for consent without marking them in code. After publishing,
-use `blockingSnippet` from `cookie installation --json` and place it first in `<head>`. It does not
+use `snippet` (it switches to the blocking loader) or `delivery.blockingSnippet` from
+`cookie installation --json` and place it first in `<head>`. It does not
 block inline code, server-side tags or fetch/beacon calls, and GTM channels cannot use it. Verify
 with a cloud scan; publishing without `blocking` restores the ordinary loader.
