@@ -48,16 +48,20 @@ Set `draft.banner.preferencesAccess` to `"custom-link"`, preserving the rest of 
 links or buttons to every affected page, including mobile navigation and SPA routes:
 
 ```html
-<a href="#cookie-settings" data-siteos-cookie-preferences>Cookie settings</a>
-<a href="#privacy-choices" data-siteos-cookie-privacy-choices>Your privacy choices</a>
+<a href="#privacy-choices" data-siteos-cookie-privacy-choices style="display:inline-flex;align-items:center;gap:6px">
+  <!-- official California opt-out icon: copy Studio's snippet, which includes the SVG -->
+  Your privacy choices
+</a>
 ```
 
-Both links open the one preferences surface; the second starts at the sale/share and
-targeted-advertising opt-outs. There is one floating control: for visitors in the US or an unknown
+One link is enough (runtime 11.14.0): it opens the preferences everywhere and starts at the
+sale/share and targeted-advertising opt-outs for US visitors. A legacy `data-siteos-cookie-preferences`
+link keeps working. There is one floating control: for visitors in the US or an unknown
 location with services mapped to those purposes it shows "Your privacy choices" text with the
 official California opt-out icon (US law needs both) unless a usable privacy-choices link is present;
-elsewhere it is an icon. A custom "Your privacy choices" link needs that official icon beside it. It hides
-only while every needed custom control is present. Missing, hidden, disabled or negative-tabindex controls retain the floating fallback.
+elsewhere it is an icon. A custom "Your privacy choices" link needs that official icon beside it. A
+usable privacy-choices link hides the floating control; missing, hidden, disabled or negative-tabindex
+controls retain the floating fallback.
 Route changes recheck availability. Do not remove the fallback through CSS.
 
 `SiteOSCookie.openPreferences()` and `SiteOSCookie.openPrivacyChoices()` remain available for
