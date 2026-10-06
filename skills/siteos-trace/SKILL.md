@@ -118,7 +118,7 @@ Do not add observation of cookies, storage, DOM text, form values, payload value
 For `installation save`, write `{ "expectedDraftVersion": <current version>, "draft": <complete draft> }`.
 Read the current installation first and preserve its draft fields: `providers` (a list containing
 `siteos_analytics`, `ga4`, `google_ads`, `hubspot`, `meta`, `zoominfo`, `linkedin`, `clarity` or `custom`), `sampleRate`, `maxBatchSize`, `consentMode`
-(`disabled`, `explicit_adapter`, `google_consent_mode` or `siteos_cookie`), nullable `releaseLabel` and, when
+(`disabled`, `explicit_adapter`, `google_consent_mode`, `iubenda` or `siteos_cookie`), nullable `releaseLabel` and, when
 present, `collectionPolicy` and `collectionStart`. Use the existing defaults unless the task calls for a reviewed change.
 `collectionStart` is `immediate` (default, also when absent) or `after_consent`: Trace then keeps
 and sends nothing until the consent source grants analytics, starts on the grant and stops on
@@ -132,7 +132,7 @@ cannot read the published configuration with discovery, so after publication ins
 snippet. Do not disable consent handling as an automatic workaround for missing observations.
 
 Consent modes have distinct evidence sources: `siteos_cookie` reads the SiteOS banner’s public state on the same page, `google_consent_mode` observes supported data-layer
-consent commands, `explicit_adapter` uses the application's explicit consent evidence, and
+consent commands, `iubenda` reads public Measurement/Marketing permissions (runtime 0.10+), `explicit_adapter` uses the application's explicit consent evidence, and
 `disabled` records unknown consent. Selecting an adapter does not configure a vendor tag or forward
 events. Check enabled providers and sampling before interpreting absent traffic. A saved draft does
 not affect the live runtime until publication. Runtime 0.2.1 adds bounded GA4 single-event POST

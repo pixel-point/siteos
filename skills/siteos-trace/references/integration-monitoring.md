@@ -123,3 +123,13 @@ an authorized upgrade. Installing a newer plugin or deploying the server does no
 website snippet. Use the exact returned snippet/SRI and preserve intentional provider exclusions.
 Publish customer/GTM configurations only within the requested Project/environment scope. Exercise
 faulty consent or repeat scenarios in controlled fixtures, not on production visitor journeys.
+
+### iubenda
+
+Use `consentMode: "iubenda"` with runtime 0.10+. The current installation snippet reads iubenda's
+public Measurement/Marketing permissions on the same page; no provider credentials or custom
+getter are required. Save and publish explicitly, then replace an older snippet. Keep strict
+collection and Immediate/After analytics consent as separate choices. Late attachment provides
+permission snapshots but cannot invent missed ready/grant/withdrawal callbacks. Verify runtime,
+published revision and real before-choice/grant/withdrawal requests on the selected environment;
+local synthetic adapter tests are not hosted acceptance.
