@@ -16,7 +16,7 @@ Trace 0.6 observes supported Google tag, Meta pixel and HubSpot loader signature
 destination pixels. Native SiteOS Analytics has its own event evidence. Trace 0.7 added selected
 ZoomInfo, LinkedIn Insight and Microsoft Clarity request and loader signatures; filters use
 `zoominfo`, `linkedin` and `clarity`. Runtime 0.8 recognizes them, and any other third-party
-service, through vendor discovery (on by default; the website needs the 0.8 snippet): the shared
+service, through vendor discovery (always on; the website needs the 0.8 snippet): the shared
 vendor registry names a cross-site request or script, image or frame load from its hostname, and Trace stores only the vendor id and registrable
 domain. Discovered services show activity without event names, rules, SDK checks or coverage-matrix
 capabilities; analytics and marketing vendors observed while that purpose was denied raise generic
@@ -25,6 +25,18 @@ adapter. A custom service or GTM name does not add an adapter. Resource Timing d
 Only known start-time consent/route context supports resource consent conclusions; buffered or
 unknown-context entries remain inconclusive. Fetch/XHR/Beacon copies are excluded from resource
 counts, and a request plus its terminal result is one operation.
+
+## Service map
+
+`siteos_trace_get_services` or `siteos trace services --environment <slug> [--period 24h|7d] --json`
+returns one row per service: mapped live GTM tags, real traffic for the period (events, page views,
+last seen, consent), the latest Cookie scan items and the Cookie banner declaration. Each fact
+keeps its own source and date; a GTM tag does not prove the service runs, traffic does not prove
+it is declared, and a missing Cookie column (`null`) means Cookie is not attached or the
+connection lacks Cookie read. GTM tags are mapped only by template type or the hosts their Custom
+HTML loads, never by name; read `tagManager.unmappedTags` before claiming a tag has no service.
+An `unrecognized` row is a registrable domain only: research it before describing it. Use the
+row's `reference` as the Browser activity filter and as Cookie's review identity.
 
 Read resource evidence through `siteos_trace_list_observations` with `kind: "resource"`, or
 `siteos trace observations --kind resource --environment <slug> --json`. Read findings through

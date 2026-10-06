@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.39.0`
+Package: `@siteoshq/cli@2.40.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -92,6 +92,7 @@ siteos trace status [--json]
 siteos trace environments [--json]
 siteos trace report [--environment <slug>] [--json]
 siteos trace coverage [--environment <slug>] [--json]
+siteos trace services [--environment <slug>] [--period <24h|7d>] [--json]
 siteos trace ga4 show [--environment <slug>] [--json]
 siteos trace ga4 bind --input <json-file> [--environment <slug>] [--json]
 siteos trace ga4 sync --input <json-file> [--environment <slug>] [--json]

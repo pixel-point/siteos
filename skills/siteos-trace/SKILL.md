@@ -7,7 +7,7 @@ description: Investigate website tracking and configure evidence-backed event ch
 
 Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
 
-Hosted reads: `siteos_trace_get_coverage`, `siteos_trace_get_report`, `siteos_trace_list_events`, `siteos_trace_list_issues`, `siteos_trace_get_issue`, `siteos_trace_list_observations`, `siteos_trace_get_gtm_summary`, `siteos_trace_get_ga4` and `siteos_trace_get_notifications`.
+Hosted reads: `siteos_trace_get_coverage`, `siteos_trace_get_report`, `siteos_trace_list_events`, `siteos_trace_list_issues`, `siteos_trace_get_issue`, `siteos_trace_list_observations`, `siteos_trace_get_gtm_summary`, `siteos_trace_get_services`, `siteos_trace_get_ga4` and `siteos_trace_get_notifications`.
 
 Trace combines Google reports/configuration history with optional browser observations. Use its Health Summary, Destinations and
 Debugger to understand where an event was observed and why a rule raised an issue. It is separate
@@ -118,13 +118,13 @@ Do not add observation of cookies, storage, DOM text, form values, payload value
 For `installation save`, write `{ "expectedDraftVersion": <current version>, "draft": <complete draft> }`.
 Read the current installation first and preserve its draft fields: `providers` (a list containing
 `siteos_analytics`, `ga4`, `google_ads`, `hubspot`, `meta`, `zoominfo`, `linkedin`, `clarity` or `custom`), `sampleRate`, `maxBatchSize`, `consentMode`
-(`disabled`, `explicit_adapter`, `google_consent_mode` or `siteos_cookie`), nullable `releaseLabel` and, with a
-collection policy, `vendorDiscovery`. Use the existing defaults unless the task calls for a reviewed change.
-`vendorDiscovery` is on by default (keep `true`; `false` is an owner's explicit opt-out). With runtime
-0.8+ it names other third-party services from the shared vendor registry by request hostname; Trace
-stores only the service or its registrable domain. A snippet pinned to 0.7 or older cannot read the
-published configuration with discovery, so after publication install the returned snippet. Do not
-disable consent handling as an automatic workaround for missing observations.
+(`disabled`, `explicit_adapter`, `google_consent_mode` or `siteos_cookie`), nullable `releaseLabel` and, when
+present, `collectionPolicy`. Use the existing defaults unless the task calls for a reviewed change.
+Third-party service discovery is always on and is not a draft field: with a collection policy and
+runtime 0.8+ Trace names other third-party services from the shared vendor registry by request
+hostname and stores only the service or its registrable domain. A snippet pinned to 0.7 or older
+cannot read the published configuration with discovery, so after publication install the returned
+snippet. Do not disable consent handling as an automatic workaround for missing observations.
 
 Consent modes have distinct evidence sources: `siteos_cookie` reads the SiteOS banner’s public state on the same page, `google_consent_mode` observes supported data-layer
 consent commands, `explicit_adapter` uses the application's explicit consent evidence, and
