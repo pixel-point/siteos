@@ -33,10 +33,19 @@ returns one row per service: mapped live GTM tags, real traffic for the period (
 last seen, consent), the latest Cookie scan items and the Cookie banner declaration. Each fact
 keeps its own source and date; a GTM tag does not prove the service runs, traffic does not prove
 it is declared, and a missing Cookie column (`null`) means Cookie is not attached or the
-connection lacks Cookie read. GTM tags are mapped only by template type or the hosts their Custom
-HTML loads, never by name; read `tagManager.unmappedTags` before claiming a tag has no service.
-An `unrecognized` row is a registrable domain only: research it before describing it. Use the
-row's `reference` as the Browser activity filter and as Cookie's review identity.
+connection lacks Cookie read. A tag or domain is attributed first to a Cookie service whose
+owner-declared sources match it (`identity.source: "cookie"`), then by GTM template type or a
+registry vendor of the hosts its Custom HTML loads, never by name; read `identity` before
+explaining why a row is a service and `tagManager.unmappedTags` before claiming a tag has no
+service. Hosting and CDN files (S3, CloudFront, jsDelivr and similar) never name a service: a tag
+that loads only them is `kind: "unidentified_tag"` (its name is not a service), and observed
+hosting domains are listed in `infrastructure`. An `unrecognized` row is a registrable domain only:
+research it before describing it. `state` and `action` give the one next step (add, publish or
+identify in Cookie; paused tags need none and are never attention); `cookieReference` is what
+Cookie Services resolves for it. Use the row's `reference` as the Browser activity filter. To
+identify a tag through the CLI, add a `gtm` discovery source such as
+`{ "source": "gtm", "reference": "GTM-XXXX tag 21 · <tag name>", "url": "<script URL without query>" }`
+to the matching Cookie custom service.
 
 Read resource evidence through `siteos_trace_list_observations` with `kind: "resource"`, or
 `siteos trace observations --kind resource --environment <slug> --json`. Read findings through
