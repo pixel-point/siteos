@@ -13,7 +13,13 @@ npx @siteoshq/cli trace issues --environment production --provider ga4 --state a
 ```
 
 Replace the environment, provider and event with the task's actual selection. Supported providers
-are `siteos_analytics`, `ga4`, `google_ads`, `hubspot`, `meta` and `custom`. The UI lists `custom`
+are `siteos_analytics`, `ga4`, `google_ads`, `hubspot`, `meta`, `zoominfo`, `linkedin`, `clarity`
+and `custom`; CLI `--provider` and MCP `provider` filters accept each of them. Runtime 0.8 vendor
+discovery adds other third-party services: filter them with `vendor:<id>` (for example
+`vendor:hotjar`) or, when not recognized, `domain:<registrable domain>`, as returned in each
+destination's `service`. Service names, categories and purposes come from the shared vendor
+registry; Trace never stores a subdomain, path or URL. Unclassified `unknown` activity can appear
+in results but is not a filter. The UI lists `custom`
 under Sources as Data layer. It does not establish that any vendor received that event.
 Destinations identify provider families, not individual accounts, properties or pixel IDs.
 An enabled collection adapter alone does not make a destination observed. A published expectation

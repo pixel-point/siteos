@@ -13,9 +13,15 @@ and actual runtime version; no recent signal can mean late, blocked or absent ob
 Importing a GTM tag is configuration evidence, not proof of execution or network activity.
 
 Trace 0.6 observes supported Google tag, Meta pixel and HubSpot loader signatures, plus recognized
-destination pixels. Native SiteOS Analytics has its own event evidence. ZoomInfo, Warmly, Clay and
-Zaraz are not supported adapters in this release. A custom service or GTM name does not add an
-adapter. Resource Timing describes a load/request attempt, not SDK initialization or receipt.
+destination pixels. Native SiteOS Analytics has its own event evidence. Trace 0.7 added selected
+ZoomInfo, LinkedIn Insight and Microsoft Clarity request and loader signatures; filters use
+`zoominfo`, `linkedin` and `clarity`. Runtime 0.8 recognizes them, and any other third-party
+service, through vendor discovery (on by default; the website needs the 0.8 snippet): the shared
+vendor registry names a cross-site request or script, image or frame load from its hostname, and Trace stores only the vendor id and registrable
+domain. Discovered services show activity without event names, rules, SDK checks or coverage-matrix
+capabilities; analytics and marketing vendors observed while that purpose was denied raise generic
+consent issues. An unrecognized domain is shown as such. Warmly, Clay and Zaraz have no deep
+adapter. A custom service or GTM name does not add an adapter. Resource Timing describes a load/request attempt, not SDK initialization or receipt.
 Only known start-time consent/route context supports resource consent conclusions; buffered or
 unknown-context entries remain inconclusive. Fetch/XHR/Beacon copies are excluded from resource
 counts, and a request plus its terminal result is one operation.

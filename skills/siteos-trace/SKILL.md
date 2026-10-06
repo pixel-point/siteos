@@ -117,10 +117,14 @@ Do not add observation of cookies, storage, DOM text, form values, payload value
 
 For `installation save`, write `{ "expectedDraftVersion": <current version>, "draft": <complete draft> }`.
 Read the current installation first and preserve its draft fields: `providers` (a list containing
-`siteos_analytics`, `ga4`, `google_ads`, `hubspot`, `meta` or `custom`), `sampleRate`, `maxBatchSize`, `consentMode`
-(`disabled`, `explicit_adapter`, `google_consent_mode` or `siteos_cookie`) and nullable `releaseLabel`. Use the
-existing defaults unless the task calls for a reviewed change. Do not disable consent handling as
-an automatic workaround for missing observations.
+`siteos_analytics`, `ga4`, `google_ads`, `hubspot`, `meta`, `zoominfo`, `linkedin`, `clarity` or `custom`), `sampleRate`, `maxBatchSize`, `consentMode`
+(`disabled`, `explicit_adapter`, `google_consent_mode` or `siteos_cookie`), nullable `releaseLabel` and, with a
+collection policy, `vendorDiscovery`. Use the existing defaults unless the task calls for a reviewed change.
+`vendorDiscovery` is on by default (keep `true`; `false` is an owner's explicit opt-out). With runtime
+0.8+ it names other third-party services from the shared vendor registry by request hostname; Trace
+stores only the service or its registrable domain. A snippet pinned to 0.7 or older cannot read the
+published configuration with discovery, so after publication install the returned snippet. Do not
+disable consent handling as an automatic workaround for missing observations.
 
 Consent modes have distinct evidence sources: `siteos_cookie` reads the SiteOS banner’s public state on the same page, `google_consent_mode` observes supported data-layer
 consent commands, `explicit_adapter` uses the application's explicit consent evidence, and

@@ -20,9 +20,9 @@ additional required consent `analytics_storage`. Do not leave its default Initia
 
 Prefer `draft.integrations.ga4MeasurementIds: ["G-EXAMPLE1"]` with the actual reviewed IDs,
 retaining all other draft fields, and publish the configuration when authorized. In Cookie Studio,
-use Services → GA4 Measurement IDs → Apply IDs to draft, then publish. Include every stream;
-keep the grant trigger and initial consent requirement on the Google tag. Verify Cookie readiness
-with `getRuntimeStatus()` and real requests. Cookie does not install GA4.
+enter them in Services → GA4 Measurement IDs (a valid list saves to the draft), then publish.
+Include every stream; keep the grant trigger and initial consent requirement on the Google tag.
+Verify Cookie readiness with `getRuntimeStatus()` and real requests. Cookie does not install GA4.
 
 Basic mode disables listed streams before consent. Explicitly selected Advanced mode allows
 cookieless signals before a choice; refusal/withdrawal disables sending, and a later allowed
