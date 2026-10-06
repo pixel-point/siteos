@@ -119,7 +119,12 @@ For `installation save`, write `{ "expectedDraftVersion": <current version>, "dr
 Read the current installation first and preserve its draft fields: `providers` (a list containing
 `siteos_analytics`, `ga4`, `google_ads`, `hubspot`, `meta`, `zoominfo`, `linkedin`, `clarity` or `custom`), `sampleRate`, `maxBatchSize`, `consentMode`
 (`disabled`, `explicit_adapter`, `google_consent_mode` or `siteos_cookie`), nullable `releaseLabel` and, when
-present, `collectionPolicy`. Use the existing defaults unless the task calls for a reviewed change.
+present, `collectionPolicy` and `collectionStart`. Use the existing defaults unless the task calls for a reviewed change.
+`collectionStart` is `immediate` (default, also when absent) or `after_consent`: Trace then keeps
+and sends nothing until the consent source grants analytics, starts on the grant and stops on
+withdrawal. It needs a consent source other than `disabled`, a collection policy and runtime 0.9+;
+publication fails with an older runtime asset, and an older installed snippet stops collecting, so
+install the returned snippet. Change it only when the owner asks; never as a fix for missing data.
 Third-party service discovery is always on and is not a draft field: with a collection policy and
 runtime 0.8+ Trace names other third-party services from the shared vendor registry by request
 hostname and stores only the service or its registrable domain. A snippet pinned to 0.7 or older
