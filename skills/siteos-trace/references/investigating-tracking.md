@@ -94,7 +94,9 @@ workflows. Select `siteos_cookie` in the collection draft only when using the ba
 publication and replacement of an old pinned Trace snippet remain explicit.
 
 - `consent_before_grant`: a named destination request was observed while its expected purpose was denied.
-- `consent_after_withdrawal`: the same page has an observed withdrawal before that request.
+- `consent_after_withdrawal`: the same page has an observed withdrawal before that request. For a
+  service Trace sees only by domain, a request within 250 ms of the withdrawal is the service's reply
+  to Cookie's stop call and is not reported; anything later is.
 - `consent_advanced_review`: Google activity under denial with Advanced or unknown Google mode.
   Cookieless requests can be expected here; this informational finding does not prove a violation.
 - `consent_expected_event_missing`: a reviewed event with `afterConsentSeconds` was not observed
