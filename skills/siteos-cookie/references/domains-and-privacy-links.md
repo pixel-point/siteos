@@ -54,8 +54,9 @@ links or buttons to every affected page, including mobile navigation and SPA rou
 </a>
 ```
 
-One link is enough (runtime 11.14.0): it opens the preferences everywhere and starts at the
-sale/share and targeted-advertising opt-outs for US visitors. A legacy `data-siteos-cookie-preferences`
+One link is enough (runtime 11.14.0): it opens the preferences everywhere, and since 11.14.1 the
+sale/share and targeted-advertising opt-outs appear (and the link starts at them) only for visitors
+in the US or an unknown location; elsewhere it shows the purposes alone. A legacy `data-siteos-cookie-preferences`
 link keeps working. There is one floating control: for visitors in the US or an unknown
 location with services mapped to those purposes it shows "Your privacy choices" text with the
 official California opt-out icon (US law needs both) unless a usable privacy-choices link is present;
