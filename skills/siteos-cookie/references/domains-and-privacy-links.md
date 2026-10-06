@@ -60,7 +60,10 @@ in the US or an unknown location; elsewhere it shows the purposes alone. A legac
 link keeps working. There is one floating control: for visitors in the US or an unknown
 location with services mapped to those purposes it shows "Your privacy choices" text with the
 official California opt-out icon (US law needs both) unless a usable privacy-choices link is present;
-elsewhere it is an icon. A custom "Your privacy choices" link needs that official icon beside it. A
+elsewhere it is an icon. A custom "Your privacy choices" link needs that official icon beside it.
+`banner.floatingControls.privacyIconColor` (Banner design → Privacy icon color, runtime 11.15.0)
+recolors only the icon's official blue on the button and in Studio's snippet; recommend the official
+blue unless the user chooses otherwise. A
 usable privacy-choices link hides the floating control; missing, hidden, disabled or negative-tabindex
 controls retain the floating fallback.
 Route changes recheck availability. Do not remove the fallback through CSS.
