@@ -276,12 +276,18 @@ native SiteOS Analytics and the known Google services in Advanced Consent Mode a
 The Google rules target `gtag/js` with the service's ID prefixes, not the GTM container.
 
 Confirmed scan inventory can supply origins when `apply` creates a **new** custom vendor service:
-it copies up to 20 unique HTTPS origins from that vendor's confirmed request items into
-`lifecycle.scriptOrigins`. Cookies or storage items alone supply no request origins. Existing custom
-services are not enriched; review and edit their lifecycle origins separately when needed. Confirm
+it copies up to 20 unique HTTPS origins from that vendor's confirmed request items into the
+service's `blockingOrigins`. Cookies or storage items alone supply no request origins. Existing
+custom services are not enriched; review and edit their domains separately when needed. Confirm
 the vendor and purpose with the owner, review `plan`, then apply to the draft. A scan, proposal or
 inventory application alone does not publish or enable blocking. Review shared hosts carefully:
-ordinary rules cover every path on the exact hostname; other subdomains do not match.
+a custom service's `blockingOrigins` (Studio: **Domains to block**, at most 20) hold
+`https://cdn.example.com` for every path on that exact hostname or, with runtime 11.16+,
+`https://*.example.com` for the domain and every subdomain (never a bare suffix such as `*.co.uk`,
+and never the website's own host). They are enforcement only: publishing a change keeps visitors'
+choices. Older services may also list `lifecycle.scriptOrigins`, which still block. Registry vendors
+and Trace domains arrive with suggested domains that the owner reviews. Never use hosting or CDN
+domains shared by unrelated services or a whole company's websites such as `*.microsoft.com`.
 
 After reviewing and publishing the draft, use the top-level `snippet` from
 `cookie installation --json`. Its selection follows the current draft, so receiving a blocking
