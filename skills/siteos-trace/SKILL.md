@@ -198,3 +198,10 @@ caller cancellation/opaque responses are unknown. Same-stream successes are requ
 request recovery. This does not cover every arbitrary network service or prove analytics report
 processing. Do not enable Cookie solely to obtain these results. Deploy compatible backend/Edge
 before an authorized runtime installation upgrade; always read the actual snippet and version.
+
+Runtime 0.11 can include bounded `networkResult.context`: page phase at request/result, fetch
+keepalive and an allowlisted error class. A raw network rejection after observed `pagehide` has
+`technicalResult: result_unknown`; it cannot prove destination failure or recovery. A merely
+hidden page does not soften a failure. HTTP errors and timeouts remain failures. Keep legacy
+incident history intact. An open incident records past failures, not continuous failure or missing
+GA4 report events. If responses are only opaque, automatic browser recovery cannot be verified.

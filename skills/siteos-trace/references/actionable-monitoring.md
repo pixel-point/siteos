@@ -40,6 +40,11 @@ records supported 4xx/5xx responses or network errors. An initiated request, acc
 unreadable response does not prove failure. One failure opens a warning; at least three failures
 across two page lifetimes escalate to critical. Duplicate batch delivery does not open another issue.
 
+From runtime 0.11, inspect optional `networkResult.context` and `technicalResult` together.
+`outcome: network_error` with `resultPhase: pagehide` is unknown, because page teardown cannot be
+distinguished from independent transport failure. Hidden visibility alone is not page exit.
+HTTP errors and timeouts retain failure classification. Older evidence is not reclassified.
+
 Read `trace issue show --id <returned-id> --environment <slug> --json`. Keep the exact ID, including
 any `trc_incident_` prefix. Inspect `context`, `diagnostics`, `findings` and timestamps. Page activity,
 consent and nearby GTM changes are context, not causal proof. GTM callback status does not contain
@@ -49,6 +54,8 @@ without a provider filter so consent and other destinations remain visible.
 Three successful terminal results after the latest failure, across at least two page lifetimes,
 verify technical recovery. Silence and manual resolution do not verify a fix. Other rules require
 a comparable completed analysis window. New findings remain grouped in the same incident.
+Opaque responses, cancellations and page-exit rejections are not successful terminal results.
+An incident that remains open does not prove continuous failure or missing provider report events.
 
 ## Learned schemas and coverage
 
