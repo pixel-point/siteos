@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.40.0`
+Package: `@siteoshq/cli@2.41.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -171,6 +171,7 @@ siteos seo gsc export --format <json|csv> --output <new-file> [--dataset <pages|
 siteos seo gsc sync [--environment <slug>] [--json]
 siteos seo gsc bind --connection <id> --property <site-url> --website <environment-url> --revision <number> [--environment <slug>] [--json]
 siteos seo gsc disconnect --revision <number> [--environment <slug>] [--json]
+siteos seo opportunities [--type <losing-clicks|close-to-top|technical|ai-answers>] [--status <open|hidden>] [--limit <1-100>] [--environment <slug>] [--json]
 ```
 
 ## Analytics

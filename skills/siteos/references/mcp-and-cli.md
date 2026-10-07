@@ -63,6 +63,7 @@ Project selector; do not ask for an Environment for this panel.
 | Requested result | `section` | Optional exact selection |
 | --- | --- | --- |
 | Overall saved evidence | `overview` | No check ID |
+| Ranked next steps from saved evidence | `opportunities` | No check ID |
 | Technical audit / repair verification | `site-audit` | `auditId` |
 | AI content / metadata / copy checks | `content` | `reportId`: content scan ID |
 | Lighthouse Performance | `performance` | `reportId`: batch ID; `device`: `mobile` or `desktop` |

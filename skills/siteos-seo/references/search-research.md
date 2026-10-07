@@ -248,3 +248,25 @@ For persistent AI Visibility sets, follow [AI Visibility](ai-visibility.md#ai-vi
 `saved save --visibility <settings.json>` saves the question catalog and revision, then
 `run --set <saved-id> --revision <revision>` links the authorized observation to that set.
 Saving never enables a recurring schedule or runs a check.
+
+## Opportunities
+
+Use Opportunities when the user asks what to work on first or to "find the best opportunity and
+implement it". It ranks saved evidence only; reading never syncs Google, runs research or spends
+credits:
+
+```bash
+npx @siteoshq/cli seo opportunities --json
+npx @siteoshq/cli seo opportunities --type losing-clicks --limit 5 --json
+```
+
+MCP hosts can call `siteos_seo_get_opportunities` or open `siteos_open_project_panel` with
+`section: "opportunities"`. Each item has an impact level, facts, a likely reason (for lost clicks)
+and a next step. Present reasons as likely and estimates as estimates. Work from the evidence in
+the repository or CMS, keep publication with the owner and verify with a page recheck, a later GSC
+report or a rank check the user authorized. Hidden items are user decisions: read them with
+`--status hidden` and do not resurface them as new findings.
+
+Rank tracking keyword sets can also run daily or weekly. An owner, admin or SEO/GEO Manager enables
+that in the application on the Keyword sets tab or the report header; there is no CLI or MCP
+command for it. Automatic checks share history with manual checks of the same set.

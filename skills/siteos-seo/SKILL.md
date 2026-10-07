@@ -76,6 +76,7 @@ or stop after reading a technical audit. Keep focused requests on their selected
 | Task | Supported path | Workflow |
 | --- | --- | --- |
 | Complete SEO/GEO setup, review and improvements | Coordinate the supported paths below for one Project environment | [Complete SEO/GEO](references/complete-seo-geo.md) |
+| Find the best next step: pages losing clicks, queries close to the top, audit findings on pages with traffic, AI answer gaps | Read-only `siteos_seo_get_opportunities`, panel section `opportunities` or `seo opportunities` CLI | [Opportunities](references/search-research.md#opportunities) |
 | Public HTML audit, canonical/robots/sitemap, technical GEO, verify fixes | SEO CLI and Site Audit | [Technical audit](references/technical-audit.md) |
 | Independent AI metadata, unfinished copy, spelling and grammar checks | Read-only content MCP; explicit paid content CLI operations | [Content checks](references/content-checks.md) |
 | Install or configure the SiteOS Sanity Studio plugin | Existing Studio code, published package and explicit team connection | [Sanity Studio setup](references/content-checks.md#sanity-studio-plugin-setup) |
@@ -159,6 +160,12 @@ read the saved audit with current access. For a Production audit, open its panel
 for another environment, use its exact headless report and link without substituting Production.
 Explain completed versus partial/failed/cancelled evidence. Receipt alone authorizes no paid check, fix or
 publication. Opening a panel or starting an audit does not silently subscribe.
+
+For a research check (for example a Rank tracking or AI Visibility run started through the CLI, or
+the `lastRunId` of an automatic schedule), subscribe to `siteos.seo.research.finished` with its exact
+`runId`. The payload summarizes position or mention changes; re-read the saved report before acting.
+Recurring position and AI answer alerts to Slack, Telegram or email are configured in the application
+on the SEO/GEO notifications page; there is no CLI or MCP write for them.
 
 Events are documented for Work web chats, desktop Work with Cloud selected, and dots. Do not claim
 local Codex background delivery without host support. If Events are absent, explain the limit;
