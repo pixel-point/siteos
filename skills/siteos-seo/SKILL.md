@@ -164,8 +164,13 @@ publication. Opening a panel or starting an audit does not silently subscribe.
 For a research check (for example a Rank tracking or AI Visibility run started through the CLI, or
 the `lastRunId` of an automatic schedule), subscribe to `siteos.seo.research.finished` with its exact
 `runId`. The payload summarizes position or mention changes; re-read the saved report before acting.
-Recurring position and AI answer alerts to Slack, Telegram or email are configured in the application
-on the SEO/GEO notifications page; there is no CLI or MCP write for them.
+Recurring Opportunity, position and AI answer alerts to Slack, Telegram or email are configured in
+the application on the SEO/GEO notifications page; there is no CLI or MCP write for them. When the
+user asks to be told about new opportunities, subscribe to `siteos.seo.opportunities.alerted` for
+the exact Organization, Project and environment with `after` set to now; it requires Opportunity
+alerts to be enabled for that environment. Each subscription delivers one urgent or weekly alert;
+subscribe again with the delivered `createdAt` to continue. Read the current Opportunities before
+recommending work.
 
 Events are documented for Work web chats, desktop Work with Cloud selected, and dots. Do not claim
 local Codex background delivery without host support. If Events are absent, explain the limit;
