@@ -25,7 +25,7 @@ if (result.success) await search.record(result.analyticsReceipt);
 ```
 
 Two delivery paths share this client. For a configured Cloudflare Search environment, use the
-public endpoint and publishable key returned by Search → Connection or `siteos search delivery`:
+public endpoint and publishable key shown in Search → API keys or returned by `siteos search delivery`:
 
 ```ts
 const search = createSiteOSSearchClient({
