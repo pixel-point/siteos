@@ -23,7 +23,7 @@ the skill never handles either proof. The CLI installs runtime credentials into 
 owner-only project `.env`; do not inspect or print that file.
 
 Ensure `.env` is ignored before running `credential issue --install`. The Forms installer writes
-`SITEOS_FORMS_SUBMISSION_CREDENTIAL` only; it does not install `SITEOS_FORMS_PUBLIC_URL`. Configure
+`SITEOS_FORMS_API_KEY` only; it does not install `SITEOS_FORMS_PUBLIC_URL`. Configure
 that non-secret URL separately for the selected SiteOS application, preserving all other entries
 without printing the file. Production uses `https://app.siteos.sh`; the separate staging
 installation uses `https://siteosapp.xui.se`. A Project's website URL is not its Forms API origin.
@@ -48,7 +48,7 @@ Do not mutate Auth or another product's Projects from this skill and do not call
 - Never log credentials during smoke tests.
 - Keep runtime credentials server-only.
 - Keep the environment-scoped Forms submission credential in
-  `SITEOS_FORMS_SUBMISSION_CREDENTIAL`; never reuse the project management API
+  `SITEOS_FORMS_API_KEY`; never reuse the project management API
   key for runtime submissions.
 - Use `forms credential list` metadata before `issue --install` or an intentional `rotate --install`; never read the plaintext installation.
 
@@ -186,7 +186,7 @@ Do not switch to a project API-key submission path or a form-key path such as `/
 
 The CLI's hosted default is `https://app.siteos.sh`; the credential installer does not write the
 API origin. Generated runtime must fail safely when the explicitly configured
-`SITEOS_FORMS_PUBLIC_URL` is missing or unsafe, and must send only `SITEOS_FORMS_SUBMISSION_CREDENTIAL` as runtime authority.
+`SITEOS_FORMS_PUBLIC_URL` is missing or unsafe, and must send only `SITEOS_FORMS_API_KEY` as runtime authority.
 It must never send an Auth grant, Project context, browser cookie, or Project API key.
 
 If the upstream response is HTML or another non-JSON payload, assume the route or environment contract is wrong and normalize the local error message accordingly.

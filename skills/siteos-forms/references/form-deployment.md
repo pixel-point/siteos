@@ -23,6 +23,32 @@ Do not infer installation from a source checkout; upgrade the CLI when these com
    the intended SiteOS installation. The key selects the Environment; deploy does not use local
    interactive Auth, common Project state, or a fallback Environment.
 
+## Developer handoff and environment examples
+
+Include these blank placeholders in the host project's `.env.example`, with the two key purposes
+clearly separated:
+
+```dotenv
+SITEOS_FORMS_PUBLIC_URL=https://app.siteos.sh
+# Server runtime: submit answers only.
+SITEOS_FORMS_API_KEY=
+# Optional local publication / trusted CI only; omit from hosted application runtime.
+SITEOS_FORMS_DEPLOYMENT_KEY=
+```
+
+Developers can edit the field map, regenerate definitions, run tests and build without a deployment
+key. To send local test answers they need the selected Environment's API key. To publish changed
+rules to their authorized test Environment they need a deployment key; an owner/admin can issue it
+with the one-time setup command above. Keep publication access separate from ordinary source access.
+For routine releases, CI holds its own Environment-scoped deployment key, so contributors do not
+need a shared Production secret. Configure publication in that trusted job before traffic promotion.
+
+`SITEOS_FORMS_API_KEY` is the canonical name from CLI 2.44.0. The previous
+`SITEOS_FORMS_SUBMISSION_CREDENTIAL` is a read fallback for existing integrations. A non-empty
+canonical value wins; renaming the variable does not rotate the key or change its rights. The CLI
+writes the canonical name and also updates a legacy entry if one already exists during issuance or
+rotation. Do not add the legacy name to new `.env.example` files.
+
 ## One field map and generated versions
 
 Copy `assets/define-form.ts` and `assets/contract-version.ts` into the host project for Zod 4.
