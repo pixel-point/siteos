@@ -1,6 +1,6 @@
 ---
 name: siteos-integrations
-description: Use for shared SiteOS Organization provider connections, including selected GitHub repositories, Slack channel discovery and notification destinations used by Project services.
+description: Use for shared SiteOS Organization provider connections, including Mailchimp contact forwarding, selected GitHub repositories, Slack channel discovery and notification destinations used by Project services.
 ---
 
 # SiteOS Integrations
@@ -60,3 +60,16 @@ show pending candidates, refresh catalogs or mutate connections.
 Projects owns repository bindings per environment, so Production and Staging may use different repositories. Services controls the shared provider; Pulse controls its own PR policy and Check selection. From Pulse configuration, **Manage GitHub in Services** retains the Project/environment return destination. Connecting GitHub does not attach Pulse, publish a Check bundle or enable automatic checks. Other services can consume this shared connection only when their own supported workflow exists.
 
 For PR execution and preview requirements after connection, load [Pulse GitHub verification](../siteos-pulse/references/github-pull-requests.md). A connected repository is not a general source-code indexing or arbitrary CI execution capability.
+
+## Mailchimp contacts
+
+Mailchimp is an Organization connection used by per-form contact forwarding. For setup, mapping,
+consent and safe delivery recovery, load [Mailchimp forwarding](../siteos-forms/references/mailchimp.md).
+Check installed help for `integrations mailchimp` and use a matching server. Owner/admin can read
+safe connection/catalog metadata through `siteos_integrations_get_connection` with provider
+`mailchimp`, or `siteos integrations mailchimp status --organization <id> --json`. CLI connect
+returns the protected Services page; the user enters the API key there for the exact Organization.
+Never request a key in chat. CLI refresh and disconnect use the dedicated Mailchimp write scope and
+an expected revision; neither permits entering/replacing credentials through CLI. Forms settings and
+retries use separate Forms scopes. MCP remains read-only. Connecting does not enable a form or send a
+campaign. Mailchimp Forms is a separate collection UI; SiteOS contacts appear in Audience → Contacts.

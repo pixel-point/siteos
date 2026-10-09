@@ -1,7 +1,7 @@
 interface:
   display_name: "SiteOS Integrations"
-  short_description: "Connect GitHub repositories and shared providers"
-  default_prompt: "Use $siteos-integrations to connect the requested provider or selected GitHub repositories to the SiteOS Organization and verify its supported connection state."
+  short_description: "Connect Mailchimp, GitHub and shared providers"
+  default_prompt: "Use $siteos-integrations to connect or manage the requested Mailchimp, GitHub or other supported provider to the SiteOS Organization and verify its supported connection state."
 
 policy:
   allow_implicit_invocation: true

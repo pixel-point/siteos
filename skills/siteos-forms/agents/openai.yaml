@@ -1,4 +1,4 @@
 interface:
   display_name: "SiteOS Forms"
-  short_description: "Build managed forms for any project"
-  default_prompt: "Use $siteos-forms to connect this project first, then add, register, and verify a managed contact form."
+  short_description: "Build forms and manage Mailchimp forwarding"
+  default_prompt: "Use $siteos-forms to resolve the requested Project and environment, then build or manage its SiteOS forms, Mailchimp forwarding and delivery outcomes as requested."

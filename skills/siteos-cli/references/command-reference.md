@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.41.0`
+Package: `@siteoshq/cli@2.42.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -224,6 +224,10 @@ siteos analytics ga4 saved remove <id> --revision <number> [--environment <slug>
 ## Integrations
 
 ```text
+siteos integrations mailchimp status --organization <id> [--json]
+siteos integrations mailchimp connect --organization <id> [--json]
+siteos integrations mailchimp refresh --organization <id> --expected-revision <n> [--json]
+siteos integrations mailchimp disconnect --organization <id> --expected-revision <n> --confirm [--json]
 siteos integrations github status [--organization <id>] [--json]
 siteos integrations github authorize [--organization <id>] [--json]
 siteos integrations github candidates [--organization <id>] [--json]
@@ -270,7 +274,12 @@ siteos forms credential list --environment <slug> [--json]
 siteos forms credential issue --environment <slug> --install [--name <name>] [--json]
 siteos forms credential rotate --environment <slug> --install [--name <name>] [--json]
 siteos forms credential revoke --environment <slug> --credential <credential-id> [--json]
-siteos forms submissions list --environment <slug> [--form <form-id>] [--query <text>] [--status <new|read|archived|spam|inbox|all>] [--purpose <regular|test|all>] [--version <id>] [--from <ISO>] [--to <ISO>] [--limit <1-100>] [--cursor <cursor>] [--json]
+siteos forms integrations show --form <id> [--environment <slug>] [--json]
+siteos forms integrations save --form <id> --input <settings.json> [--environment <slug>] [--json]
+siteos forms integrations disable --form <id> --expected-revision <n> [--environment <slug>] [--json]
+siteos forms integrations deliveries --form <id> [--state <pending|delivered|failed|cancelled>] [--before <cursor>] [--submission <id>] [--environment <slug>] [--json]
+siteos forms integrations retry --form <id> --delivery <id> --expected-revision <n> [--environment <slug>] [--json]
+siteos forms submissions list --environment <slug> [--form <form-id>] [--query <text>] [--status <new|read|archived|spam|inbox|all>] [--purpose <regular|test|all>] [--forwarding failed] [--version <id>] [--from <ISO>] [--to <ISO>] [--limit <1-100>] [--cursor <cursor>] [--json]
 siteos forms submissions read --environment <slug> --form <form-id> --submission <id> [--json]
 siteos forms submissions status --environment <slug> --form <form-id> --submission <id> --status <new|read|archived|spam> --expected-status <status> [--json]
 siteos forms deploy --manifest <path> [--json]

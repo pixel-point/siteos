@@ -94,3 +94,10 @@ Read `../siteos-forms/references/form-deployment.md` for generation, version pin
 ## Cookie service discovery
 
 Use `cookie services list` for the deployed catalog and custom-service schema and `cookie discover` for a bounded local browser/source/GTM-export inventory. Discovery never saves or publishes; the Cookie skill researches unknown providers and uses revision-checked draft save/publication. See [service discovery](../siteos-cookie/references/service-discovery.md). Verify these commands exist in the installed help before use.
+
+## Mailchimp forwarding
+
+Check `forms --help` for `forms integrations` and `integrations --help` for `mailchimp` before using
+this feature; it also needs the matching server. See [Mailchimp forwarding](../siteos-forms/references/mailchimp.md)
+for scoped connection reads/refresh, form settings, safe retries and JSON input. Keys remain in the
+protected Services dialog. A successful queued retry does not establish provider delivery.
