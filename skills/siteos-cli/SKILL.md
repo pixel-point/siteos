@@ -87,9 +87,10 @@ the server or update a website's pinned Trace script.
 ## Forms releases
 
 Use `forms deploy --manifest <path>` for non-interactive publication with an explicit Forms origin
-and release-only `SITEOS_FORMS_DEPLOYMENT_KEY`. `forms deployment-key issue|list|revoke` manages that
+and publication-only `SITEOS_FORMS_DEPLOYMENT_KEY`. `forms deployment-key issue|list|revoke` manages that
 separate Environment authority through normal Auth grants. Submission credentials cannot publish.
-Read `../siteos-forms/references/form-deployment.md` for generation, version pinning and rollback.
+An agent can run publication locally as part of an authorized form change; hosting/CI setup is
+optional. Read `../siteos-forms/references/form-deployment.md` for generation, version pinning and rollback.
 
 ## Cookie service discovery
 

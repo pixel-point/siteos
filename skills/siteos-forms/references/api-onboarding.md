@@ -67,11 +67,12 @@ Registration should be idempotent. If the same schema is unchanged and normalize
 
 For current Forms-linked projects, definition sync should be treated as required before live submit. If a form is created locally but never synced, live submissions can return `NOT_FOUND` even though the Forms Project and Environment selection are valid.
 
-## Automatic publication
+## Definition publication
 
-New integrations follow `form-deployment.md`: generate during build, publish with `forms deploy`
-in the release step, and send the generated `sourceExportId` as `contractVersion` from the host
-server. Deployment keys are separate from submission keys. Neither uses browser authority.
+New integrations follow `form-deployment.md`: generate during build, have the agent publish with
+`forms deploy` as part of an authorized form change, and send the generated `sourceExportId` as
+`contractVersion` from the host server. CI publication is optional. Deployment keys are separate
+from submission keys. Neither uses browser authority.
 
 ## Legacy Definition Sync Runtime
 

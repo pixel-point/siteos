@@ -92,7 +92,7 @@ Generate the CLI definition artifact from the runtime schema and keep the genera
 - Use the project's existing TypeScript runner when available. Otherwise add a small project-owned generator with the least additional tooling required by the host project.
 - Write the generated artifact under a predictable ignored or project-owned path such as `.siteos/forms/<form-key>.definition.json`.
 - Add SiteOS-only metadata (`formKey`, `name`, `normalizedFieldsJson`, `sourcePagePath`) around the generated `schemaJson`; do not copy validation constraints into that metadata.
-- Run the generator automatically during build, append the fingerprint using `assets/contract-version.ts`, and publish during deployment. See `form-deployment.md`.
+- Run the generator automatically during build and append the fingerprint using `assets/contract-version.ts`. The agent publishes changed definitions as part of the authorized form task, before deploying code that uses them. See `form-deployment.md`; CI publication is optional.
 
 Maintain a versioned project manifest next to the generated artifacts:
 
