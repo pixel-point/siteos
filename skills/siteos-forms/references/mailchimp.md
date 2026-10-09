@@ -43,9 +43,13 @@ form when access to the intended one is denied.
 
 4. `subscription: none` adds a contact without opting them into marketing. Do not infer consent
    from an email, a generic form submission or an existing contact. `confirm` requests confirmation;
-   `subscribe` requests direct subscription. Both require explicit user-approved intent and a real
-   boolean form consent field; each answer must be true. Existing subscription status, including an
-   opt-out, is preserved. Do not promise resubscription or invent a consent field.
+   `subscribe` requests direct subscription with a real boolean form consent field; each answer
+   must be true. Both require explicit user-approved intent. When the user explicitly requests
+   subscription on every form submission, use `subscription: "subscribe-on-submit"` and
+   `consentField: null` with CLI 2.43.0+ and the matching server. This is a separate administrator
+   policy, not evidence that the visitor ticked a checkbox. Never invent a consent field or change
+   an existing route to on-submit subscription without that intent. Existing subscription status,
+   including an opt-out, is preserved. Do not promise resubscription.
 5. Apply authorized settings with `siteos forms integrations save --form <id> --environment <slug>
    --input <settings.json> --json`, then read back. A conflict requires reading and reviewing the
    changed settings; never silently replace the expected revision and repeat. Enabling affects new
