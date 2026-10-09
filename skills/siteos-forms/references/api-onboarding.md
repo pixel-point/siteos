@@ -69,10 +69,11 @@ For current Forms-linked projects, definition sync should be treated as required
 
 ## Definition publication
 
-New integrations follow `form-deployment.md`: generate during build, have the agent publish with
-`forms deploy` as part of an authorized form change, and send the generated `sourceExportId` as
-`contractVersion` from the host server. CI publication is optional. Deployment keys are separate
-from submission keys. Neither uses browser authority.
+New Zod integrations follow `form-deployment.md`: keep ordinary schemas, register them with
+`@siteoshq/forms`, have the agent publish with `forms deploy --source siteos.forms.ts`, and send
+the package contract's `contractVersion` from the server. No project generator or build hook is
+required. CI publication is optional. Deployment and submission keys remain separate; neither
+uses browser authority.
 
 ## Legacy Definition Sync Runtime
 
@@ -181,7 +182,7 @@ Content-Type: application/json
 }
 ```
 
-For new integrations, add `contractVersion: generatedDefinition.sourceExportId` to this server-created request. An unknown contract version fails; never fall back to an unpinned request after rejection.
+For new Zod integrations, add `contractVersion: form.contractVersion` from the package registration module to this server-created request. An unknown contract version fails; never fall back to an unpinned request after rejection.
 
 Do not switch to a project API-key submission path or a form-key path such as `/api/v1/project/forms/{formKey}/submissions`; the scoped credential selects the project environment and the payload selects the form.
 

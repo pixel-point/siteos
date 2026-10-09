@@ -1,10 +1,10 @@
 # Form publication from chat
 
-Requires the matching SiteOS server and CLI with `forms deploy` and `forms deployment-key` in help.
+New Zod integrations require `@siteoshq/forms` and CLI 2.45.0+ with `forms deploy --source` in help. The existing Forms server API is unchanged.
 Do not infer installation from a source checkout; upgrade the CLI when these commands are absent.
 
 The default workflow is agent-managed: when the user asks to add or change a connected form,
-generate and check its definitions, publish them to the authorized Environment, and verify the saved
+check its source contracts, publish them to the authorized Environment, and verify the saved
 versions within the same task. Do not leave routine publication as a command for the user to run.
 This works with any website host and does not require changes to CI. Publication updates SiteOS's
 validation and field metadata; deploying the website and configuring Mailchimp forwarding remain
@@ -44,7 +44,7 @@ SITEOS_FORMS_API_KEY=
 SITEOS_FORMS_DEPLOYMENT_KEY=
 ```
 
-Developers can edit the field map, regenerate definitions, run tests and build without a deployment
+Developers can edit ordinary Zod schemas, run tests and build without a deployment
 key. To send local test answers they need the selected Environment's API key. To publish changed
 rules to their authorized test Environment they need a deployment key; an owner/admin can issue it
 with the one-time setup command above. Keep publication access separate from ordinary source access.
@@ -60,74 +60,78 @@ canonical value wins; renaming the variable does not rotate the key or change it
 writes the canonical name and also updates a legacy entry if one already exists during issuance or
 rotation. Do not add the legacy name to new `.env.example` files.
 
-## One field map and generated versions
+## Existing Zod schemas and package-owned versions
 
-Copy `assets/define-form.ts` and `assets/contract-version.ts` into the host project for Zod 4.
-Keep its installed Zod version and established TypeScript runner. Adapt schema construction to an
-existing mature validator for other stacks; never force users to maintain a second schema.
+Keep the original schemas and form resolver. Use `@siteoshq/forms/zod3` or
+`@siteoshq/forms/zod4` in a server-only `siteos.forms.ts`, exporting the contract
+array as default. See `form-contract.md` for the typed metadata. Browser code
+imports only the original validation module. The runtime server and CLI consume
+the same registration module; no generated project JSON or custom generator is
+needed. Leave the ordinary website build command intact.
 
-The project generator collects named form definitions, calls `.definition()`, and appends
-`sourceExportId: formsContractVersion(definition)`. Write those generated artifacts and manifest
-under `.siteos/forms/`. Derive field metadata from the same field map, including optional fields.
-
-The fingerprint is `sha256:` plus SHA-256 of UTF-8 canonical JSON for the object containing exactly
-`schemaJson` and `normalizedFieldsJson`. Sort object keys by Unicode code-unit order recursively,
-preserve array order, use JSON string escaping and number serialization. Do not hash names, paths,
-form keys, timestamps or the fingerprint itself. Use the supplied serializer unchanged. Keep
-artifacts finite JSON values with no undefined values or class instances.
-
-Zod refinements and transforms are not all representable in JSON Schema. Run full `safeParse` or
-`safeParseAsync` at the website server and send the parsed output. Generated contracts describe
-serialized output. A generator error must fail the build; never replace unsupported schemas with
-`{}` or disable server validation. Host-only business checks must be explicit and tested.
+The package internally uses the existing `sha256:` contract fingerprint over
+canonical `schemaJson` and `normalizedFieldsJson`. It does not change the remote
+protocol or require new hosting variables. Full refinements and normalization
+run at the website server; SiteOS independently checks the portable output.
+Unsupported outputs fail explicitly. Never replace checks with an empty schema.
 
 ## Agent-managed publication
 
-Wire generation into the host's existing build command; local builds generate without network.
-After changing validation or managed field metadata, run the project generator and applicable
-checks, then validate the complete manifest:
+After changing schemas or inbox metadata, run the applicable host checks and:
 
 ```sh
-npx @siteoshq/cli forms definition check --manifest .siteos/forms/manifest.json --json
+npx @siteoshq/cli forms definition check --source siteos.forms.ts --json
 ```
 
-Load the ignored local `.env` explicitly for publication. With the matching CLI installed globally,
-run from the repository root:
+`--source` evaluates trusted local JS/TS like a framework configuration file. It
+is not a sandbox. Use it only after establishing trust in the selected project.
+The CLI bounds evaluation time/output, suppresses arbitrary source logs and does
+not pass deployment credentials or Auth environment state into that process.
+Source evaluation must be side-effect free and must not read secrets.
+
+Load the ignored local `.env` explicitly for publication. With the matching CLI
+installed globally, run from the repository root:
 
 ```sh
-node --env-file=.env "$(command -v siteos)" forms deploy --manifest .siteos/forms/manifest.json --json
+node --env-file=.env "$(command -v siteos)" forms deploy --source siteos.forms.ts --json
 ```
 
-The CLI does not load `.env` automatically. Do not evaluate it as shell code or print its contents.
-For a process that already receives the explicit origin and scoped deployment key, use:
+The CLI does not load `.env` automatically. Do not evaluate it as shell code or
+print its contents. If the process already receives the explicit origin and
+scoped deployment key, use `siteos forms deploy --source siteos.forms.ts --json`.
 
-```sh
-npx @siteoshq/cli forms deploy --manifest .siteos/forms/manifest.json --json
-```
+The complete inventory is validated before the existing atomic publication;
+duplicate keys fail before writes. Compare the returned Environment and every
+fingerprint with the runtime contracts, then read back saved versions. Unchanged
+contracts reuse versions; missing entries never archive or delete forms. The
+publication API allows 100 forms and 512 KiB per request. Do not confuse source
+execution limits with the publication API limits.
 
-Deploy takes the whole manifest atomically, verifies generated fingerprints and returns the exact
-saved versions. Repeating an unchanged publication creates no duplicate versions. Missing entries
-never archive/delete forms. Limit one manifest to 100 forms and the API body to 512 KiB; split a
-larger inventory into explicitly separate releases or extend the supported contract first.
+If publication fails, keep changed server code out of live traffic and report
+the blocker. Do not add CI publication as a workaround. For an initial integration
+or changed submit path, verify the actual browser, saved receipt and downstream
+delivery in the approved destination.
 
-Compare the returned Environment ID and every form/fingerprint with the intended target and
-manifest. Read the definitions back through the supported Forms CLI or MCP. If publication fails,
-report the exact blocker and keep the changed server version out of live traffic; do not introduce
-a CI dependency as a workaround. For new or materially changed submit paths, verify a synthetic
-submission and its full saved receipt in the approved test destination.
+## Existing manifests and other validators
+
+Keep the existing `--manifest .siteos/forms/manifest.json` workflow until an
+explicit migration. Its project-owned generators and `sourceExportId` versions
+remain supported. Do not copy those helpers into a new Zod integration. Other
+validators may retain their supported portable-contract path; the package does
+not promise adapters for every validation library.
 
 ## Optional unattended CI publication
 
 Only configure this when the user asks for publication on deployments that run without an agent.
 Instructions alone do not execute on a Git push or hosting build. Reuse the same CLI command in
-the existing trusted release job after generation and before new server traffic. The job receives
+the existing trusted release job before new server traffic. The job receives
 its own Environment-scoped deployment key from its secret store, uses a pinned CLI version, and
 stops promotion on publication failure. Do not copy a developer Auth session into CI or require a
 particular host. Keep Preview and Production authority separate.
 
 ## Runtime versions and rollback
 
-Send `contractVersion: generatedDefinition.sourceExportId` from the website server alongside
+Send `contractVersion: form.contractVersion` (existing manifests use `generatedDefinition.sourceExportId`) from the website server alongside
 `formKey`, `payload`, and `idempotencyKey` to `POST /api/forms/submissions`. Never let browser input
 select the version, destination or account identity. New and old deployed servers use their own
 saved contracts; rollback reuses the old fingerprint without editing SiteOS settings.

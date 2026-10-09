@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.44.0`
+Package: `@siteoshq/cli@2.45.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -270,6 +270,7 @@ siteos forms definition restore --environment <slug> --form <form-id> --expected
 siteos forms definition delete --environment <slug> --form <form-id> [--apply --confirm <form-key> --expected-revision <revision> --expected-submissions <count>] [--json]
 siteos forms definition check --input <path> [--json]
 siteos forms definition check --manifest <path> [--json]
+siteos forms definition check --source <trusted-project.ts> [--json]
 siteos forms credential list --environment <slug> [--json]
 siteos forms credential issue --environment <slug> --install [--name <name>] [--json]
 siteos forms credential rotate --environment <slug> --install [--name <name>] [--json]
@@ -283,6 +284,7 @@ siteos forms submissions list --environment <slug> [--form <form-id>] [--query <
 siteos forms submissions read --environment <slug> --form <form-id> --submission <id> [--json]
 siteos forms submissions status --environment <slug> --form <form-id> --submission <id> --status <new|read|archived|spam> --expected-status <status> [--json]
 siteos forms deploy --manifest <path> [--json]
+siteos forms deploy --source <trusted-project.ts> [--json]
 siteos forms deployment-key issue --environment <slug> --install [--name <name>] [--json]
 siteos forms deployment-key list --environment <slug> [--json]
 siteos forms deployment-key revoke --environment <slug> --credential <id> [--json]

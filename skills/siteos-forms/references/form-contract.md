@@ -1,135 +1,98 @@
-# SiteOS Form Contract
+# SiteOS form contract
 
-## Purpose
+The host owns ordinary validation schemas. SiteOS owns registration, portable
+output validation, inbox display, versioning and delivery. A connection must not
+force the host to rebuild its Zod schema into a service-specific field DSL.
 
-The contract describes platform-managed form semantics so SiteOS can register, validate, store, display, and later notify on submissions. It is not a host-project visual UI schema and should not contain component styling or layout behavior.
+## Existing schemas are the source of validation
 
-Runtime validation has one source of truth. The SiteOS `schemaJson` registration value must be generated from that source, not maintained as an independent copy.
+Keep the project's installed validator and resolver. In a Zod project, export
+normal schemas and infer payload types from them. The browser and server share
+those schemas; the server calls `safeParse` or `safeParseAsync` and submits only
+the parsed output. Do not write a parallel parser or JSON Schema walker.
 
-## One Definition, Not Parallel Schemas
-
-For TypeScript projects, prefer a project-owned `defineForm` helper from `assets/define-form.ts` whose field entries contain the runtime schema and managed metadata together:
+Install the published `@siteoshq/forms` package. Use `/zod3` for Zod 3 or `/zod4`
+for Zod 4; do not force a major Zod upgrade. A separate server-only registration
+module refers to the existing schema:
 
 ```ts
-const contactForm = defineForm({
-  formKey: "contact",
-  name: "Contact form",
+import { createForm } from '@siteoshq/forms/zod3';
+import { contactSchema } from './src/lib/validation';
+
+export const contact = createForm({
+  schema: contactSchema,
+  formKey: 'contact',
+  name: 'Contact form',
+  sourcePagePath: '/contact',
   fields: {
-    name: {
-      schema: z.string().trim().min(2).max(80),
-      label: "Name",
-      kind: "text",
-      displayRole: "primary",
-    },
-    email: {
-      schema: z.string().email(),
-      label: "Email",
-      kind: "email",
-      displayRole: "secondary",
-    },
-    message: {
-      schema: z.string().trim().min(10).max(2000),
-      label: "Message",
-      kind: "textarea",
-    },
+    name: { label: 'Name', kind: 'text', displayRole: 'primary' },
+    email: { label: 'Email', kind: 'email', displayRole: 'secondary' },
+    message: { label: 'Message', kind: 'textarea' },
   },
 });
-
-export const contactFormSchema = contactForm.schema;
-export type ContactFormPayload = z.infer<typeof contactFormSchema>;
+export default [contact];
 ```
 
-The helper builds `z.object(...)` from the field schemas and generates `schemaJson` plus `normalizedFieldsJson` from the same keys. A field must never be declared once in Zod and again in an unrelated hand-written metadata array.
+This example assumes those three fields exist in `contactSchema`. The metadata
+keys are checked against its output, including optional fields. They describe
+only inbox semantics, not validation rules. The package derives required flags,
+portable validation and the exact version; the host does not implement that work.
 
-## Ownership Rules
+## Metadata boundaries
 
-- `formKey`: Stable machine key. Use kebab-case or slug-like names. Do not derive from display copy that changes often.
-- `formName`: Human label for SiteOS UI.
-- `schema`: Source of truth for runtime validation and required/optional fields.
-- `fields`: Source of truth for SiteOS managed metadata and field display in SiteOS UI.
-- `label`: Useful for SiteOS UI and normalized submission display.
-- `displayRole`: SiteOS inbox semantics. Every form must have exactly one required `primary` field for the submission title and may have any number of `secondary` fields for supporting context. Choose roles from form semantics, never from property names.
-- `options`: Keep for select-like fields; useful for future SiteOS details and validation/UI inspection.
-- `multiple`: Keep for array/multiselect semantics.
+- `formKey` is stable; names and UI copy do not determine identity.
+- `fields` references the schema output keys. Each entry has a useful `label` and
+  optional `kind`, `multiple`, `options`, or `displayRole`.
+- Exactly one required field is `primary`; supporting fields may be `secondary`.
+  Choose these by meaning, never by guessing property names.
+- Required/optional rules and constraints come from the schema, not metadata.
+- Success copy, redirects, placeholders, autocomplete and layout stay in the UI.
+- Credentials, provider mappings and destinations stay outside these contracts.
 
-## What Must Stay Out
+Keep this module server-only because the adapter uses Node crypto and conversion
+code. Browser components import the original schema module, not registration.
 
-- `required`: derive from schema.
-- `successMessage`, `successMode`, `successRedirectUrl`: UI behavior.
-- `placeholder`, `autocomplete`, `className`, layout props: UI behavior.
-- endpoint URL, immutable Project ID, and export version: delivery/runtime binding, not component contract.
+## Publication and runtime
 
-A fresh central `siteos-forms` service grant is management-only, while the environment-scoped Forms
-submission credential is runtime-only. Neither belongs in the component contract.
+The new default has no generated project files or custom build step. CLI 2.45.0+
+loads the trusted registration source directly:
 
-## Consistency Checks
-
-Fail fast when:
-
-- A contract field is missing from the validation schema.
-- The schema contains a field missing from the contract.
-- A field type is incompatible with schema shape, such as checkbox with string schema.
-- `multiple` is used on a non-array schema.
-- The contract does not declare exactly one `displayRole: "primary"` field.
-- The primary display field is optional in the validation schema.
-
-Do not require exact zod chain matching. Check compatibility with schema shape.
-
-## TypeScript And JavaScript Validation
-
-- If the project already uses Zod, use it. Do not replace it with custom `typeof` loops, JSON Schema walkers, or email regular expressions.
-- If the project has no validation library and package changes are allowed, add Zod. If the project already standardizes on another mature schema validator, preserve that convention instead of adding a second validation system.
-- Export one named form schema, infer the payload type from it, and call `safeParse` or `safeParseAsync` at the server submission boundary. Return structured field errors without exposing upstream internals.
-- When React Hook Form is present, use its Zod resolver rather than maintaining separate client validation rules.
-- Do not cast an unchecked record to the payload type. The validated result from the schema is the payload.
-
-## Generating SiteOS Schema JSON
-
-Generate the CLI definition artifact from the runtime schema and keep the generator in the project so later schema changes can be re-synced safely.
-
-- Zod 4: use `z.toJSONSchema(formSchema, { target: "draft-07" })`.
-- Zod 3: use a compatible `zod-to-json-schema` version with the same exported form schema.
-- Use the project's existing TypeScript runner when available. Otherwise add a small project-owned generator with the least additional tooling required by the host project.
-- Write the generated artifact under a predictable ignored or project-owned path such as `.siteos/forms/<form-key>.definition.json`.
-- Add SiteOS-only metadata (`formKey`, `name`, `normalizedFieldsJson`, `sourcePagePath`) around the generated `schemaJson`; do not copy validation constraints into that metadata.
-- Run the generator automatically during build and append the fingerprint using `assets/contract-version.ts`. The agent publishes changed definitions as part of the authorized form task, before deploying code that uses them. See `form-deployment.md`; CI publication is optional.
-
-Maintain a versioned project manifest next to the generated artifacts:
-
-```json
-{
-  "version": 1,
-  "forms": ["contact.definition.json", "demo-request.definition.json"]
-}
+```sh
+siteos forms definition check --source siteos.forms.ts --json
+siteos forms deploy --source siteos.forms.ts --json
 ```
 
-Manifest paths are relative to the manifest file. Each `formKey` must be unique. Validate the complete set before writing remotely:
+The package and CLI use the existing JSON Schema wire protocol internally. This
+is not a second schema for developers to maintain. `--source` evaluates local
+code; it is not a sandbox. Publish only trusted project sources. The CLI checks
+the complete inventory before making a remote write; duplicate keys fail.
+See `form-deployment.md` for environment authority and publication keys.
 
-```bash
-npx @siteoshq/cli forms definition check --manifest .siteos/forms/manifest.json --json
-npx @siteoshq/cli forms deploy --manifest .siteos/forms/manifest.json --json
+The website server sends `contractVersion: contact.contractVersion`. Old and new
+servers retain independently pinned versions. The package snapshots the portable
+contract so later metadata mutations cannot change the version silently.
+
+## Full Zod versus portable output checks
+
+SiteOS does not execute customer JavaScript. Host-only refinements and business
+checks still run at the website server. Do not claim JSON Schema runs arbitrary
+Zod logic. Transformations must have a describable output; use an explicit output
+schema when it cannot be inferred, for example:
+
+```ts
+z.string().transform(Number).pipe(z.number().int());
 ```
 
-The manifest is an inventory, not a deletion instruction. Removing a path does not delete or archive its remote form because historical submissions must remain addressable.
+Unsupported output descriptions fail. Never weaken the schema, omit validation,
+or claim that every arbitrary transform can be inferred. Keep such host checks
+covered by the website tests. JSON-compatible output remains required for HTTP.
 
-The expected dependency direction is:
+## Existing integrations and other validators
 
-```text
-shared Zod schema -> server safeParse
-                  -> JSON Schema generator -> versioned definition -> release publication
-```
+Existing manifests, helper files and generated `sourceExportId` versions remain
+supported. Do not migrate them incidentally, and never hand-edit generated files.
+`assets/define-form.ts` and `assets/contract-version.ts` are legacy compatibility
+examples, not the template for a new Zod integration.
 
-Avoid the reverse direction (`definition JSON -> custom runtime parser`). It recreates a validator incompletely and caused the hand-written email/length validation seen in the failed form run.
-
-## Stack Guidance
-
-- TypeScript/React projects: use Zod when present; otherwise add it when the project has no established validator and dependency changes are allowed.
-- Projects with another validation layer: use that layer as source of truth and map to SiteOS field metadata.
-- Plain HTML projects: create a JSON-schema-like contract only if no stronger local validation exists.
-
-## Serialized output and business rules
-
-Generated JSON Schema does not preserve all refinements or transformations. The host server owns
-full business validation and normalization and must submit parsed output. Zod JSON export uses
-`io: "output"`; unsupported conversion fails the build. Do not claim the remote JSON validator is
-an equivalent execution of arbitrary Zod logic. Do not discard checks to make generation pass.
+Other established validators retain their existing supported portable-contract
+workflow. Do not force Zod or promise a package adapter that has not shipped.

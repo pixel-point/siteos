@@ -20,8 +20,7 @@ Inspect before editing:
 - Keep project credentials server-only.
 - If Zod exists, export one shared Zod schema and validate the route payload with `safeParse` or `safeParseAsync`; never hand-roll a JSON Schema parser or email regex.
 - If React Hook Form exists, use the Zod resolver so client and server validation share the same schema.
-- Generate the SiteOS definition JSON from the shared validation schema as described in `form-contract.md` before syncing it.
-- Prefer a project-owned `defineSiteOSForm` helper so the Zod field schema and managed field metadata are declared together, then generate the definition manifest from those declarations.
+- Preserve the ordinary Zod schema. Register it with `@siteoshq/forms/zod3` or `/zod4` in a server-only `siteos.forms.ts`; the package owns conversion and versioning. No copied helper, generated project JSON or custom build step is needed.
 
 ## TanStack Start
 
@@ -55,9 +54,9 @@ Inspect before editing:
 - Reuse existing SiteOS submission helper if present.
 - Before generating new runtime, inspect the existing SiteOS helper and proxy files first. If the project already has `src/lib/siteos-project-form.*` or `app/api/forms/*`, extend those instead of inventing a parallel implementation.
 - For linked Forms projects, sync the form definition before treating the form as complete. Project and Environment selection do not register the form.
-- Use `form-deployment.md` for automatic build generation, atomic `forms deploy --manifest .siteos/forms/manifest.json`, and server-pinned `contractVersion`. Keep legacy `definition sync` for explicit unpinned-default changes only.
+- Use `form-deployment.md` for direct source validation, atomic `forms deploy --source siteos.forms.ts`, and server-pinned `contractVersion`. Keep legacy `definition sync` for explicit unpinned-default changes only.
 - When `.siteos/forms/manifest.json` exists, check and sync the manifest instead of syncing definitions one by one.
-- For SiteOS-backed submissions, the browser-facing local proxy may stay `/api/forms/:formKey`. The upstream Forms-owned API on the shared SiteOS origin expects a JSON `POST` to `{SITEOS_FORMS_PUBLIC_URL}/api/forms/submissions` with `formKey`, `contractVersion` from the generated artifact, `payload`, `idempotencyKey`, and optional request context fields, authenticated only by the server-only `SITEOS_FORMS_API_KEY` value in the `x-siteos-project-forms-credential` header.
+- For SiteOS-backed submissions, the browser-facing local proxy may stay `/api/forms/:formKey`. The upstream Forms-owned API on the shared SiteOS origin expects a JSON `POST` to `{SITEOS_FORMS_PUBLIC_URL}/api/forms/submissions` with `formKey`, `contractVersion` from the server-only package contract, `payload`, `idempotencyKey`, and optional request context fields, authenticated only by the server-only `SITEOS_FORMS_API_KEY` value in the `x-siteos-project-forms-credential` header.
 - Do not generate nested upstream paths such as `/api/v1/project/forms/{formKey}/submissions` unless that exact route is verified in current source or docs.
 - If the upstream response is HTML or any non-JSON payload, treat it as an integration mismatch or wrong endpoint. Normalize the local error instead of surfacing raw HTML-oriented upstream messages to end users.
 
@@ -69,7 +68,7 @@ Use the host project's own commands. Prefer:
 - typecheck
 - relevant unit tests
 - build
-- release publication smoke test with `npx @siteoshq/cli forms deploy --manifest .siteos/forms/manifest.json --json`
+- release publication smoke test with `npx @siteoshq/cli forms deploy --source siteos.forms.ts --json` (legacy integrations retain `--manifest`)
 - local upstream submit smoke test with `npx @siteoshq/cli forms submit --input <path> [--json]` when SiteOS config is available
 - for linked SiteOS projects, verify both the sync endpoint and the submit proxy against the configured `SITEOS_FORMS_PUBLIC_URL` before considering the form finished
 
@@ -79,7 +78,7 @@ Treat these smoke-test outcomes differently:
   distinguish creation from reuse. The current Forms handler also returns `201` when it reuses
   an unchanged version; HTTP status alone is not version-creation evidence.
 - HTML or non-JSON response: wrong route, wrong host, or wrong environment contract.
-- JSON `NOT_FOUND`: missing form or exact version in the selected runtime Environment. Regenerate/publish the matching contract; do not drop `contractVersion` to bypass the error.
+- JSON `NOT_FOUND`: missing form or exact version in the selected runtime Environment. Check/publish the matching source contract; do not drop `contractVersion` to bypass the error.
 - JSON validation/auth errors: runtime is reaching SiteOS, then fix payload or credentials.
 
 Keep the same idempotency key when retrying an unchanged submission after an uncertain response.
