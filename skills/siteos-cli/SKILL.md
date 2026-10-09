@@ -86,11 +86,14 @@ the server or update a website's pinned Trace script.
 
 ## Forms releases
 
-Use `forms deploy --manifest <path>` for non-interactive publication with an explicit Forms origin
+For Zod projects, use CLI 2.45.0+ and `forms deploy --source siteos.forms.ts` with the
+published `@siteoshq/forms` adapters. Keep ordinary Zod schemas and existing resolvers; do not add
+generated JSON, a custom converter or a website build hook. Existing manifest integrations retain
+`forms deploy --manifest <path>` until deliberately migrated. Publication requires an explicit Forms origin
 and publication-only `SITEOS_FORMS_DEPLOYMENT_KEY`. `forms deployment-key issue|list|revoke` manages that
 separate Environment authority through normal Auth grants. Submission credentials cannot publish.
 An agent can run publication locally as part of an authorized form change; hosting/CI setup is
-optional. Read `../siteos-forms/references/form-deployment.md` for generation, version pinning and rollback.
+optional. Read `../siteos-forms/references/form-deployment.md` for source validation, version pinning and rollback.
 
 ## Cookie service discovery
 
