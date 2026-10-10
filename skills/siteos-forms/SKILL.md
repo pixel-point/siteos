@@ -41,13 +41,18 @@ Use SiteOS naming exclusively. When a touched target-project file still uses leg
 2. Detect the project stack and existing conventions.
    - Check package manager, framework, routes/API support, form libraries, validation libraries, UI primitives, env/config patterns, and existing `.siteos/` files.
    - Prefer local project patterns over generic templates.
+   - Choose validation and SDK dependencies from the project's actual form stack:
+     - Existing Zod forms on a supported Node server: reuse their schemas and resolver with `@siteoshq/forms`. SDK 0.2+ requires Zod 4; an older Zod version needs an explicitly authorized migration.
+     - New JavaScript/TypeScript forms with a supported Node server and no established validator: prefer Zod 4 and `@siteoshq/forms`, using the project's package manager. Keep UI components and the form library consistent with the project.
+     - Another established validator or server language: preserve it and use the Forms HTTP API with a supported portable contract. Do not install Zod or this SDK just to connect SiteOS, or promise an adapter that has not shipped.
+   - Check the SDK's runtime requirements before installing it. A static frontend still needs a server or serverless handler for the submission credential; a frontend framework alone does not establish SDK compatibility.
 
 3. Create or update the form.
    - Build the visible UI in the host project's style.
    - Load `references/form-contract.md` before implementing validation or the registration artifact.
-   - Use the host project's established validation library. In a TypeScript/JavaScript project with Zod installed, Zod is mandatory; do not hand-write a schema walker, email regex, or parallel field parser.
+   - Use the validator selected above. In Zod projects, do not hand-write a schema walker, email regex, or parallel field parser.
    - Preserve ordinary named Zod schemas (`z.object`, `.extend`, `.refine`, `.transform`) and inferred payload types. Do not rebuild an existing schema from a SiteOS field map or replace the project's resolver.
-   - Use the supported `@siteoshq/forms` package: `createForm` from `@siteoshq/forms` accepts an ordinary Zod 4 schema plus typed inbox metadata. SDK 0.2+ supports Zod 4 only; `/zod4` is a compatible alias, `/zod3` is removed. Treat a Zod 3 upgrade as an explicit project migration, including its resolver and validation tests. Export the contracts as the default array from a server-only `siteos.forms.ts`. The website server imports the same contracts for `contractVersion`; browser components import only the original validation schemas.
+   - For Zod 4 integrations, use `createForm` from `@siteoshq/forms` with the ordinary schema plus typed inbox metadata. `/zod4` is a compatible alias, `/zod3` is removed. Include the resolver and validation tests in an authorized Zod upgrade. Export the contracts as the default array from a server-only `siteos.forms.ts`. The website server imports the same contracts for `contractVersion`; browser components import only the original validation schemas.
    - SiteOS tooling owns conversion and fingerprints. Do not copy `define-form.ts`, `contract-version.ts`, a JSON converter or a generator into a new integration. The old assets remain compatibility references for existing integrations.
    - Add a SiteOS form contract that describes managed semantics only.
    - For the SiteOS submission inbox, assign exactly one required, semantically useful field `displayRole: "primary"` and optional supporting fields `displayRole: "secondary"`. Choose roles from the form's meaning, never from property names. Always generate complete field metadata.

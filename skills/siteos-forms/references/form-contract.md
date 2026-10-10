@@ -11,7 +11,8 @@ normal schemas and infer payload types from them. The browser and server share
 those schemas; the server calls `safeParse` or `safeParseAsync` and submits only
 the parsed output. Do not write a parallel parser or JSON Schema walker.
 
-Install `@siteoshq/forms` 0.2+ with Zod 4. Use the root import; `/zod4` is a
+Choose dependencies using the stack policy in `../SKILL.md`. For a supported
+Node server using Zod, install `@siteoshq/forms` 0.2+ with Zod 4. Use the root import; `/zod4` is a
 compatibility alias. Zod 3 is not supported by new SDK releases. If the project
 still uses it, migrate Zod and its resolver only within an authorized upgrade;
 otherwise preserve the working older integration. A separate server-only registration
@@ -56,7 +57,7 @@ code. Browser components import the original schema module, not registration.
 
 ## Publication and runtime
 
-The new default has no generated project files or custom build step. CLI 2.45.0+
+The Zod SDK workflow has no generated project files or custom build step. CLI 2.45.0+
 loads the trusted registration source directly:
 
 ```sh
@@ -96,5 +97,10 @@ supported. Do not migrate them incidentally, and never hand-edit generated files
 `assets/define-form.ts` and `assets/contract-version.ts` are legacy compatibility
 examples, not the template for a new Zod integration.
 
-Other established validators retain their existing supported portable-contract
-workflow. Do not force Zod or promise a package adapter that has not shipped.
+Other established validators and server languages use the Forms HTTP API with
+a supported portable output contract and inbox metadata. Validate submissions
+with the native validator, publish the description and pin the returned version
+in server requests. The API does not require Zod or this SDK, but it still requires
+a registered description; sending arbitrary answers does not register fields.
+Check the validator's supported export path rather than promising an unshipped
+adapter or silently dropping constraints. Preserve existing working integrations.

@@ -12,15 +12,18 @@ Inspect before editing:
 - UI library and styling conventions
 - env/config convention
 
+Apply the validation and SDK selection policy in `../SKILL.md` before installing
+dependencies. Framework choice does not override an established form validator.
+
 ## Next.js App Router
 
 - Put UI in the appropriate component/page location.
 - Add a route handler such as `app/api/forms/[formKey]/route.ts`.
 - The route reads server env/config and proxies submissions to SiteOS.
 - Keep project credentials server-only.
-- If Zod exists, export one shared Zod schema and validate the route payload with `safeParse` or `safeParseAsync`; never hand-roll a JSON Schema parser or email regex.
-- If React Hook Form exists, use the Zod resolver so client and server validation share the same schema.
-- Preserve the ordinary Zod schema. Register it with `@siteoshq/forms` (Zod 4) in a server-only `siteos.forms.ts`; the package owns conversion and versioning. No copied helper, generated project JSON or custom build step is needed.
+- When Zod is the selected validator, export one shared schema and validate the route payload with `safeParse` or `safeParseAsync`; never hand-roll a JSON Schema parser or email regex.
+- If React Hook Form exists, preserve the resolver for the selected validator. With Zod, use its compatible resolver so client and server validation share the same schema.
+- For Zod 4 on a supported Node server, preserve the ordinary schema and register it with `@siteoshq/forms` in a server-only `siteos.forms.ts`; the package owns conversion and versioning. No copied helper, generated project JSON or custom build step is needed.
 
 ## TanStack Start
 
@@ -95,5 +98,8 @@ If remote registration or submission cannot be tested because API credentials ar
 `@siteoshq/forms` requires Node.js 22.12+ and Zod 4. It works with any Node backend,
 not only Next.js; browser imports are blocked. React/Vue/static HTML frontends
 still need a backend or serverless handler to hold the submission credential.
-PHP, Python, Ruby and other servers use the Forms HTTP API and their own validators;
-do not install a JavaScript SDK into those runtimes or promise an unshipped adapter.
+Servers using another validator or language use the Forms HTTP API and their own
+validators. This includes JavaScript/TypeScript projects with an established
+alternative to Zod. Do not install Zod just for SiteOS, install this Node SDK into
+another runtime, or promise an unshipped adapter. HTTP integrations still publish
+a supported description before submitting its pinned version.
