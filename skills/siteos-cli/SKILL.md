@@ -87,7 +87,7 @@ the server or update a website's pinned Trace script.
 ## Forms releases
 
 For Zod projects, use CLI 2.45.0+ and `forms deploy --source siteos.forms.ts` with the
-published `@siteoshq/forms` adapters. Keep ordinary Zod schemas and existing resolvers; do not add
+published `@siteoshq/forms` 0.2+ root import with Zod 4. Keep ordinary Zod schemas and existing resolvers; do not add
 generated JSON, a custom converter or a website build hook. Existing manifest integrations retain
 `forms deploy --manifest <path>` until deliberately migrated. Publication requires an explicit Forms origin
 and publication-only `SITEOS_FORMS_DEPLOYMENT_KEY`. `forms deployment-key issue|list|revoke` manages that

@@ -20,7 +20,7 @@ Inspect before editing:
 - Keep project credentials server-only.
 - If Zod exists, export one shared Zod schema and validate the route payload with `safeParse` or `safeParseAsync`; never hand-roll a JSON Schema parser or email regex.
 - If React Hook Form exists, use the Zod resolver so client and server validation share the same schema.
-- Preserve the ordinary Zod schema. Register it with `@siteoshq/forms/zod3` or `/zod4` in a server-only `siteos.forms.ts`; the package owns conversion and versioning. No copied helper, generated project JSON or custom build step is needed.
+- Preserve the ordinary Zod schema. Register it with `@siteoshq/forms` (Zod 4) in a server-only `siteos.forms.ts`; the package owns conversion and versioning. No copied helper, generated project JSON or custom build step is needed.
 
 ## TanStack Start
 
@@ -33,7 +33,7 @@ Inspect before editing:
 - Build the form UI and validation locally.
 - Check if the deployed environment has serverless functions.
 - If yes, add the function/proxy in the platform's expected directory.
-- If no, require a SiteOS public form token endpoint before enabling real submission.
+- If no, explain that the current credential-based API requires a backend or serverless handler before real submissions can work. Do not expose the credential or assume an unshipped public-token endpoint.
 
 ## Plain HTML
 
@@ -89,3 +89,11 @@ uncertainty and read back the receipt. Never generate a new key automatically af
 response or treat a conflict as proof of successful delivery.
 
 If remote registration or submission cannot be tested because API credentials are intentionally not exposed in chat, state that limitation clearly.
+
+## SDK versus HTTP API
+
+`@siteoshq/forms` requires Node.js 22.12+ and Zod 4. It works with any Node backend,
+not only Next.js; browser imports are blocked. React/Vue/static HTML frontends
+still need a backend or serverless handler to hold the submission credential.
+PHP, Python, Ruby and other servers use the Forms HTTP API and their own validators;
+do not install a JavaScript SDK into those runtimes or promise an unshipped adapter.

@@ -11,12 +11,14 @@ normal schemas and infer payload types from them. The browser and server share
 those schemas; the server calls `safeParse` or `safeParseAsync` and submits only
 the parsed output. Do not write a parallel parser or JSON Schema walker.
 
-Install the published `@siteoshq/forms` package. Use `/zod3` for Zod 3 or `/zod4`
-for Zod 4; do not force a major Zod upgrade. A separate server-only registration
+Install `@siteoshq/forms` 0.2+ with Zod 4. Use the root import; `/zod4` is a
+compatibility alias. Zod 3 is not supported by new SDK releases. If the project
+still uses it, migrate Zod and its resolver only within an authorized upgrade;
+otherwise preserve the working older integration. A separate server-only registration
 module refers to the existing schema:
 
 ```ts
-import { createForm } from '@siteoshq/forms/zod3';
+import { createForm } from '@siteoshq/forms';
 import { contactSchema } from './src/lib/validation';
 
 export const contact = createForm({

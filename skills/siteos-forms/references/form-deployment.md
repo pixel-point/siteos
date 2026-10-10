@@ -1,6 +1,6 @@
 # Form publication from chat
 
-New Zod integrations require `@siteoshq/forms` and CLI 2.45.0+ with `forms deploy --source` in help. The existing Forms server API is unchanged.
+New Zod integrations require Zod 4, `@siteoshq/forms` 0.2+ and CLI 2.45.0+ with `forms deploy --source` in help. The existing Forms server API is unchanged.
 Do not infer installation from a source checkout; upgrade the CLI when these commands are absent.
 
 The default workflow is agent-managed: when the user asks to add or change a connected form,
@@ -62,8 +62,7 @@ rotation. Do not add the legacy name to new `.env.example` files.
 
 ## Existing Zod schemas and package-owned versions
 
-Keep the original schemas and form resolver. Use `@siteoshq/forms/zod3` or
-`@siteoshq/forms/zod4` in a server-only `siteos.forms.ts`, exporting the contract
+Keep the original schemas and form resolver. Use `@siteoshq/forms` in a server-only `siteos.forms.ts`, exporting the contract
 array as default. See `form-contract.md` for the typed metadata. Browser code
 imports only the original validation module. The runtime server and CLI consume
 the same registration module; no generated project JSON or custom generator is
