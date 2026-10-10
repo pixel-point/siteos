@@ -13,7 +13,7 @@ change resources with CLI/UI. Compare the Project and environment across both in
 ```bash
 siteos search index list --environment production --json
 siteos search index create --environment production --name Documentation --slug documentation --json
-siteos search content list --environment production --index INDEX_ID --json
+siteos search content --environment production --index INDEX_ID --json
 siteos search query --environment production --index INDEX_ID --query installation --json
 ```
 
@@ -51,10 +51,33 @@ siteos search credential issue --environment production --index INDEX_ID --insta
 siteos search indexing-credential issue --environment production --index INDEX_ID --install --json
 ```
 
-Named-index installation writes separate variable names to the ignored owner-only `.env`; it
-preserves existing default and other-index credentials. Use the returned safe `installed`
-metadata for the variable names. Do not print or copy secret values into chat. Default installs
-retain the conventional `SITEOS_SEARCH_*` names.
+CLI 2.46.0+ supports the readable installation names and `--env-prefix` below.
+Check `siteos --version` and upgrade the CLI separately when needed.
+
+A new single-search installation uses `SITEOS_SEARCH_TOKEN`, `SITEOS_SEARCH_ENV`,
+`SITEOS_SEARCH_PUBLIC_URL` and, when needed, `SITEOS_SEARCH_INDEXING_CREDENTIAL`.
+Keep the explicit `--index`: readable variable names do not change the credential's index binding.
+
+For multiple searches, choose stable prefixes by purpose, not by an ID/hash or a mutable display
+name. For example, install Blog with these commands and Documentation with `SITEOS_SEARCH_DOCS`:
+
+```bash
+siteos search credential issue --environment production --index INDEX_ID --env-prefix SITEOS_SEARCH_BLOG --install --json
+siteos search indexing-credential issue --environment production --index INDEX_ID --env-prefix SITEOS_SEARCH_BLOG --install --json
+```
+
+Installation writes only the ignored owner-only `.env`. The CLI records a non-secret index/prefix
+binding in a comment there and reuses it on subsequent installs. A prefix occupied by another index
+or credentials without a known binding fails before issuing a key; select a separate prefix.
+Do not remove binding comments, drop `--index`, or overwrite existing credentials to bypass a conflict.
+Existing ID-derived installations keep their names; a second search does not rename the first.
+If the same index has several installed prefixes, repeat `--env-prefix` explicitly.
+
+Use the returned safe `installed.envPrefix` and variable names for website configuration and sync.
+Do not print or copy secret values into chat. Local installation does not configure hosting:
+the reviewed hosting environment needs the same server-only names and their securely transferred
+values. A successful local query is not evidence that Preview or Production has these variables.
+Do not add a browser-public prefix such as `NEXT_PUBLIC_`.
 
 For server-proxy delivery, give each search a separate route group, for example
 `/api/docs-search/query` and `/api/blog-search/query`, with its own Suggestions/events routes.
@@ -62,11 +85,16 @@ In each group's `runtime-url.ts`, set `searchRuntimeVariables` to the names retu
 installation. Bind those names in server code; never accept them from a request. Set each native
 Search component's query, Suggestions and event endpoints to the matching group.
 
-For local source handlers, keep a config per index. Set `index: { id: "INDEX_ID" }` alongside
-`environment.slug`; the sync runner reads that index's installed credential without a default
-fallback. Use `pnpm search:sync --config siteos-search.docs.config.ts --dry-run --output docs.json`
+For local source handlers, keep a config per index. Set
+`index: { id: "INDEX_ID", envPrefix: "SITEOS_SEARCH_BLOG" }` alongside `environment.slug`;
+copy `envPrefix` from installation metadata (`SITEOS_SEARCH` for a new single search).
+The sync runner reads exactly those variables without falling back to another index.
+Existing configs with only `index.id` retain the old ID-derived names.
+Use `pnpm search:sync --config siteos-search.docs.config.ts --dry-run --output docs.json`
 and the corresponding Blog config. Live sync omits `--dry-run` only after review and authorization.
-The runtime smoke helper accepts `--index INDEX_ID` with its existing `--environment` flag.
+The runtime smoke helper accepts `--index INDEX_ID --env-prefix SITEOS_SEARCH_BLOG` with its
+`--environment` flag. Without a prefix it reads the local binding, then the legacy ID-derived names;
+it does not silently use another search's conventional variables.
 
 Verify both searches, a reload, an empty result, and separate Suggestions. If collecting visitor
 analytics, verify each permitted query/click against its own index. Never use internal MCP or

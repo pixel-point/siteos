@@ -12,9 +12,19 @@ const sourceIdPattern = /^[a-z0-9][a-z0-9-]{0,62}$/;
 const environmentSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 function credentialPrefix(config) {
   const id = config.index?.id;
-  if (id === undefined) return "SITEOS_SEARCH";
+  if (id === undefined) {
+    if (config.index?.envPrefix !== undefined) throw new Error("index.envPrefix requires index.id.");
+    return "SITEOS_SEARCH";
+  }
   if (typeof id !== "string" || !/^[A-Za-z0-9_-]{1,255}$/.test(id))
     throw new Error("index.id must be an exact SiteOS index ID.");
+  const prefix = config.index.envPrefix;
+  if (prefix !== undefined) {
+    if (typeof prefix !== "string" || prefix.length > 80 ||
+      !/^SITEOS_SEARCH(?:_[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*)?$/.test(prefix))
+      throw new Error("index.envPrefix must be SITEOS_SEARCH or an uppercase prefix such as SITEOS_SEARCH_BLOG.");
+    return prefix;
+  }
   return `SITEOS_SEARCH_INDEX_${createHash("sha256").update(id).digest("hex").slice(0,24).toUpperCase()}`;
 }
 const indexingCredentialHeader = "x-siteos-project-search-indexing-credential";

@@ -1,7 +1,8 @@
 const siteosSearchConfig = {
   schemaVersion: 1,
-  // For a named index, set index: { id: "<exact-index-id>" }.
-  // CLI-installed credential names are derived from that ID; no default fallback.
+  // Set index: { id: "<exact-index-id>", envPrefix: "SITEOS_SEARCH" }.
+  // Copy envPrefix from CLI installed metadata. Use SITEOS_SEARCH_BLOG for another search.
+  // Existing index-only configs retain their legacy ID-derived names; no credential fallback.
   project: {},
   environment: {
     slug: "prod",

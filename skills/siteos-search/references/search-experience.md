@@ -2,7 +2,7 @@
 
 Use the selected common Project and an explicit common `--environment`. The CLI resolves its native Search binding; never infer a connection from matching names or slugs. Existing user authorization remains valid throughout the workflow. Reuse approved sources and placement decisions when resuming.
 
-Run `siteos search --help` first when using an older CLI. These operations require the updated CLI and Search backend. An unavailable command or route is a version mismatch, not permission to call internal endpoints. Use a locally built CLI during release acceptance; do not claim unpublished functionality is in the npm release.
+Run `siteos search --help` first when using an older CLI. These operations require the matching CLI and Search backend. A missing command can indicate an older CLI; an HTTP 404 can also come from an undeployed website proxy or a SiteOS routing defect. Identify the failing URL and compare the installed help, website routes and server release before naming the cause. Do not substitute internal endpoints. Use a locally built CLI during release acceptance; do not claim unpublished functionality is in the npm release.
 
 For public website crawling, use [website-crawler.md](website-crawler.md). Its previews preserve other sources and do not install the website interface.
 
@@ -45,6 +45,14 @@ siteos search installation verify --environment production --url https://website
 ```
 
 Run verification after the updated website proxy is reachable. The CLI obtains a short-lived challenge, queries the explicit website endpoint without sending it a SiteOS management credential, then validates the returned Search receipt. At least one matching result is required. HTTPS is required except for loopback development; redirects are rejected. The saved result proves that query path at the check time, not continuous uptime or every keyboard interaction.
+
+Read back `installation status` and report its exact `verifiedEndpoint` and `lastVerifiedAt`.
+A loopback or preview check does not verify the public website, even when its index environment
+is Production. Query verification does not check Suggestions or visitor events. Check the website's
+Suggestions request separately for a successful response and the published order (or intentional
+empty list). When visitor collection is authorized and enabled, also verify the settled query and
+result-click events and read the same index's visitor report. Never drop `--index` after a report
+failure, enable collection to complete a checklist, or describe query-only success as full installation.
 
 Complete browser verification separately: trigger, focus, typing, late response cancellation, empty results, errors, pagination, result clicks, keyboard and mobile. Resuming setup starts from `installation status` plus diagnostics; do not recreate working credentials or resync unchanged content to restart the checklist.
 

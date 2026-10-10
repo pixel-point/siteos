@@ -1,4 +1,5 @@
-// For each route group, use the variable names returned by CLI --index ID --install.
+// Use the exact installed metadata from CLI --index ID --install.
+// One search uses SITEOS_SEARCH_*; separate searches may use SITEOS_SEARCH_BLOG_* / SITEOS_SEARCH_DOCS_*.
 // Keep these server-owned; visitors must never choose a credential/environment variable.
 export const searchRuntimeVariables = {
   credential: "SITEOS_SEARCH_TOKEN",

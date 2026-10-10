@@ -8,18 +8,6 @@ import process from "node:process";
 const environmentSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const runtimeTokenHeader = "x-siteos-project-search-credential";
 const runtimeTokenRegex = /^psq_[A-Za-z0-9_-]{22}$/;
-const runtimeTokenEnvName = "SITEOS_SEARCH_TOKEN";
-const runtimeEnvironmentEnvName = "SITEOS_SEARCH_ENV";
-const runtimeTokenStatuses = new Set([
-  "environment-mismatch",
-  "invalid-format",
-  "missing",
-  "revoked",
-  "search-inactive",
-  "search-not-ready",
-  "unauthorized",
-  "valid",
-]);
 
 function parseArgs(argv) {
   const [command, ...rest] = argv;
@@ -50,14 +38,14 @@ function usage() {
   return [
     "Usage:",
     "  node scripts/runtime-token-tooling.mjs help [command]",
-    "  node scripts/runtime-token-tooling.mjs validate --environment <slug> [--index <id>] [--project-root <path>]",
-    "  node scripts/runtime-token-tooling.mjs query --q <query> --environment <slug> [--index <id>] [--project-root <path>] [--limit <n>] [--offset <n>]",
+    "  node scripts/runtime-token-tooling.mjs validate --environment <slug> [--index <id>] [--env-prefix <prefix>] [--project-root <path>]",
+    "  node scripts/runtime-token-tooling.mjs query --q <query> --environment <slug> [--index <id>] [--env-prefix <prefix>] [--project-root <path>] [--limit <n>] [--offset <n>]",
   ].join("\n");
 }
 
 function commandUsage(command) {
   if (command === "validate") {
-    return "Usage:\n  node scripts/runtime-token-tooling.mjs validate --environment <slug> [--index <id>] [--project-root <path>]";
+    return "Usage:\n  node scripts/runtime-token-tooling.mjs validate --environment <slug> [--index <id>] [--env-prefix <prefix>] [--project-root <path>]\n\nChecks local credential format and environment only, without a request. Use query --q <query> to verify server access.";
   }
 
   if (command === "init" || command === "rotate") {
@@ -68,9 +56,9 @@ function commandUsage(command) {
   if (command === "query") {
     return [
       "Usage:",
-      "  node scripts/runtime-token-tooling.mjs query --q <query> --environment <slug> [--index <id>] [--project-root <path>] [--limit <n>] [--offset <n>]",
+      "  node scripts/runtime-token-tooling.mjs query --q <query> --environment <slug> [--index <id>] [--env-prefix <prefix>] [--project-root <path>] [--limit <n>] [--offset <n>]",
       "",
-      "Reads SITEOS_SEARCH_TOKEN and SITEOS_SEARCH_ENV from the project .env and sends a runtime query smoke request without printing the token.",
+      "Reads the installed Search variable names from the project .env and sends a runtime query smoke request without printing the token. Use --env-prefix when several installations share an index.",
     ].join("\n");
   }
 
@@ -120,7 +108,7 @@ function resolveApiBaseUrl(dotenv, name = "SITEOS_SEARCH_PUBLIC_URL") {
   const fromDotenv = readOptionalString(readEnvVariable(dotenv, name));
   const configured = fromEnv ?? fromDotenv;
   if (!configured) {
-    throw new Error("SITEOS_SEARCH_PUBLIC_URL is required.");
+    throw new Error(`${name} is required.`);
   }
   return configured.replace(/\/+$/, "");
 }
@@ -175,7 +163,10 @@ async function loadToolContext(params = {}) {
   }
   const indexId = readOptionalString(params.indexId);
   if (indexId && !/^[A-Za-z0-9_-]{1,255}$/.test(indexId)) throw new Error("Invalid --index ID.");
-  const prefix = indexId ? `SITEOS_SEARCH_INDEX_${createHash("sha256").update(indexId).digest("hex").slice(0,24).toUpperCase()}` : "SITEOS_SEARCH";
+  const requestedPrefix = readOptionalString(params.envPrefix);
+  if (params.envPrefix !== undefined && (!requestedPrefix || !indexId ||
+    requestedPrefix.length > 80 || !/^SITEOS_SEARCH(?:_[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*)?$/.test(requestedPrefix)))
+    throw new Error("--env-prefix requires --index and SITEOS_SEARCH or an uppercase prefix such as SITEOS_SEARCH_BLOG.");
   const dotenvPath = path.join(projectRoot, ".env");
   let dotenv = "";
   if (await fileExists(dotenvPath)) {
@@ -185,6 +176,16 @@ async function loadToolContext(params = {}) {
       throw new Error("The project .env cannot be read.");
     }
   }
+  const bindings = [...dotenv.matchAll(/^# siteos-search binding ([A-Z0-9_]+) ([A-Za-z0-9_-]+)\r?$/gm)];
+  const installedPrefixes = [...new Set(bindings.filter((binding) => binding[2] === indexId).map((binding) => binding[1]))];
+  if (!requestedPrefix && installedPrefixes.length > 1) throw new Error("Several Search variable prefixes are installed for this index. Pass --env-prefix explicitly.");
+  const prefix = requestedPrefix ?? installedPrefixes[0] ??
+    (indexId ? `SITEOS_SEARCH_INDEX_${createHash("sha256").update(indexId).digest("hex").slice(0,24).toUpperCase()}` : "SITEOS_SEARCH");
+  if (!/^SITEOS_SEARCH(?:_[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*)?$/.test(prefix))
+    throw new Error("The installed Search variable prefix is invalid.");
+  const owners = bindings.filter((binding) => binding[1] === prefix);
+  if (owners.length > 1 || (owners.length === 1 && owners[0][2] !== indexId))
+    throw new Error("The installed Search variable prefix belongs to another index. Keep --index and --env-prefix aligned.");
   const token = readOptionalString(readEnvVariable(dotenv, `${prefix}_TOKEN`));
   const installedEnvironmentSlug = readOptionalString(
     readEnvVariable(dotenv, `${prefix}_ENV`),
@@ -202,6 +203,8 @@ async function loadToolContext(params = {}) {
     environmentSlug,
     installedEnvironmentSlug,
     token,
+    tokenVariable: `${prefix}_TOKEN`,
+    environmentVariable: `${prefix}_ENV`,
   };
 }
 
@@ -222,31 +225,9 @@ export async function validateRuntimeToken(params = {}) {
     };
   }
 
-  const response = await requestJson(
-    `${context.apiBaseUrl}/api/search/environment/${encodeURIComponent(context.environmentSlug)}/token-status`,
-    {
-      headers: {
-        [runtimeTokenHeader]: context.token,
-      },
-      method: "GET",
-    },
-  );
-  if (
-    !response ||
-    response.success !== true ||
-    response.environmentSlug !== context.environmentSlug ||
-    typeof response.canQuery !== "boolean" ||
-    !runtimeTokenStatuses.has(response.status) ||
-    (response.projectEnvironmentId !== null && typeof response.projectEnvironmentId !== "string")
-  ) {
-    throw new Error("SiteOS Search runtime returned an invalid response.");
-  }
-
   return {
-    canQuery: response.canQuery,
-    projectEnvironmentId: response.projectEnvironmentId,
-    environmentSlug: response.environmentSlug,
-    status: response.status,
+    environmentSlug: context.environmentSlug,
+    status: "locally-valid",
   };
 }
 
@@ -260,12 +241,12 @@ export async function queryRuntime(params = {}) {
 
   if (!context.token || !context.installedEnvironmentSlug) {
     throw new Error(
-      `${runtimeTokenEnvName} and ${runtimeEnvironmentEnvName} must be installed through the SiteOS CLI.`,
+      `${context.tokenVariable} and ${context.environmentVariable} must be installed through the SiteOS CLI.`,
     );
   }
 
   if (!isRuntimeTokenFormat(context.token)) {
-    throw new Error(`${runtimeTokenEnvName} has an invalid format.`);
+    throw new Error(`${context.tokenVariable} has an invalid format.`);
   }
 
   const searchParams = new URLSearchParams();
@@ -306,6 +287,7 @@ async function main() {
     projectRoot: args.get("project-root"),
     environmentSlug: args.get("environment"),
     indexId: args.get("index"),
+    envPrefix: args.get("env-prefix"),
   };
 
   let result;

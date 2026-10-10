@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.45.0`
+Package: `@siteoshq/cli@2.46.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -337,12 +337,12 @@ siteos search diagnostics --environment <slug> [--json]
 siteos search doctor --environment <slug> [--json]
 siteos search reindex --environment <slug> [--json]
 siteos search credential list --environment <slug> [--json]
-siteos search credential issue --environment <slug> --install [--name <name>] [--json]
-siteos search credential rotate --environment <slug> --install [--name <name>] [--json]
+siteos search credential issue --environment <slug> --install [--name <name>] [--json] [--env-prefix <prefix>]
+siteos search credential rotate --environment <slug> --install [--name <name>] [--json] [--env-prefix <prefix>]
 siteos search credential revoke --environment <slug> --credential <credential-id> [--json]
 siteos search indexing-credential list --environment <slug> [--json]
-siteos search indexing-credential issue --environment <slug> --install [--name <name>] [--json]
-siteos search indexing-credential rotate --environment <slug> --install [--name <name>] [--json]
+siteos search indexing-credential issue --environment <slug> --install [--name <name>] [--json] [--env-prefix <prefix>]
+siteos search indexing-credential rotate --environment <slug> --install [--name <name>] [--json] [--env-prefix <prefix>]
 siteos search indexing-credential revoke --environment <slug> --credential <credential-id> [--json]
 ```
 

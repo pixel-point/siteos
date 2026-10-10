@@ -273,11 +273,18 @@ The canonical browser contract is fixed:
 - the project-owned server route calls SiteOS `GET /api/search/environment/:environmentSlug`
 - the server route attaches the runtime query credential with `x-siteos-project-search-credential`
 
-The server-side environment contract is fixed:
+For one new search, use these server-side environment names:
 
 - `SITEOS_SEARCH_TOKEN` stores the environment query credential
 - `SITEOS_SEARCH_ENV` selects the environment slug explicitly; `prod` is an example selected environment, not a fallback
 - the SiteOS API base URL is server-side only and requires `SITEOS_SEARCH_PUBLIC_URL`
+
+Keep the selected `--index` on credential commands. For multiple searches, choose a stable
+`--env-prefix` such as `SITEOS_SEARCH_BLOG`; copy the CLI's safe installed variable names into
+the route group's `searchRuntimeVariables`. Existing installations retain their variable names.
+See [named-indices.md](named-indices.md) for prefix ownership, sync configuration and hosting setup.
+The CLI installs local `.env` values only; hosting must have matching server-side variables before
+checking that deployment. Never infer deployment configuration from a local smoke check.
 
 Production, staging, and local client projects must set the reviewed server-side `SITEOS_SEARCH_PUBLIC_URL`; Project configuration and another service origin are not Search fallbacks.
 
@@ -297,7 +304,7 @@ npx @siteoshq/cli search credential issue \
 
 Use `search credential rotate` with the same `--environment`, `--install`, optional `--name`, and `--json` arguments only for intentional replacement. Do not read CLI Auth storage, parse a plaintext credential from CLI output, or call the Search credential-management HTTP endpoints directly.
 
-Use the runtime helper only for server-side validation and query smoke verification. Do not read `.env` manually and do not write inline Node HTTP clients for the SiteOS environment query:
+Use the runtime helper to inspect local credential configuration and run a server-side query smoke check. Do not read `.env` manually and do not write inline Node HTTP clients for the SiteOS environment query:
 
 ```bash
 node .agents/skills/siteos-search/scripts/runtime-token-tooling.mjs validate \
@@ -311,7 +318,9 @@ node .agents/skills/siteos-search/scripts/runtime-token-tooling.mjs query \
   --limit 5
 ```
 
-The `validate` and `query` commands read `SITEOS_SEARCH_TOKEN` and `SITEOS_SEARCH_ENV` from the project `.env`, require the explicit command environment to match, and print redacted JSON. Treat `status: "query-ok"` as enough evidence for server-side runtime query reachability. The retired helper `init` and `rotate` commands stop locally with unified CLI guidance and make no request.
+The `validate` and `query` commands read the installed variable names from the project `.env`, require the explicit command environment to match, and print redacted JSON. Use `--index` for a selected index and `--env-prefix` when needed, following the CLI installation metadata. The conventional names for a new search are `SITEOS_SEARCH_TOKEN` and `SITEOS_SEARCH_ENV`; existing installations retain their names.
+
+`validate` makes no request: `status: "locally-valid"` confirms only local format and environment consistency, not that the credential is active or that Search is reachable. Run `query` with a representative indexed phrase for server verification. Treat `status: "query-ok"` as evidence for server-side runtime query reachability, then inspect returned results. The retired helper `init` and `rotate` commands stop locally with unified CLI guidance and make no request.
 
 The delivered query integration must not create or require browser-public environment variables for the SiteOS search token, environment slug, or API base URL. In Next.js, this specifically prohibits:
 
