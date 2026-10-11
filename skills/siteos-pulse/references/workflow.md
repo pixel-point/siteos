@@ -1,4 +1,6 @@
-# Pulse workflow reference
+# Legacy manifest workflow
+
+For new native checks and ordinary Playwright attachment, use [saved setup](checks-setup.md). This reference applies to existing manifest-managed Checks and PR code Checks.
 
 ## Project and configuration state
 
