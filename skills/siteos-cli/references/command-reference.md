@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.48.0`
+Package: `@siteoshq/cli@2.49.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -244,6 +244,12 @@ siteos integrations destination create --channel <provider-channel-id> [--organi
 ## Pulse
 
 ```text
+siteos pulse playwright list [--environment <slug>] [--json]
+siteos pulse playwright attach --name <name> --slug <slug> [--config playwright.config.ts] [--files 'tests/**/*.spec.ts'] [--project <name>] [--tag @smoke] [--assets <glob>] [--variables <names>] [--refresh-environment <name>] [--dry-run]
+siteos pulse playwright migrate --check <id> --revision <n> [--dry-run]
+siteos pulse playwright publish --check <id> [--retry] [--dry-run]
+siteos pulse native list [--environment <slug>] [--json]
+siteos pulse native save --name <name> --slug <slug> --kind <http|page> --path </path> [--cadence <seconds>] [--check <id> --revision <n>]
 siteos pulse init [--project <slug>] [--suite <slug>] [--tests-dir <path>] [--base-url <url>]
 siteos pulse validate [--json]
 siteos pulse sync [--check] [--json]

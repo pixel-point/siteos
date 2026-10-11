@@ -9,8 +9,8 @@ Inspect the existing package manager, `@playwright/test` dependency, Playwright 
 - Reuse an existing user journey when it already proves the requested behavior.
 - Preserve the repository's locator, fixture, authentication, and test-data conventions.
 - Prefer a dedicated Pulse spec only when an existing test depends on unsupported runtime behavior or has destructive side effects.
-- Use `pulse init` for a missing Pulse configuration and starter, not as a replacement for an existing Playwright suite.
-- Use `pulse sync --check --json` to preview which specs and supporting files Pulse would add or remove before accepting synchronization changes.
+- For new journeys, use the existing Playwright configuration and [saved setup](checks-setup.md). A basic availability/content Check needs no test file.
+- Keep `pulse init` and `pulse sync --check --json` for existing manifest-managed Checks. Do not introduce their configuration for a newly attached suite.
 
 ## Optional Microsoft companion
 
@@ -82,9 +82,9 @@ a local edit, deployment receipt or manual pass does not prove scheduled executi
 Pulse bundles the selected specs and their local imports for an isolated Chromium run.
 
 - Runtime package imports are limited to `@playwright/test`; Node built-ins and repository-local supporting files are allowed.
-- Do not depend on a Playwright `webServer` entry. The remote runner targets the configured deployed base URL and does not start the repository application.
-- Keep the Pulse configuration single-worker and deterministic unless the service contract explicitly changes.
-- Treat environment variables reported by `pulse sync --check --json` as review items. Do not deploy until every required value has an intentional run-scoped source.
+- Do not depend on a Playwright `webServer` entry during remote execution. Keep local startup conditional on `PLAYWRIGHT_BASE_URL` being absent; Pulse supplies the deployed environment URL.
+- Keep tests deterministic. The runner enforces one worker without changing the repository configuration.
+- Review the variable names saved with the Check and bind each required value to an intentional run-scoped source. Legacy `pulse sync --check --json` reports those names for manifest-managed Checks.
 - If an existing test needs unsupported external packages, create a small Pulse-specific adapter or dedicated Check instead of expanding the runner dependency boundary.
 
 ## Author and repair
@@ -95,11 +95,13 @@ For a new scenario:
 2. Start from the repository's existing fixture or the Pulse starter.
 3. Explore the real page through the test context when browser tooling is available.
 4. Add the smallest deterministic actions and assertions that prove the behavior.
-5. Run the single spec through `npx @siteoshq/cli pulse test -- <relative-spec>` before the full configured Check set.
+5. Run the single spec using the project's ordinary Playwright command before the selected Check set.
 
 For a failure, first decide whether the application regressed, the intended behavior changed, or only the test implementation drifted. Repair locators or timing only when the user-visible contract is unchanged. Do not hide failures with sleeps, retries, broad exception handling, `test.skip`, or `test.fixme` without an explicit documented reason.
 
-Finish every authoring or repair pass with:
+For saved Playwright setup, finish with the normal local test command and `siteos pulse playwright publish --check <id> --dry-run`. Publish within the authorized scope and inspect the remote verification Run before reporting activation. Use `--assets` for dynamic fixture/config files, including a required `tsconfig.json` and its local extends files; files outside the selected root and external package dependencies remain unsupported.
+
+For legacy manifest-managed Checks, use:
 
 ```sh
 npx @siteoshq/cli pulse validate --json
@@ -116,7 +118,7 @@ These commands prove local configuration, synchronization intent, Playwright exe
 Use the runner-supplied `baseURL` and relative navigation such as `page.goto("/pricing")` when a
 Check is intended for both a fixed environment URL and a PR preview. Do not hard-code the
 production hostname in a preview Check. Configure its schedule and PR participation independently
-in `siteos.config.json` v3; a shared Check uses the same published assertions and version in both
+in Pulse (or `siteos.config.json` v3 for legacy Checks); a shared Check uses the same published assertions and version in both
 contexts. If production-only assertions, real deliveries, or variable/Secret requirements differ,
 keep those in a separate Check excluded from PR verification. The PR feature does not execute
 unpublished test changes from the PR branch.

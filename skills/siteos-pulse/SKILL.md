@@ -15,37 +15,22 @@ Hosted reads: `siteos_pulse_list_checks` and `siteos_pulse_get_check` expose pub
 
 For runtime exceptions, error groups, releases or Sentry migration, read [Pulse Errors](references/errors.md) first. That workflow does not require Checks, Playwright or a runner.
 
-## Workflow
+When `$playwright-cli` is available, it can help author and inspect a journey. Do not assume or require that another skill is installed; the project's local Playwright command remains sufficient.
 
-1. Resolve the target through the shared execution contract.
-2. Inspect the Pulse attachment with `npx @siteoshq/cli project status --json`.
-3. If Pulse is not attached, run `npx @siteoshq/cli project connect pulse --json` within the requested monitoring setup. Attach an existing resource with `--resource <id>` when preserving an existing deployment. Read the resource ID and environment bindings from `project status --json`; do not select a second Project.
-4. Inspect existing package scripts and Playwright configuration, fixtures, helpers, and specs before creating monitoring files. Reuse suitable tests and conventions instead of creating a parallel suite.
-5. Select the intended common environment with `npx @siteoshq/cli project environment use <slug> --json`. Initialize missing Pulse monitoring files with `npx @siteoshq/cli pulse init`. Do not replace an existing Playwright setup or Pulse configuration.
-   The common Project supplies the name/slug and selected environment URL. Manage addresses in Project settings or `project environment update`; deployment and dry runs resolve that environment, and local tests use its URL unless explicitly overridden.
-6. Edit `siteos.config.json` and the appropriate tests according to the requested behavior. For every Check, establish whether it belongs in scheduled monitoring, PR verification, both, or manual use only. Preserve project-local conventions.
-   - For Vitest, lint, typechecking or secret scanning, read [PR code Checks](references/code-checks.md). Version 4 adds `type: "code"` with the same CLI workflow; code-only setup does not need Playwright or a preview. Use the built-in pinned scanner for secret checks; do not invent a repository script that prints matching keys.
-   - Browser PR participation requires config version 3 or 4 and `checks[].pullRequests.enabled`. Set each Check’s schedule explicitly; `mode: "manual"` means no schedule and still permits selected PR runs. `active: false` disables both uses.
-   - Read the workflow reference below before changing version or execution usage. Preserve existing PR selection and schedule choices during sync. Do not infer PR participation from filenames, folders, or a repository connection.
-   - PR previews require a base-URL-relative Check and cannot receive environment variables/Secrets. Reuse a Check in both contexts when its assertions are the same; use separate Checks when their behavior differs.
-   - Load [references/playwright-authoring.md](references/playwright-authoring.md) before creating, extending, or repairing Playwright tests.
-   - When `$playwright-cli` is available in the current agent environment, use it as the optional browser exploration, test-authoring, and debugging companion. Do not assume or require that another skill is installed.
-   - When it is unavailable, continue with the project's local Playwright executable and its help. Never install a global browser tool as a hidden prerequisite.
-7. Run the local gates in order:
+## Checks workflow
 
-   ```sh
-   npx @siteoshq/cli pulse validate --json
-   npx @siteoshq/cli pulse sync --check --json
-   npx @siteoshq/cli pulse test
-   npx @siteoshq/cli pulse deploy --dry-run --json
-   ```
-
-8. Run `npx @siteoshq/cli pulse deploy --json` only when the user requested deployment. A successful dry run proves bundle construction, not remote deployment. Verify published state with `siteos_pulse_list_checks` / `siteos_pulse_get_check`, or `pulse checks list` / `pulse checks read --check <id>` when available. Compare published defaults, preserved overrides, effective scheduling, `pullRequests.repositoryEnabled/selected/selectionSource/automaticEnabled/eligible/inactiveReasons`, and active version/checksum; an upload response alone does not prove the effective schedule.
-9. For browser Checks, when remote verification is requested or follows an authorized repair/deployment, run `npx @siteoshq/cli pulse run --check <check-id> --json` (CLI 2.13.0+ and the matching server). Use the exact Check ID from Check reads, deployment output or verified saved run evidence in the selected Project/environment. This starts one manual run of the deployed Check; it does not upload local changes.
-10. Read the returned Run ID with `siteos_pulse_get_run` until terminal, then inspect every test outcome. Resolve the MCP connection once through the shared contract. Do not click **Run again** or use browser automation to re-read saved run status available through MCP/CLI. The GitHub CLI setup workflow is described in the PR reference. If neither the supported CLI nor MCP can complete a step, report that specific capability/access blocker. Browser exploration of the tested website remains available for reproducing defects.
-11. Report local checks, deployment, remote Run ID and terminal result separately. A queued/running response is not a pass, and a manual pass does not establish scheduled recovery; confirm that from a subsequent eligible scheduled pass. If a write loses its response, reconcile current runs and reuse the original `--request-id` for the same request; never issue a fresh request as an automatic retry.
-
-Load [references/workflow.md](references/workflow.md) for configuration versions, file ownership, sync/deploy behavior, migration safeguards, and error handling.
+1. Resolve the target through the shared execution contract, inspect `siteos project status --json`, and select the requested common environment. Connect Pulse explicitly with `siteos project connect pulse --json` if needed. Preserve existing resource IDs and environment bindings.
+2. Choose the smallest useful check:
+   - Availability or visible page content: use a native page check in Pulse or `siteos pulse native save`. No repository config, package or Playwright installation is needed.
+   - Customer journeys: reuse ordinary Playwright tests/config. Inspect existing fixtures and scripts before adding tests. Read [Playwright authoring](references/playwright-authoring.md); never send real leads or perform purchases just to test monitoring.
+   - Vitest, lint, typechecking or secret scanning: retain [PR code Checks](references/code-checks.md). The new page/Playwright setup does not replace their v4 manifest.
+3. For page checks, choose the path, HTTP/content check and schedule explicitly. Use `pulse native list` for IDs and revisions before edits; edits preserve scheduling overrides. Read back with MCP Check diagnostics.
+4. For Playwright, read [saved setup and migration](references/checks-setup.md). Use `pulse playwright attach` or the Pulse editor to save config path, files and optional projects/tags/fixtures. No Checks SDK and no `siteos.config.json` are required for this path. Run the project's normal Playwright command locally.
+5. `pulse playwright publish --check <id> --dry-run` prepares an immutable snapshot without uploads. Authorized publication uses the same command without `--dry-run`; it queues verification and activates only after a nonempty successful run. Read the returned Run ID through MCP. Failed preparation/verification keeps the active version. Reconcile the same upload after a lost response; use `--retry` only for an intentional repeat of a finished failed candidate.
+6. Automatic refresh is opt-in: save the exact GitHub deployment environment with `--refresh-environment <name>` and the existing Project repository binding. The trusted branch, latest successful non-transient deployment and website URL must match. SiteOS prepares source without importing customer config, verifies on the runner and rechecks deployment authority before activation. Missing evidence is not success. Read `setup.refresh` and `setup.candidate` through Check diagnostics.
+7. Existing browser Checks use `pulse playwright list`, then `migrate --check <id> --revision <n> --dry-run` before applying the reviewed migration. Preserve Check IDs, schedules, overrides, Secrets, PR choices, incidents and runs. Publish and verify the new version before removing obsolete repository config; retain config needed by code or unmigrated checks.
+8. Existing manifest-managed Checks remain supported. Follow [legacy workflow](references/workflow.md) for `init`, `validate`, `sync`, `test` and `deploy`; do not create legacy config for a new page or attached Playwright Check. Establish scheduled/manual/PR use explicitly. A repository connection never implies PR participation, and PR runs never receive variables or Secrets.
+9. Report setup, preparation, queued verification, active version and scheduled monitoring separately. A manual pass is not scheduled incident recovery. Do not modify another project as part of this setup.
 
 For costs or waiting Checks, read `npx @siteoshq/cli pulse usage --json` in the selected context,
 or `siteos_billing_get_usage` for its Organization. `mode: "preview"` / `state: "preview"` means
@@ -57,7 +42,7 @@ when explaining these values or diagnosing a queue.
 
 - The common Project selects Pulse through an explicit attachment. Pulse retains its resource IDs, checks, deployment state and runtime data.
 - Pulse setup never provisions another service. Matching service slugs are not shared identity.
-- `siteos.config.json` is tracked, but immutable Project IDs and Auth/service credentials stay in private CLI state.
+- Saved page/Playwright setup belongs to SiteOS. Legacy/code manifests remain tracked; Project selection and credentials stay in private CLI state.
 - Do not inspect or print `~/.siteos`, legacy binding contents, `.env`, service grants, runtime credentials, or authorization headers.
 - CLI 2 requires a common Project selection. Select it with `siteos project use`; service-private bindings are not imported.
 - Do not claim deployment success after `--dry-run`; distinguish local validation, local Playwright execution, bundle construction, upload, and remote scheduling.
