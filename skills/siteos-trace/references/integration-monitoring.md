@@ -55,7 +55,8 @@ Use its retained page timeline to inspect adjacent stages without assuming causa
 ## Independent CMP state
 
 Runtime 0.5+ supports a provider-neutral public adapter under `explicit_adapter`. SiteOS Cookie
-uses its existing `siteos_cookie` mode. No bundled iubenda or other vendor adapter is implied.
+uses its existing `siteos_cookie` mode. Built-in sources exist only for iubenda (0.10+), OneTrust,
+Cookiebot and IAB TCF (0.14+); other CMPs use the explicit adapter.
 Read the CMP's public API independently of Google/GTM consent commands. Never infer a user's
 choice solely from the integration signal being investigated, cookies, storage or DOM text.
 
@@ -133,3 +134,11 @@ collection and Immediate/After analytics consent as separate choices. Late attac
 permission snapshots but cannot invent missed ready/grant/withdrawal callbacks. Verify runtime,
 published revision and real before-choice/grant/withdrawal requests on the selected environment;
 local synthetic adapter tests are not hosted acceptance.
+
+### OneTrust, Cookiebot and IAB TCF
+
+Use `consentMode: "onetrust"`, `"cookiebot"` or `"tcf"` with runtime 0.14+. OneTrust maps its default
+Performance (C0002) and Targeting (C0004) groups, Cookiebot its statistics/marketing consent, and TCF
+purposes 1+8 (analytics) and 1+3+4 (advertising); Didomi, Quantcast and Sourcepoint use `tcf`. No TC
+string, consent ID or storage is read. Renamed OneTrust groups read as denied, so confirm the mapping
+with the owner. Save, publish and verify real before-choice/grant requests as for iubenda.

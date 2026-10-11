@@ -70,6 +70,14 @@ cannot prove missing fields. Stored property values are never needed.
 
 Baselines stay frozen. Repeated missing habitual properties or new types raise
 `learned_property_missing` / `learned_property_type_drift`. Explicit property rules take precedence.
+
+`delivery_share_drop` compares, per service, the share of a key data-layer event (purchase,
+generate_lead, sign_up, begin_checkout, add_to_cart…; Meta standard names such as `Lead` match)
+received over the last 24 hours with that service's share over the previous 7 days. It opens below
+70% of the usual share (critical below 25%) once the day has 20 such events and the week 100 with a
+usual share of at least 50%, and resolves when the share returns. Shares are sampled observations,
+not conversions; a steady consent or blocker rate does not open it. Read `findings[].details`
+(`sourceCount`, `deliveredCount`, `share`, `usualShare`, `destinationEventName`) before explaining it.
 After reviewing an intentional schema change, restart only the selected baseline:
 
 ```sh
@@ -92,7 +100,9 @@ npx @siteoshq/cli trace notifications save --environment production --input noti
 ```
 
 Input: `{ "enabled": true, "candidateId": "<returned candidate>", "minimumSeverity": "warning",
-"includeRecovery": true, "expectedRevision": <current route revision> }`.
+"includeRecovery": true, "expectedRevision": <current route revision> }`. An optional weekly digest
+adds `"weeklyDigest": true, "digestTimeZone": "<IANA zone>"`; it is independent of `enabled`, uses
+the same destinations, sends on Mondays at 09:00 in that zone and stays silent for its first week.
 Severity is `warning` or `critical`. Disabling uses `enabled:false` and `candidateId:null`.
 Read back the route. Repeated findings stay quiet; new incidents, escalation and verified recovery
 are separate transitions. A 60-second dispatch delay suppresses brief incidents that recover before
