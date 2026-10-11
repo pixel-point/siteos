@@ -1,6 +1,6 @@
 ---
 name: siteos-pulse
-description: "Use for SiteOS Pulse browser/code Checks, scheduled monitoring and GitHub PR verification: configure independent usage, validate and publish bundles, and inspect saved Check/run evidence through supported CLI and MCP tools."
+description: "Use for SiteOS Pulse runtime Errors, browser/code Checks, scheduled monitoring and GitHub PR verification: connect error capture, inspect issues and releases, configure Checks, and manage saved evidence through supported CLI and MCP tools."
 ---
 
 # SiteOS Pulse
@@ -12,6 +12,8 @@ Projects owns the common Project and environment identity. Pulse owns its attach
 For GitHub setup, preview admission or a missing PR result, read [GitHub PR verification](references/github-pull-requests.md). It defines the CLI setup steps and read-only MCP diagnostics and distinguishes PR verification from a manual run.
 
 Hosted reads: `siteos_pulse_list_checks` and `siteos_pulse_get_check` expose published settings, overrides, effective schedules, independent PR participation and eligibility, active package versions and open incident evidence. `siteos_pulse_list_runs` and `siteos_pulse_get_run` provide run history and failure details. Discover available tools first; older servers may not expose Check reads.
+
+For runtime exceptions, error groups, releases or Sentry migration, read [Pulse Errors](references/errors.md) first. That workflow does not require Checks, Playwright or a runner.
 
 ## Workflow
 

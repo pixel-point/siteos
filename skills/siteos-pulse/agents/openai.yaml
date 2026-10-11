@@ -1,7 +1,7 @@
 interface:
   display_name: "SiteOS Pulse"
-  short_description: "Configure Playwright monitoring and GitHub PR checks"
-  default_prompt: "Use $siteos-pulse to configure scheduled and GitHub PR Checks for the selected Project environment, validate locally and publish only when requested."
+  short_description: "Configure monitoring, PR checks and runtime errors"
+  default_prompt: "Use $siteos-pulse to configure Checks or runtime Errors for the selected Project environment. Errors does not require Playwright. Validate locally and publish only when requested."
 
 policy:
   allow_implicit_invocation: true
