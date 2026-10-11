@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.47.0`
+Package: `@siteoshq/cli@2.48.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -255,6 +255,9 @@ siteos pulse errors settings [--input <settings.json>] [--json]
 siteos pulse errors keys --revision <n> --output <private-file>
 siteos pulse errors triage --issue <id> --revision <n> --status <open|resolved|ignored>
 siteos pulse errors upload-map --release <release> --file <generated-path> --input <map-file>
+siteos pulse errors upload-key issue --name <name> --output <private-file> [--environment <slug>]
+siteos pulse errors upload-key list [--environment <slug>]
+siteos pulse errors upload-key revoke --credential <id> [--environment <slug>]
 siteos pulse usage [--json]
 siteos pulse checks list [--cursor <check-id>] [--json]
 siteos pulse checks read --check <check-id> [--json]
