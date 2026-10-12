@@ -1,6 +1,6 @@
 ---
 name: siteos-integrations
-description: Use for shared SiteOS Organization provider connections, including Mailchimp contact forwarding, selected GitHub repositories, Slack channel discovery and notification destinations used by Project services.
+description: Use for shared SiteOS Organization provider connections, including Vercel deployments, Mailchimp contact forwarding, selected GitHub repositories, Slack channel discovery and notification destinations used by Project services.
 ---
 
 # SiteOS Integrations
@@ -73,3 +73,21 @@ Never request a key in chat. CLI refresh and disconnect use the dedicated Mailch
 an expected revision; neither permits entering/replacing credentials through CLI. Forms settings and
 retries use separate Forms scopes. MCP remains read-only. Connecting does not enable a form or send a
 campaign. Mailchimp Forms is a separate collection UI; SiteOS contacts appear in Audience → Contacts.
+
+
+## Vercel deployments
+
+Vercel supplies deployment evidence for Pulse automatic test updates, independently of the customer's build system. It does not build, publish or modify a Vercel project. Check installed `integrations --help` and server support first.
+
+1. Read `siteos integrations vercel status --organization <id> --json` or `siteos_integrations_get_connection` with provider `vercel`.
+2. To connect, use `siteos integrations vercel connect --organization <id> --json`. The returned Services page has a protected token dialog. The user enters a Vercel token and, for a team, its Team ID there. Never request or place the token in chat, files or CLI arguments. SiteOS encrypts it and only issues read requests; the token itself may have additional provider permissions.
+3. Wait for `status: ready` and select a returned project matching the GitHub repository and directory in the SiteOS Project environment's repository settings. Connecting alone does not select a project or enable Checks.
+4. Enable `--auto-refresh` on the intended Playwright Checks. Read candidate and refresh state to verify preparation, execution and activation. Preserve existing Check identity, history, schedules, Secrets and PR policy.
+
+`vercel refresh` queues a catalog reload. `vercel disconnect` requires `--confirm`; both require the current `--expected-revision`. Replacing a token creates a new connection identity, so affected Project environments must select it again. MCP exposes saved metadata only. Missing deployment proof or revoked access retains working Checks and stops updates; it never falls back to another account, environment or branch.
+
+For deployment-aware Checks, use `project repository show --json`, preserve the returned repository settings,
+and save a reviewed binding file with `deploymentSource: { "provider": "vercel", "connectionId": "<connection-id>", "projectId": "<vercel-project-id>" }`.
+Use `project repository save --input <binding.json> --json`; retain its current `revision` and selected environment.
+Set `deploymentSource` to `null` only to return to GitHub deployment evidence. A Vercel project may have Git integration disabled;
+its deployed repository and SHA still require verification before tests activate. Read back the binding and candidate status.

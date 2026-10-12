@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.49.0`
+Package: `@siteoshq/cli@2.50.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -224,6 +224,10 @@ siteos analytics ga4 saved remove <id> --revision <number> [--environment <slug>
 ## Integrations
 
 ```text
+siteos integrations vercel status --organization <id> [--json]
+siteos integrations vercel connect --organization <id> [--json]
+siteos integrations vercel refresh --organization <id> --expected-revision <n> [--json]
+siteos integrations vercel disconnect --organization <id> --expected-revision <n> --confirm [--json]
 siteos integrations mailchimp status --organization <id> [--json]
 siteos integrations mailchimp connect --organization <id> [--json]
 siteos integrations mailchimp refresh --organization <id> --expected-revision <n> [--json]
@@ -245,7 +249,7 @@ siteos integrations destination create --channel <provider-channel-id> [--organi
 
 ```text
 siteos pulse playwright list [--environment <slug>] [--json]
-siteos pulse playwright attach --name <name> --slug <slug> [--config playwright.config.ts] [--files 'tests/**/*.spec.ts'] [--project <name>] [--tag @smoke] [--assets <glob>] [--variables <names>] [--refresh-environment <name>] [--dry-run]
+siteos pulse playwright attach --name <name> --slug <slug> [--config playwright.config.ts] [--files 'tests/**/*.spec.ts'] [--project <name>] [--tag @smoke] [--assets <glob>] [--variables <names>] [--auto-refresh | --no-refresh | --refresh-environment <name>] [--dry-run]
 siteos pulse playwright migrate --check <id> --revision <n> [--dry-run]
 siteos pulse playwright publish --check <id> [--retry] [--dry-run]
 siteos pulse native list [--environment <slug>] [--json]
