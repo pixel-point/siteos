@@ -58,19 +58,30 @@ attempts are admitted separately; their measured execution uses the same Organiz
 
 ## Browser preview admission
 
-The preview provider must emit a successful GitHub Deployment Status with the PR's exact **head
-SHA**, matching configured deployment environment and `environment_url`. A merge SHA, ordinary
-commit status, Actions success or PR open event does not supply a usable preview. Require HTTPS,
-no credentials, query/fragment or non-default port, and a public hostname. This release supports
-same-repository PRs on trusted previews; fork PRs and environment Secrets are not supported.
+Browser Checks need a ready Preview for the PR's exact **head SHA**. With a selected
+Vercel deployment source in the Project repository binding, Pulse automatically
+looks up pending previews through Vercel, including deployments completed before
+the PR opened. No SiteOS build hook or Prime CI is required. The selected project,
+repository/root directory, branch, Preview target and source SHA must match.
+Ordinary Vercel Git deployments need no extra GitHub permission. Builders that
+rewrite Git identity also need Commit statuses read and a current successful
+status for the exact immutable deployment URL; metadata alone is not proof.
+
+Other hosting providers can emit a successful GitHub Deployment Status matching
+the saved preview environment and hostname. An ordinary commit status or Actions
+success alone is insufficient. Require HTTPS, no credentials, query/fragment or
+non-default port, and a public hostname. Only same-repository PRs on trusted
+previews are supported; fork PRs and environment Secrets are not supported.
 
 Browser verification runs the already published trusted Check bundle, not browser test changes
 from the PR. Code verification is an explicit v4 capability: it runs published commands against
 the exact PR source in a separate executor. It does not provide AI code review/navigation. Do not assume a repository connection authorizes any of those capabilities.
 
-Existing PRs are not backfilled. After setup or a repaired denial, update the PR for code Checks or redeploy the preview for
-browser Checks at the current head. Review the attempt before intentionally retriggering it. A new commit requires its
-own preview; duplicate events for the same admission do not justify a new manual run.
+For Vercel, open PRs already observed by Pulse are reconciled automatically while
+Browser checks wait; allow about a minute for the next lookup. PRs never observed
+by Pulse still need an update. Other providers need a deployment event for the
+current head. A new commit requires its own ready Preview. Polling does not rerun
+completed browser attempts; review the saved result before intentionally retrying.
 
 ## Diagnose and accept
 
