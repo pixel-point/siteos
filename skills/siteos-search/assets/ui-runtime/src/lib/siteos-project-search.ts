@@ -35,6 +35,7 @@ export type SiteOSProjectSearchItem = {
 export type SiteOSProjectSearchQueryResponse = {
   success: true;
   analyticsReceipt?: string;
+  analytics?: SiteOSSearchAnalyticsPolicy;
   query: string;
   hits: SiteOSProjectSearchHit[];
   items: SiteOSProjectSearchItem[];
@@ -62,13 +63,13 @@ export type SiteOSProjectSearchQueryErrorResponse = {
 export type SiteOSSearchSuggestion = {
   id: string; title: string; url: string; snippet: string; sectionLabel: string;
 };
+export type SiteOSSearchAnalyticsPolicy = { enabled: boolean; collectionMode: "independent" | "consent_required" };
 export type SiteOSSearchClientConfig = {
   /** A host-owned proxy, or an explicitly published Search Edge query URL. */
   endpoint: string;
   publicKey?: string;
-  /** Defaults to independent. An existing consent callback retains consent-required behavior. */
-  analyticsMode?: "independent" | "consent_required" | "off";
-  canRecordAnalytics?: () => boolean;
+  /** Actual consent from the host CMP, consulted only when SiteOS requires it. */
+  hasAnalyticsConsent?: () => boolean;
   isAnalyticsDisabled?: () => boolean;
 };
 export type SiteOSSearchQueryOptions = {
@@ -87,33 +88,55 @@ export function createSiteOSSearchClient(config: SiteOSSearchClientConfig) {
       (!safeSearchPath(config.endpoint) && !((config.endpoint.startsWith("https://") && endpoint.protocol === "https:") || localHttp)) ||
       (config.publicKey !== undefined && !/^spk_[A-Za-z0-9_-]{20,100}$/u.test(config.publicKey)))
     throw new Error("Use a query endpoint and a publishable Search key; private credentials stay on the server.");
+  let policy: SiteOSSearchAnalyticsPolicy | undefined;
+  let sequence = 0, appliedSequence = 0;
+  let preparing: Promise<boolean> | undefined;
+  const updatePolicy = (value: unknown, requestSequence: number) => {
+    if (requestSequence < appliedSequence) return;
+    appliedSequence = requestSequence;
+    policy = analyticsPolicy(value);
+  };
   const consent = () => {
-    try { return config.canRecordAnalytics?.() === true; } catch { return false; }
+    try { return config.hasAnalyticsConsent?.() === true; } catch { return false; }
   };
   const canRecord = () => {
     try {
-      const mode = config.analyticsMode ?? (config.canRecordAnalytics ? "consent_required" : "independent");
-      return mode !== "off" && config.isAnalyticsDisabled?.() !== true &&
+      return policy?.enabled === true && config.isAnalyticsDisabled?.() !== true &&
         !(typeof window !== "undefined" && (window as unknown as { SiteOSSearchDisabled?: boolean }).SiteOSSearchDisabled === true) &&
         typeof navigator !== "undefined" && navigator.doNotTrack !== "1" &&
         (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl !== true &&
-        (mode === "independent" || consent());
+        (policy.collectionMode === "independent" || consent());
     } catch { return false; }
   };
   const headers = (): Record<string, string> => config.publicKey ? { "X-SiteOS-Search-Key": config.publicKey } : {};
-  return {
+  const client = {
     canRecordAnalytics: canRecord,
-    search(query: string, options: SiteOSSearchQueryOptions = {}) {
-      return querySiteOSProject(query, { ...options, interactionId: canRecord() ? options.interactionId : undefined }, config);
+    /** Call before starting an interaction. Missing policy disables analytics, never search. */
+    async prepareAnalytics(): Promise<boolean> {
+      preparing ??= client.suggestions().then(() => canRecord()).finally(() => { preparing = undefined; });
+      return preparing;
+    },
+    async search(query: string, options: SiteOSSearchQueryOptions = {}) {
+      const requestSequence = ++sequence;
+      try {
+        const result = await querySiteOSProject(query, { ...options, interactionId: canRecord() ? options.interactionId : undefined }, config);
+        updatePolicy(result.success ? result.analytics : undefined, requestSequence);
+        return result;
+      } catch (error) {
+        updatePolicy(undefined, requestSequence);
+        throw error;
+      }
     },
     async suggestions(signal?: AbortSignal): Promise<{ configured: boolean; items: SiteOSSearchSuggestion[] } | null> {
+      const requestSequence = ++sequence;
       const url = config.endpoint.endsWith("/query") ? config.endpoint.slice(0, -6) + "/suggestions" : config.endpoint.replace(/\/$/u, "") + "/suggestions";
       try {
-        const response = await fetch(url, { credentials: "omit", cache: "no-store", redirect: "error", referrerPolicy: "no-referrer",
+        const response = await fetch(url, { credentials: "same-origin", cache: "no-store", redirect: "error", referrerPolicy: "no-referrer",
           headers: { Accept: "application/json", ...headers() },
           signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(5000)]) : AbortSignal.timeout(5000) });
-        if (!response.ok) return null;
-        const body: unknown = await response.json();
+        if (!response.ok) { updatePolicy(undefined, requestSequence); return null; }
+        const body: unknown = await readSearchResponse(response);
+        updatePolicy(isRecord(body) ? body.analytics : undefined, requestSequence);
         if (!body || typeof body !== "object" || !("configured" in body) || typeof body.configured !== "boolean" || !("items" in body) || !Array.isArray(body.items) || body.items.length > 10) return null;
         const items: SiteOSSearchSuggestion[] = [];
         for (const item of body.items) {
@@ -121,13 +144,13 @@ export function createSiteOSSearchClient(config: SiteOSSearchClientConfig) {
           items.push({id:item.id,title:item.title,url:item.url,snippet:item.snippet,sectionLabel:item.sectionLabel});
         }
         return {configured:body.configured,items};
-      } catch { return null; }
+      } catch { updatePolicy(undefined, requestSequence); return null; }
     },
     async record(receipt: string | undefined, clickedResultId?: string): Promise<boolean> {
       if (!receipt || !canRecord()) return false;
       try {
         const response = await fetch(config.endpoint, {
-          method: "POST", credentials: "omit", cache: "no-store", keepalive: true, redirect: "error", referrerPolicy: "no-referrer",
+          method: "POST", credentials: "same-origin", cache: "no-store", keepalive: true, redirect: "error", referrerPolicy: "no-referrer",
           headers: { "Content-Type": "application/json", ...headers() },
           body: JSON.stringify({ receipt, consent: consent(), ...(clickedResultId ? { clickedResultId } : {}) }),
         });
@@ -135,12 +158,12 @@ export function createSiteOSSearchClient(config: SiteOSSearchClientConfig) {
       } catch { return false; }
     },
   };
+  return client;
 }
-export function loadSiteOSSearchSuggestions(signal?: AbortSignal) {
-  return createSiteOSSearchClient({ endpoint: "/api/search/query" }).suggestions(signal);
-}
-export function searchSiteOSProject(query: string, options: SiteOSSearchQueryOptions = {}) {
-  return querySiteOSProject(query, options, { endpoint: "/api/search/query" });
+function analyticsPolicy(value: unknown): SiteOSSearchAnalyticsPolicy | undefined {
+  if (!isRecord(value) || typeof value.enabled !== "boolean" ||
+      (value.collectionMode !== "independent" && value.collectionMode !== "consent_required")) return undefined;
+  return { enabled: value.enabled, collectionMode: value.collectionMode };
 }
 async function querySiteOSProject(
   query: string,
@@ -164,7 +187,7 @@ async function querySiteOSProject(
     {
       method: "GET",
       cache: "no-store",
-      credentials: "omit",
+      credentials: "same-origin",
       redirect: "error",
       referrerPolicy: "no-referrer",
       headers: {
@@ -224,6 +247,7 @@ async function querySiteOSProject(
     }));
   return {
     success: true,
+    analytics: analyticsPolicy(value.analytics),
     query: normalizedQuery,
     hits,
     items: hits.map((hit) => ({

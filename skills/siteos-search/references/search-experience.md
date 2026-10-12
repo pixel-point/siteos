@@ -61,8 +61,8 @@ Complete browser verification separately: trigger, focus, typing, late response 
 Read `siteos search visitors report --environment <slug> --index <index-id> --days 30 --json`
 before installing events. Check `settings.enabled`, `settings.collectionMode` and retention.
 New indices default to enabled independent collection with 30-day retention. Existing indices
-preserve their settings and consent-required policy. Missing `collectionMode` means an older
-server: retain consent-required behavior and do not claim independent delivery is supported.
+preserve their settings and consent-required policy. Missing `collectionMode` is an unsupported
+server response: update the service before enabling events.
 
 For an authorized mode change (not a reporting-only request):
 
@@ -70,17 +70,14 @@ For an authorized mode change (not a reporting-only request):
 siteos search visitors configure --environment production --index <index-id> --enabled true --retention-days 30 --collection-mode independent --json
 ```
 
-Independent collection requires CLI 2.26.0 or newer and a server that reports `collectionMode`.
-Confirm the flag with `search visitors configure --help` first; use `siteos-cli` to upgrade an
-older CLI before changing the mode. Read back the same index. Omitting
-`--collection-mode` preserves the current policy. Never change an existing index's disabled
-setting, mode or retention merely to install the search UI.
+The service owns collection policy. Updated origin and Edge responses include
+`analytics: { enabled, collectionMode }`; the runtime discovers it through the existing suggestions
+endpoint before starting an interaction and refreshes it from query responses. No local mode or
+legacy default is supported. Missing policy suppresses identifiers/events while search remains usable.
 
-Match the editable client to the server mode. Independent collection needs no banner or consent
-callback. Consent-required delivery uses `analyticsMode: "consent_required"` and a real live
-`canRecordAnalytics` callback. The Next.js helper defaults to independent; call
-`setSiteOSSearchAnalyticsMode("consent_required")` before using it for a consent-controlled index.
-It recognizes explicit SiteOS Cookie analytics consent (`accept_all` or `custom` plus the
+Use `prepareAnalytics()` before `canRecordAnalytics()` and allocation of the transient interaction ID.
+Consent-required delivery consults the live `hasAnalyticsConsent` callback. The canonical Next.js
+adapter recognizes explicit SiteOS Cookie analytics consent (`accept_all` or `custom` plus the
 analytics category). Another CMP calls `setSiteOSSearchAnalyticsConsent(true|false)` on initial
 state and every change; `null` restores the SiteOS Cookie adapter. Merely attaching Cookie does
 not change independent collection. Never substitute a fabricated consent grant.

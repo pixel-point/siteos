@@ -14,10 +14,10 @@ host, transpile it with the existing build or deliver an equivalent local JavaSc
 ```ts
 const search = createSiteOSSearchClient({
   endpoint: "/api/search/query",
-  analyticsMode: "independent",
 });
 
 const controller = new AbortController();
+await search.prepareAnalytics();
 const interactionId = search.canRecordAnalytics() ? crypto.randomUUID() : undefined;
 const result = await search.search("tokens", { signal: controller.signal, limit: 10, interactionId });
 if (result.success) await search.record(result.analyticsReceipt);
@@ -31,7 +31,6 @@ public endpoint and publishable key shown in Search → API keys or returned by 
 const search = createSiteOSSearchClient({
   endpoint: "https://search.example.com/api/search/public/query",
   publicKey: "spk_PUBLISHABLE_KEY_FROM_SITEOS",
-  analyticsMode: "independent",
 });
 ```
 
@@ -52,9 +51,14 @@ Preserve these interactions when adapting:
 - Render result text and highlight segments as text; never inject provider HTML.
 - Preserve engine order, support pagination, and distinguish zero results from a failed request.
 - Result navigation uses validated local paths and real anchors. Keep mobile controls reachable.
-- Read the index collection settings and match `analyticsMode`. Independent collection needs no
-  consent callback; `consent_required` uses `canRecordAnalytics` with actual current consent.
-  Existing callbacks without an explicit mode retain their consent-required behavior.
+- SiteOS owns analytics policy. Do not copy `enabled` or `collectionMode` into website code.
+  Call `prepareAnalytics()` before allocating the in-memory interaction ID. The existing suggestions
+  response supplies safe settings; query responses refresh them. Unknown, malformed or unavailable
+  policy disables events while search remains usable. There is no local `analyticsMode` option.
+- For a consent-required index, supply `hasAnalyticsConsent: () => yourCmp.analyticsGranted()`.
+  Read the current visitor choice, including revocation; never return a fabricated grant. The
+  canonical Next.js adapter reads SiteOS Cookie automatically and supports another CMP through
+  `setSiteOSSearchAnalyticsConsent`. Independent collection does not require this callback.
 - Generate an in-memory interaction ID only when `search.canRecordAnalytics()` allows it; pass it
   to `search.search`. Record the settled result receipt, including zero results, via `search.record`.
   Record result clicks with their document ID and receipt before navigation. Keep the ID across

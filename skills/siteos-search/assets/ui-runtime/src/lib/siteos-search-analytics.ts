@@ -1,6 +1,13 @@
 // Aggregate search analytics. No persistent visitor identifier, storage or cookies.
-export type SiteOSSearchAnalyticsMode = "independent" | "consent_required" | "off";
-let collectionMode: SiteOSSearchAnalyticsMode = "independent";
+import { createSiteOSSearchClient } from "./siteos-project-search";
+const client = createSiteOSSearchClient({
+  endpoint: "/api/search/query",
+  hasAnalyticsConsent: hasSiteOSSearchAnalyticsConsent,
+  isAnalyticsDisabled: () => optedOut,
+});
+export const prepareSiteOSSearchAnalytics = client.prepareAnalytics;
+export const searchSiteOSProject = client.search;
+export const loadSiteOSSearchSuggestions = client.suggestions;
 let optedOut = false;
 type Consent = {
   categories?: string[];
@@ -20,21 +27,7 @@ export function setSiteOSSearchAnalyticsConsent(granted: boolean | null): void {
   if (typeof window !== "undefined")
     window.dispatchEvent(new Event("siteos-search:consent"));
 }
-export function canRecordSiteOSSearch(): boolean {
-  if (
-    typeof window === "undefined" || optedOut || collectionMode === "off" ||
-    (window as unknown as { SiteOSSearchDisabled?: boolean }).SiteOSSearchDisabled === true ||
-    navigator.doNotTrack === "1" ||
-    (navigator as Navigator & { globalPrivacyControl?: boolean })
-      .globalPrivacyControl === true
-  )
-    return false;
-  return collectionMode === "independent" || hasSiteOSSearchAnalyticsConsent();
-}
-export function setSiteOSSearchAnalyticsMode(mode: SiteOSSearchAnalyticsMode): void {
-  collectionMode = mode;
-  if (typeof window !== "undefined") window.dispatchEvent(new Event("siteos-search:consent"));
-}
+export const canRecordSiteOSSearch = client.canRecordAnalytics;
 export function setSiteOSSearchAnalyticsDisabled(disabled: boolean): void {
   optedOut = disabled;
   if (typeof window !== "undefined") window.dispatchEvent(new Event("siteos-search:consent"));
@@ -77,17 +70,5 @@ export function recordSiteOSSearch(
   receipt: string | undefined,
   clickedResultId?: string,
 ): void {
-  if (!receipt || !canRecordSiteOSSearch()) return;
-  void fetch("/api/search/query", {
-    method: "POST",
-    credentials: "same-origin",
-    cache: "no-store",
-    keepalive: true,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      receipt,
-      consent: hasSiteOSSearchAnalyticsConsent(),
-      ...(clickedResultId ? { clickedResultId } : {}),
-    }),
-  }).catch(() => undefined);
+  void client.record(receipt, clickedResultId);
 }

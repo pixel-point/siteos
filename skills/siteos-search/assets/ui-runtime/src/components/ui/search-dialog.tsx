@@ -5,7 +5,7 @@ import Link from "next/link";
 import { recentSearches, suggestions } from "@/data/search";
 import { BookOpen, FileText, X } from "lucide-react";
 
-import { loadSiteOSSearchSuggestions, searchSiteOSProject, type SiteOSProjectSearchHit } from "@/lib/siteos-project-search";
+import { type SiteOSProjectSearchHit } from "@/lib/siteos-project-search";
 import {
   buildSiteOSProjectSearchDialogSections,
   isSiteOSProjectSuggestionsState,
@@ -17,6 +17,9 @@ import {
 import { cn } from "@/lib/utils";
 import {
   canRecordSiteOSSearch,
+  prepareSiteOSSearchAnalytics,
+  searchSiteOSProject,
+  loadSiteOSSearchSuggestions,
   recordSiteOSSearch,
   subscribeSiteOSSearchConsent,
 } from "@/lib/siteos-search-analytics";
@@ -56,7 +59,14 @@ function useSearch(query: string, open: boolean) {
   const controller = useRef<AbortController | null>(null);
   const interaction = useRef<string | undefined>(undefined);
   const receipts = useRef(new Map<string, string>());
-  useEffect(() => subscribeSiteOSSearchConsent(() => setConsentVersion((v) => v + 1)), []);
+  useEffect(() => subscribeSiteOSSearchConsent(() => {
+    if (!canRecordSiteOSSearch()) {
+      controller.current?.abort();
+      interaction.current = undefined;
+      receipts.current.clear();
+    }
+    setConsentVersion((v) => v + 1);
+  }), []);
   useEffect(() => {
     const abort = new AbortController();
     controller.current = abort;
@@ -75,8 +85,6 @@ function useSearch(query: string, open: boolean) {
       });
       return () => abort.abort();
     }
-    if (canRecordSiteOSSearch()) interaction.current ??= crypto.randomUUID();
-    else interaction.current = undefined;
     setData({
       query: normalized,
       results: [],
@@ -86,6 +94,10 @@ function useSearch(query: string, open: boolean) {
     });
     const timer = setTimeout(async () => {
       try {
+        await prepareSiteOSSearchAnalytics();
+        if (abort.signal.aborted) return;
+        if (canRecordSiteOSSearch()) interaction.current ??= crypto.randomUUID();
+        else interaction.current = undefined;
         const response = await search(normalized, {
           limit: 20,
           signal: abort.signal,
@@ -102,7 +114,8 @@ function useSearch(query: string, open: boolean) {
           });
           return;
         }
-        if (response.analyticsReceipt)
+        if (!canRecordSiteOSSearch()) interaction.current = undefined;
+        if (canRecordSiteOSSearch() && response.analyticsReceipt)
           for (const hit of response.hits) receipts.current.set(hit.id, response.analyticsReceipt);
         setData({
           query: normalized,
@@ -147,7 +160,11 @@ function useSearch(query: string, open: boolean) {
         setData((previous) => ({ ...previous, error: true }));
         return;
       }
-      if (response.analyticsReceipt)
+      if (!canRecordSiteOSSearch()) {
+        interaction.current = undefined;
+        receipts.current.clear();
+      }
+      if (canRecordSiteOSSearch() && response.analyticsReceipt)
         for (const hit of response.hits) receipts.current.set(hit.id, response.analyticsReceipt);
       setData((previous) => ({
         ...previous,

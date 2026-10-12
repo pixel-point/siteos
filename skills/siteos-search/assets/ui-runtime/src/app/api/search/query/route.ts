@@ -52,7 +52,6 @@ export async function GET(request: Request): Promise<Response> {
       signal: AbortSignal.any([request.signal, AbortSignal.timeout(15_000)]),
       headers: {
         Accept: "application/json",
-        "X-SiteOS-Search-Analytics": "2",
         [SITEOS_RUNTIME_QUERY_CREDENTIAL_HEADER]: queryCredential,
         ...privacyHeaders(request),
       },
