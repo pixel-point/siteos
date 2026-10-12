@@ -7,7 +7,7 @@ description: Investigate website tracking and configure evidence-backed event ch
 
 Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
 
-Hosted reads: `siteos_trace_get_coverage`, `siteos_trace_get_report`, `siteos_trace_list_events`, `siteos_trace_list_issues`, `siteos_trace_get_issue`, `siteos_trace_list_observations`, `siteos_trace_get_gtm_summary`, `siteos_trace_get_services`, `siteos_trace_get_ga4` and `siteos_trace_get_notifications`.
+Hosted reads: `siteos_trace_get_coverage`, `siteos_trace_get_report`, `siteos_trace_list_events`, `siteos_trace_list_issues`, `siteos_trace_get_issue`, `siteos_trace_list_observations`, `siteos_trace_get_gtm_summary`, `siteos_trace_get_services`, `siteos_trace_get_campaign_tagging`, `siteos_trace_get_ga4` and `siteos_trace_get_notifications`.
 
 Trace combines Google reports/configuration history with optional browser observations. Use its Health Summary, Destinations and
 Debugger to understand where an event was observed and why a rule raised an issue. It is separate
@@ -108,10 +108,21 @@ for GTM installation, technical incidents, learned schemas, coverage and notific
 2. Run `npx @siteoshq/cli project environment list --json` and `npx @siteoshq/cli trace environments --json`. Select it with `npx @siteoshq/cli project environment use <slug> --json`; Trace resolves its explicit binding. Existing environments require the [common environment connection workflow](../siteos/references/projects-and-environments.md), not a name match.
 3. For Google-only setup, follow the binding workflow above and stop after verifying imports. For observer setup, run `npx @siteoshq/cli trace status --json` and `npx @siteoshq/cli trace report --environment <slug> --json`. Distinguish absent setup, a published installation waiting for data, current observations and open incidents. No recent data is not proof of an outage or a healthy site.
 4. For requested observer setup, run `npx @siteoshq/cli trace installation ensure --environment <slug> --json`, then `npx @siteoshq/cli trace installation show --environment <slug> --json`. Ensure is idempotent and prepares a draft. Edit only documented draft fields, retain the current `expectedDraftVersion`, and save with `npx @siteoshq/cli trace installation save --environment <slug> --input <draft.json> --json`.
-5. When publication is authorized, run `npx @siteoshq/cli trace installation publish --environment <slug> --json`. Read installation again and use its exact `snippet`; do not invent the runtime URL, integrity hash or public key. Install it once using the project's existing script/GTM convention, then verify actual delivery and the environment report. A missing snippet means the required installation is not published and ready.
+5. When publication is authorized, run `npx @siteoshq/cli trace installation publish --environment <slug> --json`. Read installation again and use its exact `snippet`; do not invent the runtime URL, integrity hash or public key. Install it once using the project's existing script/GTM convention, then verify actual delivery and the environment report. A missing snippet means the required installation is not published and ready. An `OUTDATED_RUNTIME` error names runtime versions that sent evidence in the last 24 hours but cannot read the new configuration, usually a tag pinned to `/runtime/<version>/trace.min.js`; those pages would stop sending evidence. Report the versions and page counts and prefer moving the tag to the stable `/runtime/trace.js`. Repeat with `--acknowledge-outdated-runtime` (CLI 2.52.0+) only after the owner accepts that loss explicitly.
 6. For a requested tracking plan, use `npx @siteoshq/cli trace tracking-plan ensure --environment <slug> --json` and `npx @siteoshq/cli trace tracking-plan show --environment <slug> --json`. Prepare a complete reviewed plan using the application's actual event contract; save through `npx @siteoshq/cli trace tracking-plan save --environment <slug> --input <plan.json> --json`. Reread and review the saved draft. Publish through `npx @siteoshq/cli trace tracking-plan publish --expected-draft-version <reviewed-version> --environment <slug> --json` when authorized. A conflict requires a fresh read and review; never remove the guard to retry. Read back the result and inspect new evidence before claiming validation.
 
 Do not add observation of cookies, storage, DOM text, form values, payload values or persistent visitor IDs. Keep provider/event/property names separate from personal values. Do not infer business metrics, conversions or delivery success from script installation alone. Report exact observed status and the timestamp or absence of evidence.
+
+Issue actions (CLI 2.52.0+) are explicit, user-requested writes on an issue of the selected environment:
+`npx @siteoshq/cli trace issue acknowledge --id <id> --environment <slug> --json`,
+`... trace issue snooze --id <id> --until <ISO date|24h|7d> ...` and `... trace issue resolve --id <id> ...`.
+Resolve only after fresh evidence confirms the fix; a new failure reopens it. Never acknowledge,
+snooze or resolve to clear a list, and never use them for recovery notices.
+
+Observations carry `personalData` (`{kind, location, name}` where an email address or phone number
+appeared while analytics was granted, never the value) and `campaignParameters` (landing campaign
+names). `trace campaign-tagging [--period 24h|7d]` and `siteos_trace_get_campaign_tagging` read
+which campaign names landings carried. Neither proves untagged traffic or a clean page.
 
 ## Draft input contracts
 

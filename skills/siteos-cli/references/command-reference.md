@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.51.0`
+Package: `@siteoshq/cli@2.52.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -108,9 +108,13 @@ siteos trace events [--environment <slug>] [--provider <provider>] [--event <nam
 siteos trace properties [--environment <slug>] [--provider <provider>] [--event <name>] [--property <name>] [--search <text>] [--period <24h|7d>] [--cursor <cursor>] [--json]
 siteos trace issues [--environment <slug>] [--provider <provider>] [--event <name>] [--state <all|active|snoozed|resolved|new>] [--rule <rule>] [--container-id <GTM-ID>] [--tag-id <id>] [--search <text>] [--period <24h|7d>] [--cursor <cursor>] [--json]
 siteos trace observations [--environment <slug>] [--provider <provider>] [--event <name>] [--kind <kind>] [--page-view <uuid>] [--container-id <GTM-ID>] [--tag-id <id>] [--result <result>] [--search <text>] [--period <24h|7d>] [--cursor <cursor>] [--json]
+siteos trace campaign-tagging [--environment <slug>] [--period <24h|7d>] [--json]
 siteos trace issue show --id <uuid> [--environment <slug>] [--cursor <finding-cursor>] [--json]
+siteos trace issue <acknowledge|resolve> --id <uuid> [--environment <slug>] [--json]
+siteos trace issue snooze --id <uuid> --until <ISO date|24h|7d> [--environment <slug>] [--json]
 siteos trace observation show --batch-id <uuid> --event-id <uuid> [--environment <slug>] [--json]
 siteos trace installation <show|ensure|save|publish> [--environment <slug>] [--input <draft.json>] [--json]
+siteos trace installation publish --acknowledge-outdated-runtime [--environment <slug>] [--json]
 siteos trace tracking-plan <show|ensure|save|publish> [--environment <slug>] [--input <plan.json>] [--json]
 siteos trace tracking-plan publish --expected-draft-version <number> [--environment <slug>] [--json]
 ```
