@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.50.0`
+Package: `@siteoshq/cli@2.51.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -259,6 +259,13 @@ siteos pulse validate [--json]
 siteos pulse sync [--check] [--json]
 siteos pulse test [--check <slug>] [--headed] [--project <name>] [--base-url <url>] [-- <playwright-options>]
 siteos pulse deploy [--dry-run] [--output <path>] [--json]
+siteos pulse telemetry settings [--environment <slug>] [--json]
+siteos pulse telemetry configure --revision <n> --enabled <true|false>
+siteos pulse telemetry key --revision <n> --output <private-file>
+siteos pulse telemetry revoke --revision <n>
+siteos pulse telemetry logs [--service <name>] [--severity <0-24>] [--trace <id>] [--from <ISO>] [--to <ISO>] [--cursor <cursor>]
+siteos pulse telemetry traces [--service <name>] [--status <0-2>] [--min-duration <ms>] [--from <ISO>] [--to <ISO>] [--cursor <cursor>]
+siteos pulse telemetry trace --trace <id>
 siteos pulse errors list [--environment <slug>] [--json]
 siteos pulse errors show --issue <id> [--json]
 siteos pulse errors settings [--input <settings.json>] [--json]
