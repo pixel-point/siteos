@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@2.53.0`
+Package: `@siteoshq/cli@2.54.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -117,6 +117,8 @@ siteos trace installation <show|ensure|save|publish> [--environment <slug>] [--i
 siteos trace installation publish --acknowledge-outdated-runtime [--environment <slug>] [--json]
 siteos trace tracking-plan <show|ensure|save|publish> [--environment <slug>] [--input <plan.json>] [--json]
 siteos trace tracking-plan publish --expected-draft-version <number> [--environment <slug>] [--json]
+siteos trace tracking-plan export [--format csv|json-schema|siteos] [--version <number>] [--output <file>] [--environment <slug>]
+siteos trace tracking-plan import --input <file> [--mode merge|replace] [--provider <service>] [--dry-run] [--environment <slug>] [--json]
 ```
 
 ## SEO/GEO

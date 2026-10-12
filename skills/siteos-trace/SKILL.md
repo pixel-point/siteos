@@ -124,6 +124,9 @@ advisory **Tracking** section only when tracking changed: missing or retyped pla
 events the same Checks sent on the last merged PR but not now, or events new to both production
 (7 days) and that PR. It also lists consent-gated and unreached events. No section means no
 change was seen, not verified delivery. Treat it as pre-merge evidence; it is names only.
+With the SiteOS Cookie banner, a consent pass reopens visited preview pages with Accept all and
+Reject all; "After Reject all: … was still sent" is a consent finding to fix before merging, while
+GA4 cookieless Consent Mode pings are expected. Other banners are not operated by the pass yet.
 
 Observations carry `personalData` (`{kind, location, name}` where an email address or phone number
 appeared while analytics was granted, never the value) and `campaignParameters` (landing campaign
@@ -179,6 +182,8 @@ monitoring, use the `gtmExecutionMonitor` metadata returned by `installation sho
 installation workflow. This is one common monitor; individual event names and tags need no setup.
 
 For `tracking-plan save`, write `{ "expectedDraftVersion": <current version>, "expectations": [...] }`.
+With CLI 2.54.0+, to hand a plan to a person or another tool, use `trace tracking-plan export --format csv|json-schema|siteos [--version <n>] [--output <file>]`.
+To adopt an existing plan file, run `trace tracking-plan import --input <file> --dry-run --json` first, review its added, changed, removed and skipped lists with the user, then repeat without `--dry-run`. Import only changes the draft; merge keeps rules the file does not name and `--provider` names the service for events without one.
 Each expectation contains `provider`, `eventName`, `required`, nullable `consentPurpose` (`analytics`
 or `advertising`), nullable `maximumSilenceMinutes`, optional nullable `afterConsentSeconds` (5–300),
 optional nullable `afterConsentReadySeconds` (5–300), optional `checkSdkConsent` and
