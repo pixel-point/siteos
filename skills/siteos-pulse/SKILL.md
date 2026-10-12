@@ -9,7 +9,7 @@ Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once p
 
 Projects owns the common Project and environment identity. Pulse owns its attached resource, Checks, schedules, PR policy, deployment bundles and run evidence. GitHub is a shared Organization connection owned by Integrations.
 
-For GitHub setup, preview admission or a missing PR result, read [GitHub PR verification](references/github-pull-requests.md). It defines the CLI setup steps and read-only MCP diagnostics and distinguishes PR verification from a manual run.
+For GitHub setup, preview admission or a missing PR result, read [GitHub PR verification](references/github-pull-requests.md). It defines the CLI setup steps and read-only MCP diagnostics and distinguishes PR verification from a manual run. Where Trace shares the Project environment, browser PR Checks also capture tracking names and, only when tracking changed against the Trace plan, recent production or the same Checks on the last merged PR, the GitHub Check gets an advisory **Tracking** section; it never changes the conclusion. Fix tracking findings through the Trace workflow.
 
 Hosted reads: `siteos_pulse_list_checks` and `siteos_pulse_get_check` expose published settings, overrides, effective schedules, independent PR participation and eligibility, active package versions and open incident evidence. `siteos_pulse_list_runs` and `siteos_pulse_get_run` provide run history and failure details. Discover available tools first; older servers may not expose Check reads.
 

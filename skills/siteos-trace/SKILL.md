@@ -119,6 +119,12 @@ Issue actions (CLI 2.52.0+) are explicit, user-requested writes on an issue of t
 Resolve only after fresh evidence confirms the fix; a new failure reopens it. Never acknowledge,
 snooze or resolve to clear a list, and never use them for recovery notices.
 
+With Pulse browser Checks on pull requests in the same Project environment, the GitHub Check adds an
+advisory **Tracking** section only when tracking changed: missing or retyped planned properties,
+events the same Checks sent on the last merged PR but not now, or events new to both production
+(7 days) and that PR. It also lists consent-gated and unreached events. No section means no
+change was seen, not verified delivery. Treat it as pre-merge evidence; it is names only.
+
 Observations carry `personalData` (`{kind, location, name}` where an email address or phone number
 appeared while analytics was granted, never the value) and `campaignParameters` (landing campaign
 names). `trace campaign-tagging [--period 24h|7d]` and `siteos_trace_get_campaign_tagging` read
