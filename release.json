@@ -11,7 +11,7 @@
   "source": {
     "repository": "https://github.com/pixel-point/siteos-platform",
     "path": "plugins/siteos",
-    "revision": "a9665741256af057dc9b5b97b79110a1b36abc15"
+    "revision": "8df3239bae5a98396fecac7716846cd5240bc61c"
   },
   "artifact": {
     "algorithm": "sha256",
