@@ -1,6 +1,6 @@
 ---
 name: siteos-pulse
-description: "Use for SiteOS Pulse runtime Errors, server logs/traces, browser/code Checks, scheduled monitoring and GitHub PR verification: connect error capture, inspect issues and releases, configure Checks, and manage saved evidence through supported CLI and MCP tools."
+description: "Use for SiteOS Pulse runtime Errors, server logs, browser/server traces and optional session replay, browser/code Checks, scheduled monitoring and GitHub PR verification: connect error capture, inspect issues and releases, configure Checks, and manage saved evidence through supported CLI and MCP tools."
 ---
 
 # SiteOS Pulse
@@ -13,7 +13,9 @@ For GitHub setup, preview admission or a missing PR result, read [GitHub PR veri
 
 Hosted reads: `siteos_pulse_list_checks` and `siteos_pulse_get_check` expose published settings, overrides, effective schedules, independent PR participation and eligibility, active package versions and open incident evidence. `siteos_pulse_list_runs` and `siteos_pulse_get_run` provide run history and failure details. Discover available tools first; older servers may not expose Check reads.
 
-For server logs, OpenTelemetry or request traces, read [server telemetry](references/telemetry.md). It uses standard OTLP and an independent collection key; no Checks or SiteOS SDK are required.
+For logs, OpenTelemetry or browser/server request traces, read [telemetry setup](references/telemetry.md). Server OTLP needs no SiteOS SDK; optional browser tracing uses its own public key, consent lifecycle and SDK import. Neither requires Checks.
+
+For masked session playback, read [optional replay](references/replay.md). It has its own permission, public collection key and consent gate; it never starts implicitly with Errors or tracing.
 
 For runtime exceptions, error groups, releases or Sentry migration, read [Pulse Errors](references/errors.md) first. That workflow does not require Checks, Playwright or a runner.
 
