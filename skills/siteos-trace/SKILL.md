@@ -128,10 +128,12 @@ install the returned snippet. Change it only when the owner asks; never as a fix
 `campaignParameters: true` (default off) reports which known UTM and ad click-ID parameter names a
 landing URL had, never their values; it needs a collection policy and runtime 0.15+ and publishes
 configuration version 5, which older snippets reject. Turn it on only when the owner asks.
-`personalDataChecks: true` (default off) needs `collectionStart: "after_consent"` and runtime 0.16+:
-after the grant the browser reports where an email or phone number appears in observed values,
-never the value (configuration version 6). With the SiteOS Cookie source, the owner lists Trace in
-that banner from the browser's Collection settings; there is no CLI or MCP action for it.
+`personalDataChecks: true` (default off) needs a consent source other than `disabled`, a collection
+policy and runtime 0.17+, and keeps `collectionStart` unchanged (configuration version 7). Only
+while the consent source grants analytics does the browser report where an email or phone number
+appears in observed values, never the value. Do not switch collection to `after_consent` for it.
+With the SiteOS Cookie source, the owner lists Trace in that banner from the browser's Collection
+settings; there is no CLI or MCP action for it.
 Third-party service discovery is always on and is not a draft field: with a collection policy and
 runtime 0.8+ Trace names other third-party services from the shared vendor registry by request
 hostname and stores only the service or its registrable domain. A snippet pinned to 0.7 or older

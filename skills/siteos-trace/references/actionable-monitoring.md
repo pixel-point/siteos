@@ -79,7 +79,7 @@ usual share of at least 50%, and resolves when the share returns. Shares are sam
 not conversions; a steady consent or blocker rate does not open it. Read `findings[].details`
 (`sourceCount`, `deliveredCount`, `share`, `usualShare`, `destinationEventName`) before explaining it.
 
-`personal_data_sent` (configuration version 6, collection after analytics consent only) means the
+`personal_data_sent` (configuration version 7, from pages where analytics was granted) means the
 browser found an email address or phone number in a value it observed: critical for a service
 request, a warning for the data layer. Details give `email`/`phone`, `foundParameters` (approved
 names), `unnamedParameter`, `pageUrl` and `pagesWithPersonalData` of `checkedPages`; Trace never has
