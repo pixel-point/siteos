@@ -129,8 +129,8 @@ which campaign names landings carried. Neither proves untagged traffic or a clea
 For `installation save`, write `{ "expectedDraftVersion": <current version>, "draft": <complete draft> }`.
 Read the current installation first and preserve its draft fields: `providers` (a list containing
 `siteos_analytics`, `ga4`, `google_ads`, `hubspot`, `meta`, `zoominfo`, `linkedin`, `clarity` or `custom`), `sampleRate`, `maxBatchSize`, `consentMode`
-(`disabled`, `explicit_adapter`, `google_consent_mode`, `iubenda`, `onetrust`, `cookiebot`, `tcf` or `siteos_cookie`), nullable `releaseLabel` and, when
-present, `collectionPolicy`, `collectionStart`, `campaignParameters` and `personalDataChecks`. Use the existing defaults unless the task calls for a reviewed change.
+(`disabled`, `explicit_adapter`, `google_consent_mode`, `iubenda`, `onetrust`, `cookiebot`, `tcf`, `usercentrics` or `siteos_cookie`), nullable `releaseLabel` and, when
+present, `collectionPolicy`, `collectionStart`, `campaignParameters`, `personalDataChecks`, `valueChecks` and `usercentrics`. Use the existing defaults unless the task calls for a reviewed change.
 `collectionStart` is `immediate` (default, also when absent) or `after_consent`: Trace then keeps
 and sends nothing until the consent source grants analytics, starts on the grant and stops on
 withdrawal. It needs a consent source other than `disabled`, a collection policy and runtime 0.9+;
@@ -145,6 +145,16 @@ while the consent source grants analytics does the browser report where an email
 appears in observed values, never the value. Do not switch collection to `after_consent` for it.
 With the SiteOS Cookie source, the owner lists Trace in that banner from the browser's Collection
 settings; there is no CLI or MCP action for it.
+`valueChecks: true` (default off) needs a consent source other than `disabled`, a collection policy
+and runtime 0.18+ (configuration version 8). While analytics is granted, the browser checks GA4,
+Meta Pixel and data-layer `ecommerce` values of ecommerce events (currency code with a value, value a
+number of zero or more, resolved transaction ID on purchase/refund, items) and sends only the kinds;
+`ecommerce_value_invalid` issues follow. Turn it on only when the owner asks.
+`consentMode: usercentrics` (runtime 0.18+) reads Usercentrics Web CMP v3 through
+`usercentrics: {analytics: [...1-8], advertising: [...0-8]}`: service template IDs or names, or
+category keys or names (a custom category key is opaque, so its name such as `Analytics` works). A
+purpose is granted only when every entry is accepted. Omitted, the server uses the GA4 template
+`87JYasXPF` and the `marketing` category; confirm the site's actual services before relying on it.
 Third-party service discovery is always on and is not a draft field: with a collection policy and
 runtime 0.8+ Trace names other third-party services from the shared vendor registry by request
 hostname and stores only the service or its registrable domain. A snippet pinned to 0.7 or older
@@ -152,7 +162,7 @@ cannot read the published configuration with discovery, so after publication ins
 snippet. Do not disable consent handling as an automatic workaround for missing observations.
 
 Consent modes have distinct evidence sources: `siteos_cookie` reads the SiteOS banner’s public state on the same page, `google_consent_mode` observes supported data-layer
-consent commands, `iubenda` reads public Measurement/Marketing permissions (runtime 0.10+), `onetrust` (groups C0002/C0004), `cookiebot` (statistics/marketing) and `tcf` (IAB TCF purposes 1+8 / 1+3+4, for Didomi and other TCF CMPs) need runtime 0.14+, `explicit_adapter` uses the application's explicit consent evidence, and
+consent commands, `iubenda` reads public Measurement/Marketing permissions (runtime 0.10+), `onetrust` (groups C0002/C0004), `cookiebot` (statistics/marketing) and `tcf` (IAB TCF purposes 1+8 / 1+3+4, for Didomi and other TCF CMPs) need runtime 0.14+, `usercentrics` (the configured services and categories) needs runtime 0.18+, `explicit_adapter` uses the application's explicit consent evidence, and
 `disabled` records unknown consent. Selecting an adapter does not configure a vendor tag or forward
 events. Check enabled providers and sampling before interpreting absent traffic. A saved draft does
 not affect the live runtime until publication. Runtime 0.2.1 adds bounded GA4 single-event POST
