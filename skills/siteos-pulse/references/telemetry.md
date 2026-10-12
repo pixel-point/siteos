@@ -2,8 +2,8 @@
 
 Pulse Telemetry collects server diagnostics through standard OTLP/HTTP JSON independently of
 Checks and Errors. It does not require Playwright, repository setup, a runner or a SiteOS SDK.
-Browser tracing, session replay, metrics, gRPC, protobuf and compressed requests are not supported
-by this version. Discover the installed server/CLI capabilities before setup; do not claim an
+Browser tracing uses a separate optional SDK entry and browser-only channel described below.
+Session replay, metrics, gRPC, protobuf and compressed requests are not part of server OTLP. Discover the installed server/CLI capabilities before setup; do not claim an
 unreleased capability is already available.
 
 1. Resolve the exact Organization, Project and environment through the shared execution contract.
@@ -46,3 +46,32 @@ unreleased capability is already available.
 
 Do not change client projects during a SiteOS-owned pilot. Do not enable browser tracing or replay
 as part of server telemetry installation.
+
+## Optional browser tracing
+
+Choose this capability explicitly. Discover `pulse telemetry --help` / installed SDK exports before
+using it; older installations support only the server workflow. Preserve all existing keys,
+exporters, source map hooks and Checks. Customers do not add DNS or change their build provider.
+
+1. Read `pulse telemetry settings --browser --environment <slug> --json`. Require the endpoint to
+   be available. Configure exact website origins and route templates with `configure --browser
+   --revision <n> --enabled true --origin https://example.com --route /api/contact` (repeat flags
+   for multiple entries). Avoid raw dynamic paths and personal identifiers.
+2. Issue `key --browser --revision <n> --output <new-private-file>` and verify publication. This is
+   a public collect-only browser key; it cannot submit server OTLP or read reports. Never move the
+   existing server secret into a public variable. Key rotation and revoke affect only this channel.
+3. Inspect existing request instrumentation and CMP. Use `@siteoshq/pulse/tracing` `initTracing` for
+   a project without browser instrumentation, or `createTraceExporter` on its existing browser
+   OpenTelemetry provider. Do not patch twice or introduce Zone.js. Set the same deployed release.
+4. Pass matching route templates and explicit first-party API origins to the SDK; cross-origin
+   APIs must allow traceparent in CORS. Connect current consent and subsequent changes; tracing
+   starts only after consent, stops on withdrawal, and honors DNT/GPC. Default sampling is 10%.
+5. Verify native fetch/XHR and cancellation, then one browser request with its server child and
+   correlated error/log. Read the ordinary trace tools; runtime marks browser versus server. Do
+   not attach unrelated errors to the most recent request. `contextFor(error)` only matches the
+   same request rejection; no automatic causal click/async tree is promised.
+6. Read browser settings for independent usage/revocation. Seven-day retention and partial traces
+   apply. Report local implementation, published configuration and actual hosted receipt separately.
+
+Read [optional replay](replay.md) only when selected. Replay is separately enabled and is never implicit in tracing setup. DataChain is excluded from
+the SiteOS-owned pilot.
