@@ -190,6 +190,8 @@ when unavailable. Do not invent raw API calls or automate the SiteOS UI as a fal
 For a new set, save a separate `visibility-settings.json` with `revision: 0` and `questions` matching
 `category.questions` by id/text/frame. Optional `topic`, `tags` and `archived` belong in that file.
 Edits use the current visibility revision and preserve existing IDs; archive removed questions.
+To edit a listed set, copy its `visibility` object; remove the read-only `websiteUrl` and question
+`version` unless installed help says the CLI ignores them.
 
 ```sh
 npx @siteoshq/cli seo research plan --input ./research-request.json --json
