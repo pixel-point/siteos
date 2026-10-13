@@ -21,6 +21,14 @@ For runtime exceptions, error groups, releases or Sentry migration, read [Pulse 
 
 When `$playwright-cli` is available, it can help author and inspect a journey. Do not assume or require that another skill is installed; the project's local Playwright command remains sufficient.
 
+## Collection setup
+
+The SiteOS app shows Pulse → Settings → Collection with one row per signal: Errors, Server logs & traces, Browser tracing and Replay. Each row has numbered setup steps and a **Set up with AI** prompt for this skill. Follow the matching reference above for that signal only; leave other signals, Checks and notifications unchanged. Finish the setup work with this report, never including keys:
+
+- **Connected:** per signal, what is now in place (settings saved, key stored as a private secret, SDK or exporter installed).
+- **Remaining:** per signal, what is still missing, with the exact next step (command, file or app action).
+- **Verified:** per signal, whether a first event was received. No event yet is neither failure nor proof of health.
+
 ## Checks workflow
 
 1. Resolve the target through the shared execution contract, inspect `siteos project status --json`, and select the requested common environment. Connect Pulse explicitly with `siteos project connect pulse --json` if needed. Preserve existing resource IDs and environment bindings.

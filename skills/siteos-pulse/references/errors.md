@@ -8,11 +8,15 @@ Check deployments or a runner just to enable Errors. Leave existing monitoring u
    setup. No fallback to production.
 2. Discover whether the installed CLI/server expose `pulse errors` and the MCP error tools. If not,
    report the version mismatch; do not invent endpoints or silently install an unpublished package.
-3. Read `siteos pulse errors settings --environment <slug> --json`. Save configuration using
-   `pulse errors settings --input settings.json --environment <slug> --json` with the returned
-   revision, `enabled`, exact `origins` and an optional saved `destinationId` (or null). Changing
+   Check `pulse errors --help` first: older CLIs only have `errors settings --input <settings.json>`
+   (the complete revision, `enabled`, exact `origins` and `destinationId` or null) and `errors keys`
+   instead of `configure` and `key`. Both older forms remain accepted.
+3. Read `siteos pulse errors settings --environment <slug> --json`. Save configuration with
+   `pulse errors configure --revision <revision> --enabled true|false --origin <exact-origin>
+   [--origin ...] [--destination <saved-id> | --no-destination] --environment <slug> --json`, using
+   the returned revision. Omitted `--origin` or destination flags keep the saved values. Changing
    these settings is a real write. Notifications remain off unless requested.
-4. `pulse errors keys --revision <revision> --output <new-private-file> --environment <slug>` rotates
+4. `pulse errors key --revision <revision> --output <new-private-file> --environment <slug>` rotates
    both collection keys. Never print the resulting server key, paste it into chat or commit it.
    Prefer the SiteOS protected UI/server secret store for transferring it to hosting. Browser keys
    permit collection only; CLI/MCP management authentication is separate.
