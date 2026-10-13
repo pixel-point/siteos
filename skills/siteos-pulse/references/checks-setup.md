@@ -44,15 +44,26 @@ siteos pulse playwright attach --check <id> --revision <shown-revision> \
   --auto-refresh
 ```
 
-First read `siteos project repository show --json` and confirm its repository, branch, directory and environment URL. For an ordinary Vercel project, connect Vercel in Services using [the Integrations workflow](../../siteos-integrations/SKILL.md#vercel-deployments). In Project environment settings choose the matching Vercel project as **Deployment source**. For CLI setup, read safe project IDs from `integrations vercel status`, then save the existing repository binding with `deploymentSource: { "provider": "vercel", "connectionId": "<returned-id>", "projectId": "<returned-prj-id>" }` and its current `revision`. Explicit `null` selects GitHub deployment events; an omitted field preserves the previous choice. Do not invent IDs or change the customer build.
+First read `siteos project repository show --json` and confirm the repository, branch, directory
+and environment URL. In **Repository & deployments**, find GitHub deployments and review the
+suggested environment before saving. CLI discovery uses `project repository deployments` with
+installation/repository IDs from the shared GitHub catalog. A reviewed binding can set
+`deploymentEnvironment`; omit it to preserve the previous value, or use an empty string to clear
+the filter. Preserve the binding's current `revision`. Do not invent IDs or silently broaden access.
 
-`--auto-refresh` enables updates from that source. The trusted worker polls each enabled Check at most once every five minutes. Vercel must prove which ready deployment currently serves the selected domain and identify its repository and commit. GitHub deployment events work without a hosting connection when their successful environment URL matches the website exactly. Existing `--refresh-environment <name>` remains an optional filter for GitHub events. An immutable preview URL alone is insufficient proof for a production domain.
+`--auto-refresh` polls each enabled Check at most once every five minutes. GitHub must report a
+successful deployment whose URL matches the website exactly and whose source commit belongs to
+the trusted branch. The optional per-Check `--refresh-environment <name>` overrides the binding's
+filter. A rollback to a deployed ancestor is supported; a newer unshipped branch head is not proof.
 
-The deployed commit must be on the selected trusted branch, but need not equal its current head. This supports ordinary deployments and rollbacks while newer commits await release. A custom builder that rewrites source identity needs verifiable equivalence; arbitrary `sourceSha` metadata is not enough. If evidence is unavailable, report the saved refresh state and use deliberate publication; do not guess the latest commit.
+Hosting providers that already report this evidence need no build changes. Otherwise configure the
+[generic successful-publication notification](../../siteos-integrations/SKILL.md#deployment-evidence)
+once in the customer's build system. It uses that build's own repository-scoped GitHub authority;
+there is no separate hosting connection, SiteOS build service or GitHub artifact dependency.
 
-For rewritten Git identity, Pulse independently requires a successful GitHub commit status whose target is the exact immutable Vercel deployment URL. The GitHub App installation needs **Commit statuses: read** for this proof. Have the organization owner accept that permission update when required; never fabricate a success status to make refresh pass.
-
-For a new project, attach Playwright tests with `--auto-refresh` after selecting the deployment source. For an existing project, use the current Check ID and revision above. Both flows preserve the customer's hosting pipeline; no GitHub Actions artifact or SiteOS build script is installed.
+For a new Check, attach Playwright tests with `--auto-refresh`. For an existing Check, use its current
+ID and revision above. Keep the current snapshot, history, schedule and PR policy. Missing evidence
+is an actionable waiting state; do not substitute the latest commit or fake a deployment.
 
 Source is prepared without executing repository code. The runner verifies the candidate, then the worker rechecks deployment and binding authority before activation. Missing deployment, revoked access, unsupported source or failed tests retain the previous version and expose a saved refresh/candidate state. `--no-refresh` disables future source refresh. Explicit publication remains available for deliberate local/test-only updates; remote verification still gates activation. Disable automatic refresh first if those tests must remain independent of the deployed commit; otherwise reconciliation restores the deployed source.
 

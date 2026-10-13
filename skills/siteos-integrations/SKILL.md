@@ -1,6 +1,6 @@
 ---
 name: siteos-integrations
-description: Use for shared SiteOS Organization provider connections, including Vercel deployments, Mailchimp contact forwarding, selected GitHub repositories, Slack channel discovery and notification destinations used by Project services.
+description: Use for shared SiteOS Organization provider connections, including GitHub deployment evidence, Mailchimp contact forwarding, selected GitHub repositories, Slack channel discovery and notification destinations used by Project services.
 ---
 
 # SiteOS Integrations
@@ -75,19 +75,36 @@ retries use separate Forms scopes. MCP remains read-only. Connecting does not en
 campaign. Mailchimp Forms is a separate collection UI; SiteOS contacts appear in Audience → Contacts.
 
 
-## Vercel deployments
+## Deployment evidence
 
-Vercel supplies deployment evidence for Pulse automatic test updates, independently of the customer's build system. It does not build, publish or modify a Vercel project. Check installed `integrations --help` and server support first.
+Pulse uses the shared GitHub connection; do not connect a separate hosting provider or request its token.
+In **Repository & deployments**, use **Find deployments in GitHub**, review the returned environment
+and URL, and choose its use before saving. CLI discovery is
+`siteos project repository deployments --installation <id> --repository <id> --refresh --json`;
+repeat without `--refresh` until it is ready. IDs come from the selected shared GitHub repository.
+Discovery requires manager access and queues bounded work; a ready empty catalog is not an error.
 
-1. Read `siteos integrations vercel status --organization <id> --json` or `siteos_integrations_get_connection` with provider `vercel`.
-2. To connect, use `siteos integrations vercel connect --organization <id> --json`. The returned Services page has a protected token dialog. The user enters a Vercel token and, for a team, its Team ID there. Never request or place the token in chat, files or CLI arguments. SiteOS encrypts it and only issues read requests; the token itself may have additional provider permissions.
-3. Wait for `status: ready` and select a returned project matching the GitHub repository and directory in the SiteOS Project environment's repository settings. Connecting alone does not select a project or enable Checks.
-4. Enable `--auto-refresh` on the intended Playwright Checks. Read candidate and refresh state to verify preparation, execution and activation. Preserve existing Check identity, history, schedules, Secrets and PR policy.
+For native hosting integrations, verify an actual successful GitHub Deployment Status with the
+source SHA, environment and URL. A commit status, build success or HTTP 200 alone is insufficient.
+If the build does not report deployment evidence, configure this command after successful publication:
 
-`vercel refresh` queues a catalog reload. `vercel disconnect` requires `--confirm`; both require the current `--expected-revision`. Replacing a token creates a new connection identity, so affected Project environments must select it again. MCP exposes saved metadata only. Missing deployment proof or revoked access retains working Checks and stops updates; it never falls back to another account, environment or branch.
+```sh
+siteos integrations github deployment report --repository <owner/repo> --sha <full-source-sha> \
+  --environment <name> --url <published-url> --run-id <publication-id> [--preview] --json
+```
 
-For deployment-aware Checks, use `project repository show --json`, preserve the returned repository settings,
-and save a reviewed binding file with `deploymentSource: { "provider": "vercel", "connectionId": "<connection-id>", "projectId": "<vercel-project-id>" }`.
-Use `project repository save --input <binding.json> --json`; retain its current `revision` and selected environment.
-Set `deploymentSource` to `null` only to return to GitHub deployment evidence. A Vercel project may have Git integration disabled;
-its deployed repository and SHA still require verification before tests activate. Read back the binding and candidate status.
+Check installed help and matching server support before setup. This standalone command uses the
+build's own `GH_TOKEN` or `GITHUB_TOKEN` with **Deployments: write** on that repository. Store it in
+the CI secret store; never request it in chat or give it to customer tests. No SiteOS login, token,
+GitHub Actions workflow, source archive or artifact upload is needed. Keep the same run ID when
+retrying one publication; serialize its notifications. A rollback or new publication gets a new run
+ID, even at the same SHA. Use `--preview` for temporary PR previews. Report the original repository
+SHA that was actually shipped, not a packaging commit or current branch head. For automatic website
+test updates, report the bound website URL after traffic has switched, not merely a ready immutable
+preview URL. The command records evidence and never builds or deploys; existing automation listening
+to GitHub deployment events must ignore the `siteos-pulse` task unless it owns this notification.
+
+Follow [Pulse setup](../siteos-pulse/references/checks-setup.md) and
+[PR verification](../siteos-pulse/references/github-pull-requests.md) for binding, selection and readback.
+Missing evidence preserves active Checks and leaves pending previews waiting; never fabricate a
+success record just to unblock them.
