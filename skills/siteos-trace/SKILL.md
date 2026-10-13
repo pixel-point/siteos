@@ -101,7 +101,7 @@ The monitoring, notification and schema workflow requires CLI 2.2.0 or newer and
 Trace server. Earlier CLI releases support the older explorer commands. Check the installed
 `npx @siteoshq/cli trace --help` before using it; source availability does not establish publication.
 Read [references/investigating-tracking.md](references/investigating-tracking.md) for filters,
-pagination, issue history, evidence limits and verification of a fix. AI explanations remain deferred. GA4 Admin/Data API reconciliation requires CLI 2.3.0+ and the matching server; use [GA4 reconciliation](references/ga4-reconciliation.md). Read [actionable monitoring](references/actionable-monitoring.md)
+pagination, issue history, evidence limits and verification of a fix. The in-app Explain action is an optional browser feature, off unless enabled and not an agent tool; investigate saved evidence yourself. GA4 Admin/Data API reconciliation requires CLI 2.3.0+ and the matching server; use [GA4 reconciliation](references/ga4-reconciliation.md). Read [actionable monitoring](references/actionable-monitoring.md)
 for GTM installation, technical incidents, learned schemas, coverage and notification configuration.
 
 1. Run `npx @siteoshq/cli project status --json`. Use `$siteos` for missing common selection. When requested and not attached, run `npx @siteoshq/cli project connect trace --json`. This prepares the selected common environment without publishing or installing a script. Manage its name and website URL in Project settings; an address change marks an existing installation as requiring explicit republication.

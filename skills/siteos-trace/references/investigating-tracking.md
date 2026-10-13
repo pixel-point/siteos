@@ -77,7 +77,7 @@ parsed. Missing evidence for an unsupported path is not evidence of failed deliv
    Marking an issue resolved in the UI is a workflow action, not proof that the tracking is fixed.
 
 Do not add payload values, full request URLs, account IDs, DOM text, cookies, persistent visitor
-IDs or other private values to Trace to simplify diagnosis. AI explanations remain deferred.
+IDs or other private values to Trace to simplify diagnosis. The optional in-app Explain action is browser-only and is not an agent tool.
 Use [actionable monitoring](actionable-monitoring.md) for the implemented notification lifecycle.
 
 
