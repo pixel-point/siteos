@@ -19,13 +19,17 @@ const search = createSiteOSSearchClient({
 const controller = new AbortController();
 await search.prepareAnalytics();
 const interactionId = search.canRecordAnalytics() ? crypto.randomUUID() : undefined;
-const result = await search.search("tokens", { signal: controller.signal, limit: 10, interactionId });
+const result = await search.search("tokens", {
+  signal: controller.signal,
+  limit: 10,
+  interactionId,
+});
 if (result.success) await search.record(result.analyticsReceipt);
 // On a result click: search.record(result.analyticsReceipt, hit.id).
 ```
 
 Two delivery paths share this client. For a configured Cloudflare Search environment, use the
-public endpoint and publishable key shown in Search → API keys or returned by `siteos search delivery`:
+public endpoint and publishable key shown in Search → Settings → Website search or returned by `siteos search delivery`:
 
 ```ts
 const search = createSiteOSSearchClient({

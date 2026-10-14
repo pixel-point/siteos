@@ -36,8 +36,11 @@ are supported. Query-string routes, off-origin redirects and browser rendering a
 The worker respects robots.txt, nofollow and noindex. `includeNoindex: true` is an explicit opt-in
 for pages the user owns, including noindex demos; it does not override robots.txt or nofollow.
 A robots.txt request failure is not permission to crawl. Limits: at most 200 visited pages,
-depth 8, 10 sitemaps, 2 MB per response, 20 MB total, five minutes per attempt. The worker validates
+depth 8, 10 sitemaps, 10 MB per response (wire and decompressed), 200 MB total decompressed,
+five minutes per attempt. Exceeding a byte limit fails the attempt and preserves the published index. The worker validates
 public IP addresses on every connection, pins DNS answers and rechecks redirects.
+Each page retains up to 500,000 characters of searchable text. Optional H2/H3 section records
+remain limited to 20 sections and 20,000 characters per section, alongside the full page record.
 
 Poll `crawl status` with a bounded interval while queued/running. A queued run needs the deployed
 Search crawler worker; do not claim it has fetched any pages. Schedules create previews by default. Use `schedule: {"days":[1,3,5],"time":"09:00","timeZone":"Europe/Madrid"}` for selected weekdays (ISO 1–7), local time and time zone; `"manual"` disables automatic starts. Legacy daily/weekly intervals remain accepted. Missing DST times are skipped; repeated times run once. With `publication: "automatic"`, complete safe crawls enqueue after an initial manually reviewed publication. Changing configuration cancels pending previews. Starting a new crawl supersedes
