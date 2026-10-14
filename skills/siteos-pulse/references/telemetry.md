@@ -10,7 +10,11 @@ unreleased capability is already available.
    Reuse its Pulse attachment. Never fall back to Production or identify a tenant from an OTLP
    `service.name` or `deployment.environment` attribute.
 2. Read `siteos pulse telemetry settings --environment <slug> --json`. Check the collector endpoint,
-   current revision, collection state and limits. Configure with `pulse telemetry configure
+   current revision, collection state and limits. `permissions` describes only the current request
+   (`permissionsBasis: current_request` on newer servers). CLI settings uses a read grant, so
+   `manage: false` does not establish an account-level denial. Discover current CLI authority with
+   `siteos auth access --organization <organization-id> --json`; configure/key/revoke each request
+   their own write grant. Do not issue or rotate a key merely to probe access. Configure with `pulse telemetry configure
    --revision <n> --enabled true --environment <slug>`. No traffic is not a healthy status.
 3. Issue a key with `pulse telemetry key --revision <n> --output <new-private-file>
    --environment <slug>`. This replaces the current key. Never print the private file, paste its
@@ -19,7 +23,11 @@ unreleased capability is already available.
    revoke --revision <n>` revokes the current key; publish/read back settings before acceptance.
 4. Inspect the existing logger and OpenTelemetry provider. Reuse both. Add an exporter to the
    existing pipeline; do not install a second global provider or intercept console by default.
-   For a new setup, use the framework's server instrumentation and official OpenTelemetry packages.
+   For a new Node.js setup with SDK 0.5.0+, use `@siteoshq/pulse/otel` `createLogsClient` once per
+   process and `client.forRequest(after)` for Next.js request logs. Its OpenTelemetry dependencies
+   install with the SDK; no six-package client setup is needed. Keep event selection and privacy
+   policy application-owned. For an existing provider, add `createLogsExporter` only. Older SDKs
+   still use the framework's server instrumentation and official OpenTelemetry packages.
    Configure the endpoint returned by settings, protocol `http/json`, and authorization header
    `Bearer <key>`. When using the standard environment variable syntax, encode the space:
    `OTEL_EXPORTER_OTLP_HEADERS=Authorization=Bearer%20<key>`.
