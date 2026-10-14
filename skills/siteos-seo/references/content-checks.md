@@ -27,6 +27,15 @@ while verification runs; for a final inventory, repeat the paginated read after 
 History lists the latest 20 retained scans. Status can display an earlier report while a new
 scan has no findings: preserve `resultsScan`, dates and current scan state separately.
 
+Later free fetches of the same URL (technical audits and rechecks while content checks are
+enabled, and a newer scan's discovery) compare saved findings without AI or credits. A finding
+whose quote or sentence is no longer on the current page becomes outdated (`outdatedAt`) and
+leaves open lists, counts, exports and repair briefs; the report's `outdated` count remains. Read
+them only with MCP `status: "outdated"` or `--status outdated`. Outdated means the saved evidence
+changed, not that the new copy is correct: do not apply its suggestion or report it as fixed; a
+new content run checks the current text. Truncated or unavailable fetches never mark a finding
+outdated, and text that returns makes it current again.
+
 `checking` and `review` are signals, not confirmed errors. `confirmed` contains a source quote,
 suggested replacement or explicit `action: "remove"`, and explanation; review the suggestion
 before applying it. Removal has an empty replacement and applies only to unfinished body text;

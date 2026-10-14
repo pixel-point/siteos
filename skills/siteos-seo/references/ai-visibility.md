@@ -118,6 +118,8 @@ as `reportId` to read a saved plan beside the conversation. Generation remains a
 do not invent a CLI command or operate the SiteOS UI through automation. A supplied **Copy full AI brief**
 handoff or application report export is also supported; individual **Copy AI brief** actions remain available.
 The full brief retains all actions, steps, verification, cited evidence and limitations.
+A plan built from fewer than 20 included answers rates no action High; treat its priorities as
+ordering within a small sample, not market evidence. Older saved plans keep their original priority.
 The branded PDF and JSON export include the saved plan. Viewing, copying and exporting do not
 generate or charge for another plan.
 
@@ -140,6 +142,16 @@ brand identity and attributable sources. Each recommendation needs a page and a 
 helps answer. Do not fabricate reviews, citations or structured data, and do not recommend a new
 schema type solely to chase a speculative AI score.
 
+Fix open indexing blockers before AI-answer work: Opportunities defers AI answer items while they
+remain. A comparison or "best X" page states neutral criteria, says where alternatives are
+stronger, cites sources with dates and never ranks the user's product first by construction.
+Case studies, testimonials, statistics and About content use only facts the user supplies; ask
+rather than invent. Check the trust basics (About, contact and legal details, author attribution,
+matching Organization or Person markup) before adding pages, and never generate city/location or
+same-template page batches. When answers cite third-party lists, check whether they include the
+product and request inclusion only where it genuinely fits; a paid placement needs disclosure and
+`rel="sponsored"` links, and site reputation abuse or expired-domain tactics are refused.
+
 For requested repairs, verify a deployed technical change with SiteOS rechecks. Evaluate visibility
 changes only through subsequent authorized, comparable prompt observations; model variation means
 one changed answer is not proof of causation. When available and relevant, report saved Analytics
@@ -153,10 +165,22 @@ with `--kind ai-rankings`; `--kind ai-visibility` reads only Prompt checks. Run/
 still uses `kind: ai-visibility` plus `category`; existing prompt requests remain unchanged.
 
 For a comparable product leaderboard, use one versioned category request. Each question is sent
-once per selected platform; every product is evaluated on the same returned answers. The first
+once per selected platform by default; every product is evaluated on the same returned answers. The first
 product is your own and must match `target` and `brand`. Include up to five competitors, three
 explicit aliases per product, ten questions and four platforms. Domains may be shared by products;
 product names and aliases must identify one product. Product and question IDs must be unique.
+
+Optional `category.answersPerQuestion` is `1`, `3` or `5` (omitted means 1). Each question is then
+asked that many times on every platform as separate paid requests, and every answer counts in the
+rates, so 3 or 5 give tighter ranges at three or five times the cost. Plan returns one part per
+answer (questions × platforms × answers); present that count and the conservative $2-per-answer
+hold before an authorized launch. Choose it only when the user asks for more precise numbers or
+accepts the cost; keep it unchanged between checks you want to compare for alerts.
+3 or 5 answers are accepted only while one whole check fits the Organization's daily AI request
+limit (questions × platforms × answers ≤ `connection.dailyRequestLimit` from plan or status,
+currently 100); 1 answer is always accepted. Plan, run and `saved save` reject a larger repeated request with
+`RESEARCH_ANSWERS_OVER_DAILY_LIMIT` before any paid work. Report that code and offer 1 answer per
+question or fewer questions or platforms; do not split one comparison across days or sets.
 
 ```json
 {
@@ -189,6 +213,10 @@ Check installed `siteos seo --help` for the flags below and follow the CLI skill
 when unavailable. Do not invent raw API calls or automate the SiteOS UI as a fallback.
 For a new set, save a separate `visibility-settings.json` with `revision: 0` and `questions` matching
 `category.questions` by id/text/frame. Optional `topic`, `tags` and `archived` belong in that file.
+Answers per question is not a visibility-settings field: it is `category.answersPerQuestion` in the
+saved request file, beside `platforms`, because it changes the paid request contract. Changing it
+is an ordinary `saved save` with the current revision; it advances the revision and pauses any
+automatic schedule until the user re-enables it in the application.
 Edits use the current visibility revision and preserve existing IDs; archive removed questions.
 To edit a listed set, copy its `visibility` object; remove the read-only `websiteUrl` and question
 `version` unless installed help says the CLI ignores them.
@@ -214,6 +242,10 @@ for one-off reports in History.
 Use `wait`, `show`, `export`, and `saved` commands for readback. No paid scorer or automatic paid retry is added. Terminal provider failures release customer reservations; unknown supplier costs remain internal.
 A collected readable answer can still vary in quality. Saving or launching queues free favicon discovery;
 reading reports and cached images never fetches competitor sites.
+
+With several answers per question, samples carry `answerNumber` and keys end in `:2`, `:3` and so
+on; report rates as shares of all answers. Changes compare matching answer numbers, so after the
+setting changes only the common answers are compared, and the comparable count says how many.
 
 Read `run.categoryReport` from the server. **Mentions is the primary metric**:
 `mentions / mentionDenominator`, with `mentionAmbiguous` excluded separately and `textAnswers`

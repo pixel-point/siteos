@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@3.2.0`
+Package: `@siteoshq/cli@3.3.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -145,7 +145,7 @@ siteos seo notifications set --enabled <true|false> [--destination <candidate-id
 siteos seo export --audit <id> --kind <pages|issues|changes> --format <csv|json> --output <new-file> [--query <text>] [--rule <id>] [--severity <error|warning|notice>] [--state <page-or-change-state>] [--environment <slug>] [--json]
 siteos seo content status [--environment <slug>] [--json]
 siteos seo content history [--environment <slug>] [--json]
-siteos seo content findings [--scan <id>] [--query <text>] [--kind <metadata|heading|placeholder|spelling|grammar|copy>] [--status <confirmed|checking|review|unconfirmed>] [--page <number>] [--environment <slug>] [--json]
+siteos seo content findings [--scan <id>] [--query <text>] [--kind <metadata|heading|placeholder|spelling|grammar|copy>] [--status <confirmed|checking|review|unconfirmed|outdated>] [--page <number>] [--environment <slug>] [--json]
 siteos seo content run [--environment <slug>] [--json]
 siteos seo content <continue|cancel> <scan-id> [--environment <slug>] [--json]
 siteos seo performance run --audit <id> --url <url> [--url <url>...] [--device <mobile|desktop>] [--idempotency-key <key>] [--environment <slug>] [--json]
@@ -178,7 +178,7 @@ siteos seo gsc export --format <json|csv> --output <new-file> [--dataset <pages|
 siteos seo gsc sync [--environment <slug>] [--json]
 siteos seo gsc bind --connection <id> --property <site-url> --website <environment-url> --revision <number> [--environment <slug>] [--json]
 siteos seo gsc disconnect --revision <number> [--environment <slug>] [--json]
-siteos seo opportunities [--type <losing-clicks|close-to-top|technical|ai-answers>] [--status <open|hidden>] [--limit <1-100>] [--environment <slug>] [--json]
+siteos seo opportunities [--type <losing-clicks|close-to-top|ctr-gap|cannibalization|technical|ai-answers|publishing-pace>] [--status <open|hidden>] [--limit <1-100>] [--environment <slug>] [--json]
 ```
 
 ## Analytics

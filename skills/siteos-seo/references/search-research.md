@@ -140,6 +140,9 @@ the command, follow the CLI upgrade workflow; never substitute a full paid run w
    SERP overlap. Investigate possible cannibalization only when overlapping pages have evidence.
 4. Map each group to an existing URL to improve or a proposed new page. A content gap is a relevant
    unmet need, not every keyword a competitor ranks for. Keep irrelevant terms outside the plan.
+   Prefer improving existing pages. Never plan templated city or location pages or batches of
+   same-template pages; on a domain with little Google traffic, schedule at most about three or
+   four genuinely useful new pages a week.
 5. Return a compact shortlist: topic, representative queries, intent, available demand/difficulty,
    target page, business reason, recommended change and evidence. Propose a meaningful validation
    window; do not promise a ranking or calculate traffic/revenue from volume without assumptions.
@@ -266,6 +269,26 @@ and a next step. Present reasons as likely and estimates as estimates. Work from
 the repository or CMS, keep publication with the owner and verify with a page recheck, a later GSC
 report or a rank check the user authorized. Hidden items are user decisions: read them with
 `--status hidden` and do not resurface them as new findings.
+
+Work foundation first. Indexing blockers (404 or server errors, redirect loops, noindex on the
+homepage or on sitemap pages, robots rules that block search engines or AI search crawlers,
+canonical targets that are missing or noindex) are listed for the homepage, sitemap URLs and linked
+pages even without Search Console; `clicks: null` means no Google data, not zero. Site-level checks
+such as an unavailable robots.txt form one `technical:site` item; verify its fix with a new full
+audit, not a page recheck. While `foundation.state` is `blocked` or `unverified`, AI answer items
+are deferred to the end of the list: fix the blockers, or run the missing audit within the user's
+scope, before content or AI-answer work. Other audit findings still appear only on pages with
+search traffic. Content proposals follow the skill's honest-content rules.
+
+Search Console items also include non-branded top-3 queries whose click-through is far below the
+site's own median (`ctr-gap`: check the live results page; an AI Overview or other result features
+may explain it), non-branded queries split between several of your pages (`cannibalization`: read
+both pages before proposing a merge, redirect or canonical) and, for a young site adding many sitemap
+URLs a week, one Low `publishing-pace` guidance item: improve existing pages first and keep to about
+three or four genuinely useful new pages a week. None of them is High, and none blocks publishing.
+Branded searches follow the environment's brand terms (`brand.terms` and `brand.split` in the JSON;
+editable in SEO/GEO settings); direct searches for tracked competitors are left out of estimates.
+Report branded and non-branded clicks separately and never assign the unattributed remainder.
 
 Rank tracking keyword sets can also run daily or weekly. An owner, admin or SEO/GEO Manager enables
 that in the application on the Keyword sets tab or the report header; there is no CLI or MCP

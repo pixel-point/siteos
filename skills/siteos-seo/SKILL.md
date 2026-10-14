@@ -76,7 +76,7 @@ or stop after reading a technical audit. Keep focused requests on their selected
 | Task | Supported path | Workflow |
 | --- | --- | --- |
 | Complete SEO/GEO setup, review and improvements | Coordinate the supported paths below for one Project environment | [Complete SEO/GEO](references/complete-seo-geo.md) |
-| Find the best next step: pages losing clicks, queries close to the top, audit findings on pages with traffic, AI answer gaps | Read-only `siteos_seo_get_opportunities`, panel section `opportunities` or `seo opportunities` CLI | [Opportunities](references/search-research.md#opportunities) |
+| Find the best next step: indexing blockers first, pages losing clicks, queries close to the top, low top-3 click-through, competing pages, audit findings on pages with traffic, AI answer gaps, publishing pace for young sites | Read-only `siteos_seo_get_opportunities`, panel section `opportunities` or `seo opportunities` CLI | [Opportunities](references/search-research.md#opportunities) |
 | Public HTML audit, canonical/robots/sitemap, technical GEO, verify fixes | SEO CLI and Site Audit | [Technical audit](references/technical-audit.md) |
 | Independent AI metadata, unfinished copy, spelling and grammar checks | Read-only content MCP; explicit paid content CLI operations | [Content checks](references/content-checks.md) |
 | Install or configure the SiteOS Sanity Studio plugin | Existing Studio code, published package and explicit team connection | [Sanity Studio setup](references/content-checks.md#sanity-studio-plugin-setup) |
@@ -127,6 +127,29 @@ with the uncertainty each would resolve. For recommendations, show the page/quer
 evidence, proposed action and verification when helpful. Separate measured facts from recommendations.
 Missing data is unknown, not zero; a sampled result is not the
 whole market. Avoid promises of indexing, a ranking gain, rich results or a universal AI position.
+
+## Keep content work honest
+
+Fix indexing blockers before content, comparison or AI-answer work, and improve existing pages
+before adding new ones. Apply these rules to every proposal, brief and implementation:
+
+- Comparisons and "best X" pages state neutral criteria, say where alternatives are stronger, cite
+  sources with their dates and never rank the user's product first by construction.
+- No templated city or location doorway pages and no batches of pages from one template. On a domain
+  with little Google traffic, publish at most about three or four genuinely useful new pages a week;
+  this is a rule of thumb, not a quota to fill.
+- Case studies, testimonials, customer quotes, statistics and About content come only from facts the
+  user provides. Ask for them; never invent or embellish them.
+- Before scaling content, check the trust basics: an About page, contact and legal details, author
+  attribution and Organization or Person structured data that matches visible content.
+- Inclusion in third-party lists and reviews must be earned by asking with accurate information.
+  A paid placement needs clear disclosure and `rel="sponsored"` links. Refuse site reputation abuse
+  (publishing on another site to borrow its ranking), expired-domain tactics and bought links;
+  explain the risk and offer the compliant alternative.
+
+Editorial thresholds such as a title over 60 characters, a description under 70 or a page under
+100 words are review prompts, not defects: change the page only when the review finds a real
+problem for readers, never merely to pass the threshold.
 
 If repository changes are requested, make the smallest coherent fix and run relevant checks. Respect
 the user's publication scope. A local edit is not evidence of a repair on the configured public site:

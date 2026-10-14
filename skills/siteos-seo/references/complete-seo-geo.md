@@ -78,8 +78,9 @@ applicable authorization; existing authorization counts.
 
 ## Deliver fixes and verified outcomes
 
-For an improvement/setup request, implement coherent evidence-backed fixes in the matching
-repository when available. For a review-only request, prepare the changes instead. Distinguish
+For an improvement/setup request, fix indexing blockers first, then implement coherent
+evidence-backed fixes in the matching repository when available. Content and AI-answer proposals
+follow the skill's honest-content rules. For a review-only request, prepare the changes instead. Distinguish
 technical fixes from content proposals that need product facts or editorial decisions. Run the
 repository's applicable checks and preserve its architecture, framework conventions and user work.
 
