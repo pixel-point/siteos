@@ -55,6 +55,30 @@ unreleased capability is already available.
 Do not change client projects during a SiteOS-owned pilot. Do not enable browser tracing or replay
 as part of server telemetry installation.
 
+SDK 0.6.0+ supports custom scalar server Log attributes, including `form.name`, `page.route` and
+application-specific fields. Use strings, finite numbers and booleans: up to 32 fields, 80-character
+technical keys, 240 UTF-8 bytes per text value and 4 KiB combined. Keep labels/templates from a
+reviewed catalog; do not collect form contents, raw URLs, personal data or credentials. Inspect
+`onDiagnostic` counts/reasons for `attributes_dropped` and `attributes_sanitized`; neither means an
+export failure, and no raw keys/values are included. SDK opts in with
+`X-SiteOS-Logs-Attributes: custom-v1`; a standard OTLP exporter needs that explicit header after its
+attribute policy is reviewed. Older senders and tracing retain their technical allowlist.
+
+Numeric attributes accept finite numbers; integral values must be within JavaScript’s safe integer
+range (−9,007,199,254,740,991 through 9,007,199,254,740,991) to survive OTLP int64 serialization
+without rounding. Unsupported numbers are dropped with diagnostics, and filters reject them.
+
+Read exact typed attribute matches with CLI 3.4.0+:
+
+```sh
+siteos pulse telemetry logs --attributes '{"form.name":"Book a demo","retryable":false}' --json
+```
+
+Logs UI has key/type/value controls; MCP `siteos_pulse_list_logs` takes the same `attributes`
+object. At most three filters combine with AND. Text is case-sensitive and numeric/boolean types
+are significant. Keep filters unchanged for pagination. Do not copy structured context into the
+message as a workaround for an outdated SDK; inspect versions and upgrade within authorized scope.
+
 ## Optional browser tracing
 
 Choose this capability explicitly. Discover `pulse telemetry --help` / installed SDK exports before
