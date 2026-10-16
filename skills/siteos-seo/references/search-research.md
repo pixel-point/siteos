@@ -252,6 +252,58 @@ For persistent AI Visibility sets, follow [AI Visibility](ai-visibility.md#ai-vi
 `run --set <saved-id> --revision <revision>` links the authorized observation to that set.
 Saving never enables a recurring schedule or runs a check.
 
+## GSC questions and page briefs
+
+For a question about Google search traffic, use `siteos_seo_query_search_console` with the exact
+`organizationId`, `projectId` and `environment`. This headless tool also serves non-Production
+environments; the conversation panel cannot display these custom selections. Check tool availability
+first: local implementation does not imply that the hosted server or installed plugin supports it.
+
+Omit `selection` to read the saved scheduled comparison. For a specific question, supply:
+
+```json
+{
+  "selection": {
+    "from": "2026-09-01",
+    "to": "2026-09-07",
+    "baseline": { "from": "2025-09-02", "to": "2025-09-08" },
+    "filters": [
+      { "dimension": "page", "expression": "https://example.com/pricing" },
+      { "dimension": "country", "expression": "usa" },
+      { "dimension": "device", "expression": "MOBILE" }
+    ]
+  },
+  "dataset": "queries",
+  "page": 1,
+  "pageSize": 25
+}
+```
+
+Replace the example dates and page with the user's actual target and include the mandatory context.
+Filters use exact matches, at most one per query/page/country/device dimension. The default comparison
+is the adjacent previous period; an explicit baseline must be earlier and equally long. Set
+`compare: false` without a baseline for one period. Results include independent totals, dates,
+dataset coverage and partial states. Do not sum sampled rows to reconstruct totals.
+
+An explicit selection may enqueue its missing or expired cached report through the existing Google
+worker. This bounded cache admission uses Search Performance read access and no research credits;
+it does not authorize force-refresh, property settings, indexing requests or scheduled sync. Poll
+the same selection while queued/running. If a prior usable report is returned, distinguish it from
+the pending refresh. Pin the returned report ID with the same selection while following `nextPage`.
+An unavailable exact report must not be replaced with another period or environment.
+
+For improving one page, call `siteos_seo_get_page_improvement_brief` with that same context and `url`.
+It reads saved exact-page GSC metrics and queries, URL Inspection evidence, technical findings and
+ignored decisions. For a custom period, first prepare the query with an exact page filter; use that
+selection and returned `reportId` in the brief. Conflicting page filters fail. Follow `queryPage`
+with the returned report/audit IDs. Missing sources stay missing: the brief never launches Google
+sync, a crawl or paid AI generation.
+
+Read the current page and matching repository before proposing edits. Separate observed evidence,
+hypotheses and changes; do not infer missing content from missing query rows. Respect ignored
+findings and explain each edit's user benefit and acceptance checks. Publication, technical
+rechecking and a later comparable GSC measurement are separate actions under the user's scope.
+
 ## Opportunities
 
 Use Opportunities when the user asks what to work on first or to "find the best opportunity and

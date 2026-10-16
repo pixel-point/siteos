@@ -48,6 +48,11 @@ for the required capability.
 
 ## Execute through MCP and CLI
 
+For a filtered GSC question, use `siteos_seo_query_search_console` when discovered. For a unified
+brief of one selected page, use `siteos_seo_get_page_improvement_brief`. These headless workflows
+take precedence over the panel's current saved GSC view; retain exact context, periods and report
+IDs. Follow [GSC questions and page briefs](references/search-research.md#gsc-questions-and-page-briefs).
+
 For every saved SEO/GEO check in Codex or another MCP App host, prefer `siteos_open_project_panel`
 with the exact Organization, Project, `section` and known check ID. Use the
 [section and report-ID mapping](../siteos/references/mcp-and-cli.md#show-saved-reports-beside-the-conversation):
