@@ -28,7 +28,13 @@ unreleased capability is already available.
    install with the SDK; no six-package client setup is needed. Keep event selection and privacy
    policy application-owned. For an existing provider, add `createLogsExporter` only. Older SDKs
    still use the framework's server instrumentation and official OpenTelemetry packages.
-   Configure the endpoint returned by settings, protocol `http/json`, and authorization header
+   SDK 0.8.0+ uses SiteOS Cloud by default when `endpoint` is omitted. Verify the installed types
+   and that settings return the standard Cloud address before omitting it; SDK 0.7.x and earlier still need
+   explicit collection endpoints. Keep exact endpoints for self-hosting, older SDKs and standard
+   OpenTelemetry exporters. Never infer a tenant or consent from the default URL. Server Logs and
+   Traces share their private Telemetry key; browser Traces, browser/server Errors and build uploads
+   retain separate credentials. Enablement can remain an application option, not another required
+   hosting variable. For a standard exporter, configure protocol `http/json` and authorization header
    `Bearer <key>`. When using the standard environment variable syntax, encode the space:
    `OTEL_EXPORTER_OTLP_HEADERS=Authorization=Bearer%20<key>`.
 5. Use batches of at most 100 records and under 96 KiB. The service retains at most 8 KiB per

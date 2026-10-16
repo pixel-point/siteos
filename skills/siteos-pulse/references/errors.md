@@ -24,6 +24,19 @@ Check deployments or a runner just to enable Errors. Leave existing monitoring u
    root entry, `/node` for server capture and `/nextjs` for request instrumentation. Reuse the
    application's boundaries, consent manager, release ID and environment conventions. Initialize
    one browser client. Default to `after-consent`; `essential` requires an explicit site policy.
+   For SDK 0.8.0+ with optional collection `endpoint`, omit it only when the
+   selected installation returns the standard SiteOS Cloud address. SDK 0.7.x and earlier still
+   requires collection endpoints; never remove them merely because newer source supports defaults.
+   Keep exact returned endpoints for older SDKs and self-hosted installations. Do not use an empty
+   string as a default or silently fall back to Cloud after an invalid explicit address.
+   A full Next.js Errors + Logs/Traces setup needs five separate credentials:
+   `NEXT_PUBLIC_SITEOS_PULSE_ERRORS_KEY`, `SITEOS_PULSE_ERRORS_KEY`,
+   `NEXT_PUBLIC_SITEOS_PULSE_TRACES_KEY`, `SITEOS_PULSE_TELEMETRY_KEY`, and
+   `SITEOS_PULSE_SOURCEMAPS_KEY`. The two public keys are collect-only; server and build keys stay
+   secret. Fewer selected channels need fewer keys. No extra enabled environment flags are required;
+   retain explicit feature selection, consent, sampling and GPC/DNT behavior in the integration.
+   Next.js public keys need direct environment references at build time. Do not add a manually
+   maintained release variable when the build adapter can derive it.
 6. Set up **automatic private source map upload as part of Errors installation**, not as a recurring
    manual CLI step. Verify SDK 0.2+ / CLI 2.48+ and matching server availability. Keep collection and
    build credentials separate. Issue `pulse errors upload-key issue --environment <slug> --name
