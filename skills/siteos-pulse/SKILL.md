@@ -13,7 +13,7 @@ For GitHub setup, preview admission or a missing PR result, read [GitHub PR veri
 
 Hosted reads: `siteos_pulse_list_checks` and `siteos_pulse_get_check` expose published settings, overrides, effective schedules, independent PR participation and eligibility, active package versions and open incident evidence. `siteos_pulse_list_runs` and `siteos_pulse_get_run` provide run history and failure details. Discover available tools first; older servers may not expose Check reads.
 
-For logs, OpenTelemetry or browser/server request traces, read [telemetry setup](references/telemetry.md). Server OTLP needs no SiteOS SDK; optional browser tracing uses its own public key, consent lifecycle and SDK import. Neither requires Checks.
+For logs, named server processing stages, OpenTelemetry or browser/server request traces, read [telemetry setup](references/telemetry.md). Server OTLP needs no SiteOS SDK; optional browser tracing uses its own public key, consent lifecycle and SDK import. Neither requires Checks.
 
 For masked session playback, read [optional replay](references/replay.md). It has its own permission, public collection key and consent gate; it never starts implicitly with Errors or tracing.
 

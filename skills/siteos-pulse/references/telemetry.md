@@ -85,6 +85,33 @@ object. At most three filters combine with AND. Text is case-sensitive and numer
 are significant. Keep filters unchanged for pagination. Do not copy structured context into the
 message as a workaround for an outdated SDK; inspect versions and upgrade within authorized scope.
 
+## Manual application stages (SDK 0.9.0+)
+
+SDK 0.9.0+ exposes `createServerTracingClient` in `@siteoshq/pulse/nextjs/server`
+and `/node`; SDK 0.8.x and earlier do not include this API. Inspect installed exports/types first.
+Use a published compatible version for the application. Do not leave temporary `file:`/`link:`
+dependencies in a release PR.
+
+For named server stages, prefer `client.withRequest({ requestId, route, method,
+parentTraceparent, after }, operation)`, `client.step(name, operation, { kind, isError })` and
+`client.getContext()`. Keep one client per process. Define static `routes` and `steps` catalogs;
+the application still owns trusted-parent checks and business-result failure predicates. The SDK
+owns the private provider, async span context, 10% parent-based sampling and per-request deferred
+export. Do not add a global provider or direct OpenTelemetry imports merely for these stages.
+Use the existing processor path if the application already needs custom OTel instrumentation.
+
+Preserve the UUID v4 attempt ID for response headers, Logs and consented browser Errors even when
+tracing is disabled/unsampled. Only a context with `sampled: true` has trace/span IDs for links.
+No server Errors, new consent flow, browser interception or Replay activation is implied. Never
+pass input values, raw URLs, headers, exception messages or result payloads as labels.
+
+Each request buffers at most 32 spans; each client caps 128 pending/active requests and four
+exports. Buffers expire after 60 seconds without sending. Nothing enters the exporter before
+`after`; concurrent callbacks await their own batch and never retry the business operation.
+Shutdown discards unstarted batches. Verify nesting/concurrency, failed results, disabled IDs,
+parent sampling, collector/scheduler failures and privacy locally, then separately verify hosted
+Preview receipt. See the SDK README for the complete API and lifecycle contract.
+
 ## Optional browser tracing
 
 Choose this capability explicitly. Discover `pulse telemetry --help` / installed SDK exports before
