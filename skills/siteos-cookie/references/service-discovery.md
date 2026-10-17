@@ -4,7 +4,7 @@ Use this workflow automatically during a complete Cookie setup or when the user 
 
 ## Gather evidence
 
-Read the current draft and published configuration through `siteos_cookie_get_site` or the CLI. The MCP response includes the built-in `serviceCatalog` and project-local `draft.customServices`; it does not run a browser scan or mutate them. Use the CLI for active discovery:
+Read the current draft and published configuration through `siteos_cookie_get_site` or the CLI. The complete MCP read and its `services` section include the built-in `serviceCatalog` and project-local `draft.customServices`; a large site needs `section: "services"` and `section: "declaration"` for the cookie table. MCP does not run a browser scan or mutate them. Use the CLI for active discovery:
 
 ```sh
 npx @siteoshq/cli cookie services list --json
@@ -60,7 +60,7 @@ A request to configure and publish the exact website can authorize publication i
 
 ## Continuous Trace review
 
-`cookie services list --json` also returns `observation` and `serviceReview` for the exact environment's attached Trace. MCP `siteos_cookie_get_site` returns `serviceObservation` and `serviceReview`. These are saved reads; they do not scan, publish or change tracking. Treat missing/stale/unavailable evidence as unknown coverage, never a passed consent check.
+`cookie services list --json` also returns `observation` and `serviceReview` for the exact environment's attached Trace. MCP `siteos_cookie_get_site` returns `serviceObservation` and `serviceReview` in the complete read and its `services` section. These are saved reads; they do not scan, publish or change tracking. Treat missing/stale/unavailable evidence as unknown coverage, never a passed consent check.
 
 A `missing` service is absent from published and draft settings; `draft` means publication is outstanding. A `listed` service can still have open consent findings. Inspect Trace evidence before claiming activity without consent; Google Advanced-mode informational findings do not establish violations. The review covers every service Trace recognizes: families with presets, other registry vendors (with a preset such as Hotjar, or without one such as ZoomInfo) and unrecognized registrable domains (`status: "review"`). A vendor without a preset carries a `suggestion` (registry name, company, privacy URL, purpose and `traceService`) for a custom service; an unrecognized domain must be researched before it is described. Necessary vendors, the GTM container and SiteOS delivery are not reviewed. The review does not infer a vendor from a generic data-layer event.
 

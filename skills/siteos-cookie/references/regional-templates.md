@@ -16,6 +16,10 @@ deployed application. Without them, write rules by hand as described in the Cook
 npx @siteoshq/cli cookie templates list --json
 ```
 
+In a host with the SiteOS MCP connection, `siteos_cookie_get_site` with `section: "templates"` returns
+the same catalog (without `draftVersion`, which is in the result header). Applying templates is a
+CLI write.
+
 The result contains:
 
 - `draftVersion`, to pass to `templates apply`;

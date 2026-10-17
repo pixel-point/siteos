@@ -7,7 +7,7 @@ description: Use when configuring, styling, installing, publishing or diagnosing
 
 Read the [shared execution contract](../siteos/references/mcp-and-cli.md) once per task before choosing tools or resolving context, including when this skill is invoked directly. Apply the service-specific workflow below after that shared contract.
 
-Hosted reads: `siteos_cookie_get_site` and `siteos_cookie_get_analytics`.
+Hosted reads: `siteos_cookie_get_site` and `siteos_cookie_get_analytics`. When the complete site read returns `RESULT_TOO_LARGE`, read one `section` at a time: `settings` (banner, regional rules, copy and compliance), `services` (selected and custom services, catalog and Trace review), `declaration` (cookie table), `inventory` (scan items; pass `nextOffset` as `offset`) and `publication` (latest revisions, published fields that differ from the draft, delivery and installation). The `draft` objects of `settings`, `services` and `declaration` together form the complete draft. Section `templates` returns the regional rule template catalog for the site, as `cookie templates list` does.
 
 Use the common SiteOS Project and the unified CLI. Cookie owns banner configuration, public delivery, consent observations and receipts; it never owns the user's account or another service's configuration. Complete routine configuration through chat and CLI when the commands support it; do not send the user to the web editor merely to edit a JSON field.
 
