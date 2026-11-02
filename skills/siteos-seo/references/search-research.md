@@ -339,7 +339,7 @@ both pages before proposing a merge, redirect or canonical) and, for a young sit
 URLs a week, one Low `publishing-pace` guidance item: improve existing pages first and keep to about
 three or four genuinely useful new pages a week. None of them is High, and none blocks publishing.
 Branded searches follow the environment's brand terms (`brand.terms` and `brand.split` in the JSON;
-editable in SEO/GEO settings); direct searches for tracked competitors are left out of estimates.
+editable on Opportunities); direct searches for tracked competitors are left out of estimates.
 Report branded and non-branded clicks separately and never assign the unattributed remainder.
 
 Rank tracking keyword sets can also run daily or weekly. An owner, admin or SEO/GEO Manager enables

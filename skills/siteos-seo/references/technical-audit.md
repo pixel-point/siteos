@@ -154,7 +154,7 @@ crawlers do not run JavaScript.
 
 A robots.txt 4xx other than 429 means no file, like Google: all crawlers are allowed and discovery
 shows `missing` with the status. Without a sitemap, full audits also probe `/sitemap_index.xml`
-and `/sitemap-index.xml`. **Intentionally hidden paths** (SEO/GEO settings → Audit scope, used only
+and `/sitemap-index.xml`. **Intentionally hidden paths** (Site Audit → Settings, used only
 with Expect indexable) exempt matching prefixes from that expectation: their noindex stays Info,
 robots blocks there are judged by homepage and sitemap intent, and they are not orphan, deep-page,
 template or sitewide-noindex candidates. They are still crawled. Suggest it when an owner keeps a

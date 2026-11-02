@@ -193,7 +193,7 @@ For a research check (for example a Rank tracking or AI Visibility run started t
 the `lastRunId` of an automatic schedule), subscribe to `siteos.seo.research.finished` with its exact
 `runId`. The payload summarizes position or mention changes; re-read the saved report before acting.
 Recurring Opportunity, position and AI answer alerts to Slack, Telegram or email are configured in
-the application on the SEO/GEO notifications page; there is no CLI or MCP write for them. When the
+the application on the Project's Notifications page; there is no CLI or MCP write for them. When the
 user asks to be told about new opportunities, subscribe to `siteos.seo.opportunities.alerted` for
 the exact Organization, Project and environment with `after` set to now; it requires Opportunity
 alerts to be enabled for that environment. Each subscription delivers one urgent or weekly alert;

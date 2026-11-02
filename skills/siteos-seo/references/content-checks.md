@@ -12,7 +12,7 @@ does not silently authorize a paid content run. When covered by the user's scope
 availability means nothing started. After an uncertain response, read status before considering
 another run. Do not bypass a disabled resource or exhausted balance.
 
-The scan discovers and checks pages independently of the technical audit and its 500-page limit.
+The scan discovers and checks pages independently of the technical audit and its 2000-page limit.
 Read early results without waiting for that audit:
 
 ```sh

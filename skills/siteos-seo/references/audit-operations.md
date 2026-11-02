@@ -38,12 +38,13 @@ configuration without activating anything. Audit timing is separate from result 
 Read back the complete `days` array, time zone, revision and next run. Weekdays are Monday=1 through Sunday=7. A missing DST time
 is skipped; a repeated time runs once. After downtime only one due occurrence is considered.
 An active audit in the same Project environment or a full Organization queue skips that slot; inspect `lastOutcome`, not just enabled.
-New full HTML audits allow 1–500 pages during Early Access (default 100), including CLI and
-scheduled runs. A saved 100-page setting stays 100; select a larger limit in SEO Settings for an
+New full HTML audits allow 1–2000 pages during Early Access (default 2000 for new resources), including CLI and
+scheduled runs. Saved 100- or 500-page settings keep their allowance; select a larger limit in SEO Settings for an
 authorized larger audit. Previously saved explicit limits up to 500 remain effective.
-Excluded, unavailable and non-HTML URLs count. The aggregate response budget is 256 MiB;
-pacing, concurrency, per-response bounds and the 15-minute deadline still apply.
-At `page_limit`, report partial coverage and unchecked URLs; never exceed 500 or repeat audits
+Excluded, unavailable and non-HTML URLs count. Up to 500 URLs and all rechecks retain 256 MiB and 15 minutes. Larger full scopes scale both
+budgets proportionally, reaching 1 GiB and 60 minutes at 2000 URLs; pacing, concurrency and
+per-response bounds remain unchanged.
+At `page_limit`, report partial coverage and unchecked URLs; never exceed 2000 or repeat audits
 to evade other budgets. Historical reports keep their original settings and evidence.
 Rechecks remain limited to 20 selected observed URLs. HTML audits do not consume research credits; paid search and AI research have a separate shared balance. Crawl budgets, one active audit per Project environment and 100 queued audits per Organization
 still apply. Different projects and Organizations can run independently when executors are available.
