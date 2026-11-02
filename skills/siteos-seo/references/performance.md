@@ -32,8 +32,9 @@ Report Lighthouse and Chrome versions, device, execution class, observation time
 scores. Compare history only with matching configuration and execution class. LCP/FCP/Speed Index
 and TBT values are milliseconds; CLS is dimensionless. These are laboratory results, not real-user
 Core Web Vitals. Lab TBT does not establish INP. Diagnostic savings are estimates and cannot be summed.
-Lighthouse's `llms-txt` check is optional information: an llms.txt file is not required, new
-measurements leave it out of Agentic Browsing counts, and it never needs attention.
+Agentic Browsing counts `llms-txt` and `ard-schema` as Lighthouse does. Neither file is required:
+a 4xx response makes the check not applicable, while a served address must be valid, so an error
+page with status 200 fails. Lighthouse 13.4.1 reports saved their counts without `llms-txt`.
 The response HTML and rendered DOM facts come from one browser navigation; unavailable snapshots
 are not empty fields. Keep X-Robots-Tag separate. Removing noindex with JavaScript does not establish
 indexability. The browser uses a fresh profile without automatically accepting consent banners.
