@@ -2,7 +2,7 @@
 
 # SiteOS CLI Command Reference
 
-Package: `@siteoshq/cli@3.5.1`
+Package: `@siteoshq/cli@3.6.0`
 
 Regenerate this file after CLI command or help changes with `pnpm siteos:cli-contract:write`.
 
@@ -292,6 +292,7 @@ siteos pulse errors upload-key revoke --credential <id> [--environment <slug>]
 siteos pulse usage [--json]
 siteos pulse checks list [--cursor <check-id>] [--json]
 siteos pulse checks read --check <check-id> [--json]
+siteos pulse checks delete --check <check-id> [--apply --revision <n>] [--json]
 siteos pulse pull-requests list [--environment <slug>] [--cursor <id>] [--json]
 siteos pulse pull-requests policy show [--environment <slug>] [--json]
 siteos pulse pull-requests policy save --input <policy.json> [--environment <slug>] [--json]

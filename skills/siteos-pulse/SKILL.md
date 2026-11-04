@@ -58,3 +58,8 @@ when explaining these values or diagnosing a queue.
 - Do not inspect or print `~/.siteos`, legacy binding contents, `.env`, service grants, runtime credentials, or authorization headers.
 - CLI 2 requires a common Project selection. Select it with `siteos project use`; service-private bindings are not imported.
 - Do not claim deployment success after `--dry-run`; distinguish local validation, local Playwright execution, bundle construction, upload, and remote scheduling.
+
+For an explicit request to remove obsolete Checks, follow the deletion preview/apply workflow in
+`references/workflow.md`. Preserve history; paused is not deleted, and omitting a manifest entry
+only retires it. Verify installed CLI/server support before writing and reconcile uncertain results
+with a preview of the same Check in the same Project/environment.

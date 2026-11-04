@@ -341,6 +341,16 @@ three or four genuinely useful new pages a week. None of them is High, and none 
 Branded searches follow the environment's brand terms (`brand.terms` and `brand.split` in the JSON;
 editable on Opportunities); direct searches for tracked competitors are left out of estimates.
 Report branded and non-branded clicks separately and never assign the unattributed remainder.
+When the query is also a keyword in the latest Rank tracking check, `ctr-gap` and `close-to-top`
+items carry `results`: that check's date, country and device, its AI Overview status (`cited`,
+`not-cited`, `sources-unknown`, `none`) and up to five other domains the overview linked to. Cite it
+as one results page in one market, never as the cause of the Search Console numbers. Without
+`results`, check the live page.
+
+Rank tracking datasets also carry `serp` per keyword: the page's result types and the AI Overview
+with up to 20 sources. `aiOverview: null` means none was returned. `references: null` means its
+sources were not returned; never count that as citing nobody. Checks saved before 2026-11-04 have
+no `serp`; treat them as no data.
 
 Rank tracking keyword sets can also run daily or weekly. An owner, admin or SEO/GEO Manager enables
 that in the application on the Keyword sets tab or the report header; there is no CLI or MCP

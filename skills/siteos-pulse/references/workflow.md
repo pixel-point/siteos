@@ -101,3 +101,26 @@ saved GitHub Check separately after the real preview event.
 Config v4 supports PR-only `type: "code"` Checks using existing package scripts.
 Use `pulse test --check <slug>` to select one Check; validate, sync and deploy remain unchanged.
 See [code Check setup](../../siteos-pulse/references/code-checks.md) for commands, prerequisites and execution limits.
+
+## Deleting obsolete Checks
+
+Deletion is explicit and scoped to the selected Project/environment. Preview the exact Check ID:
+
+```sh
+siteos pulse checks delete --check <check-id> --json
+siteos pulse checks delete --check <check-id> --apply --revision <revision-from-preview> --json
+```
+
+The preview makes no changes. Application requires `pulse:workspace:write` and Pulse resource
+management authority (Owner/Admin in legacy access mode). A changed Check revision requires a new
+preview. Queued/running work and a leased source preparation block deletion until they finish.
+If the response is lost, repeat the preview in the same context: `check.deletedAt` confirms deletion.
+Do not automatically retry an uncertain write or switch interfaces.
+
+Deletion removes the Check from lists, schedules and PR selection; past run links and artifacts
+remain under their existing retention policies. It does not report recovery or erase usage.
+Remove the slug from repository configuration too: the server reserves deleted slugs and rejects
+an old manifest with `CHECK_DELETED`. Use a new slug for a replacement Check. Saved setup and source
+refresh cannot restore a deleted Check. Lists still include paused and retired Checks, but exclude
+deleted ones. The browser offers **Delete check** in the Check menu with a confirmation dialog.
+Matching CLI/server support is required; inspect `pulse --help` before using an older installation.
