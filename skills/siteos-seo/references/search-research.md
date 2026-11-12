@@ -141,8 +141,8 @@ the command, follow the CLI upgrade workflow; never substitute a full paid run w
 4. Map each group to an existing URL to improve or a proposed new page. A content gap is a relevant
    unmet need, not every keyword a competitor ranks for. Keep irrelevant terms outside the plan.
    Prefer improving existing pages. Never plan templated city or location pages or batches of
-   same-template pages; on a domain with little Google traffic, schedule at most about three or
-   four genuinely useful new pages a week.
+   same-template pages; on a domain with little Google traffic, plan a new page only when it is
+   genuinely useful and better than what already ranks. Google names no safe number of pages.
 5. Return a compact shortlist: topic, representative queries, intent, available demand/difficulty,
    target page, business reason, recommended change and evidence. Propose a meaningful validation
    window; do not promise a ranking or calculate traffic/revenue from volume without assumptions.
@@ -322,6 +322,27 @@ the repository or CMS, keep publication with the owner and verify with a page re
 report or a rank check the user authorized. Hidden items are user decisions: read them with
 `--status hidden` and do not resurface them as new findings.
 
+When a change for an item is live on the configured public website, record it so its result can
+be read later. Mark only work that is actually published, with the time it went live:
+
+```bash
+npx @siteoshq/cli seo opportunities done <key> --at 2026-11-12T09:00:00Z --note "Rewrote the title" --url https://github.com/acme/site/pull/41 --json
+npx @siteoshq/cli seo opportunities --status done --json
+npx @siteoshq/cli seo opportunities reopen <key> --json
+```
+
+`<key>` is the item's `key` from the list, passed as one quoted argument because keys contain
+spaces and colons.
+
+`--status done` (also `status: "done"` in `siteos_seo_get_opportunities`) returns the marks in
+`done`, each with the numbers saved when it was marked and an `outcome` read only from data saved
+after the change: `waiting`, `measuring`, `changed`, `unchanged` or `unknown`. Report an outcome
+as an observation after that date, never as proof the change caused it, and never read `unknown`
+or `waiting` as "no effect". Marking starts no check: a result needs the next scheduled Google
+report, audit or research check, or one the user authorizes. An item with `doneBefore` was marked
+earlier and is open again because the saved data shows findings that were not part of it; treat
+it as new work. Marking and reopening need permission to hide Opportunities; MCP is read-only.
+
 Work foundation first. Indexing blockers (404 or server errors, redirect loops, noindex on the
 homepage or on sitemap pages, robots rules that block search engines or AI search crawlers,
 canonical targets that are missing or noindex) are listed for the homepage, sitemap URLs and linked
@@ -336,8 +357,9 @@ Search Console items also include non-branded top-3 queries whose click-through 
 site's own median (`ctr-gap`: check the live results page; an AI Overview or other result features
 may explain it), non-branded queries split between several of your pages (`cannibalization`: read
 both pages before proposing a merge, redirect or canonical) and, for a young site adding many sitemap
-URLs a week, one Low `publishing-pace` guidance item: improve existing pages first and keep to about
-three or four genuinely useful new pages a week. None of them is High, and none blocks publishing.
+URLs a week, one Low `publishing-pace` guidance item: improve existing pages first and add a page
+only when it is genuinely useful. Google names no safe number of pages; more than four a week is
+only the pace at which the item appears. None of them is High, and none blocks publishing.
 Branded searches follow the environment's brand terms (`brand.terms` and `brand.split` in the JSON;
 editable on Opportunities); direct searches for tracked competitors are left out of estimates.
 Report branded and non-branded clicks separately and never assign the unattributed remainder.
@@ -346,6 +368,39 @@ items carry `results`: that check's date, country and device, its AI Overview st
 `not-cited`, `sources-unknown`, `none`) and up to five other domains the overview linked to. Cite it
 as one results page in one market, never as the cause of the Search Console numbers. Without
 `results`, check the live page.
+
+Growth items cover a website search engines barely show yet. `stage` in the JSON is `starting`
+while no page has 20 Google clicks in 28 days, `established` once one does and `unknown` without
+usable Search Console page rows; on a starting website these items follow the indexing blockers.
+They need CLI and server releases that support `version=3`.
+
+- `referring-domains`: fewer than 20 websites link to the website in its own saved Backlinks
+  check. The count is not a quality judgement, and twenty is a SiteOS threshold. Propose earned
+  links only (partners, clients, relevant directories, work worth citing); never bought links, link
+  exchanges or mass submissions.
+- `not-ranking`: a tracked keyword is below position 20 or not among the checked results. First
+  confirm the search fits what the website offers. Improve the page Google already ranks before
+  proposing a new one, and never create several pages for variations of one search.
+- `brand-position`: a search for the brand name alone where the website is not first. Check the
+  live results before saying who ranks above it.
+- `ai-sources`: one list of pages on other sites cited by AI answers that leave the brand out.
+  `kind` (`list`, `directory`, `forum`, `page`) is read from the address and title only. Read a
+  page before saying whether it includes the brand; inclusion is earned by asking the publisher
+  with accurate facts, and a paid placement needs disclosure.
+
+None of them is High or a measured loss. `sources.backlinks` and `sources.rankings` report the
+website's own checks; `empty` means no such check is saved, and running one is a paid research
+launch that needs the user's authorization. Accessibility findings are not Opportunities; read
+them in Site Audit.
+
+New keyword research reports add an `ai-search-volume` dataset: `aiVolume` per keyword, an
+estimate of use in AI assistants (from People also ask data), separate from Google volume. A
+missing keyword or an older report without the dataset is no data, not zero.
+
+Keyword research ideas carry optional `serp` (`types`, `checkedAt`) from the provider's saved
+Google page for each idea. `ai_overview` among `types` means an AI Overview was saved on that page,
+not a live check; cite its date. `serp: null` and older reports without `serp` are no data, not
+"no AI Overview". Use Rank tracking to observe a specific keyword's live AI Overview and its sources.
 
 Rank tracking datasets also carry `serp` per keyword: the page's result types and the AI Overview
 with up to 20 sources. `aiOverview: null` means none was returned. `references: null` means its

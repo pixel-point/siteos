@@ -81,7 +81,7 @@ or stop after reading a technical audit. Keep focused requests on their selected
 | Task | Supported path | Workflow |
 | --- | --- | --- |
 | Complete SEO/GEO setup, review and improvements | Coordinate the supported paths below for one Project environment | [Complete SEO/GEO](references/complete-seo-geo.md) |
-| Find the best next step: indexing blockers first, pages losing clicks, queries close to the top, low top-3 click-through, competing pages, audit findings on pages with traffic, AI answer gaps, publishing pace for young sites | Read-only `siteos_seo_get_opportunities`, panel section `opportunities` or `seo opportunities` CLI | [Opportunities](references/search-research.md#opportunities) |
+| Find the best next step: indexing blockers first, pages losing clicks, queries close to the top, low top-3 click-through, competing pages, audit findings on pages with traffic, AI answer gaps, publishing pace for young sites, and for a website with little search traffic: few linking websites, tracked keywords not ranking, brand search, pages AI answers cite | Read-only `siteos_seo_get_opportunities`, panel section `opportunities` or `seo opportunities` CLI | [Opportunities](references/search-research.md#opportunities) |
 | Public HTML audit, canonical/robots/sitemap, technical GEO, verify fixes | SEO CLI and Site Audit | [Technical audit](references/technical-audit.md) |
 | Independent AI metadata, unfinished copy, spelling and grammar checks | Read-only content MCP; explicit paid content CLI operations | [Content checks](references/content-checks.md) |
 | Install or configure the SiteOS Sanity Studio plugin | Existing Studio code, published package and explicit team connection | [Sanity Studio setup](references/content-checks.md#sanity-studio-plugin-setup) |
@@ -141,8 +141,9 @@ before adding new ones. Apply these rules to every proposal, brief and implement
 - Comparisons and "best X" pages state neutral criteria, say where alternatives are stronger, cite
   sources with their dates and never rank the user's product first by construction.
 - No templated city or location doorway pages and no batches of pages from one template. On a domain
-  with little Google traffic, publish at most about three or four genuinely useful new pages a week;
-  this is a rule of thumb, not a quota to fill.
+  with little Google traffic, add a new page only when it is genuinely useful and better than what
+  already ranks. Google names no safe number of pages, so never promise one; many pages made mainly
+  to rank are scaled content abuse.
 - Case studies, testimonials, customer quotes, statistics and About content come only from facts the
   user provides. Ask for them; never invent or embellish them.
 - Before scaling content, check the trust basics: an About page, contact and legal details, author

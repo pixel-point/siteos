@@ -59,7 +59,10 @@ Brand lookup searches the provider's corpus:
 ```
 
 A prompt check samples the selected platforms; use the user's scope. An all-platform request means
-every currently supported platform, not just the defaults in this example:
+every currently supported platform, not just the defaults in this example. Platforms are
+`chat_gpt`, `claude`, `gemini`, `perplexity` and `google_ai_mode`. Google AI Mode answers come
+from Google's results page for the market. They are saved with the model label `google-ai-mode`
+and have no search results or fan-out queries, so the website status reads No data:
 
 ```json
 {"kind":"ai-visibility","target":"example.com","brand":"Acme","prompt":"Which website analytics tools suit a small SaaS team?","platforms":["chat_gpt","perplexity"],"country":"US","language":"en"}
@@ -290,8 +293,12 @@ dates are provider values, not verified publication dates. These fields add no p
 The same evidence feeds three saved reads. Opportunities' AI answer items carry `site` and the
 `found-page` lever when your page was returned but not cited, and ask for a crawlable, indexable
 page first when your website is in none of the returned results. Recommendations
-(`visibility-actions-v4`) receive each answer's status and returned pages as data and review those
-pages by default. The Questions tab offers the AI platforms' `fanOutQueries` as optional question
+(`visibility-actions-v5`) receive each answer's status and returned pages as data and review those
+pages by default. They also receive the pages on other sites that answers without the brand cite
+and, when a Backlinks check of the website is saved, how many websites link to it. When the
+website is in few returned results, a new plan leads with a page that can be found and with an
+Off-site action naming up to three of those cited pages. SiteOS has not read them: open a page
+before saying whether it includes the brand, and treat inclusion as earned, never bought. The Questions tab offers the AI platforms' `fanOutQueries` as optional question
 suggestions with a Rank tracking link: they are model-generated searches, not what people search,
 and choosing one only saves a question.
 
