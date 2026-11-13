@@ -38,7 +38,7 @@ configuration without activating anything. Audit timing is separate from result 
 Read back the complete `days` array, time zone, revision and next run. Weekdays are Monday=1 through Sunday=7. A missing DST time
 is skipped; a repeated time runs once. After downtime only one due occurrence is considered.
 An active audit in the same Project environment or a full Organization queue skips that slot; inspect `lastOutcome`, not just enabled.
-New full HTML audits allow 1–2000 pages during Early Access (default 2000 for new resources), including CLI and
+New full HTML audits allow 1–2000 pages (default 2000 for new resources), including CLI and
 scheduled runs. Saved 100- or 500-page settings keep their allowance; select a larger limit in SEO Settings for an
 authorized larger audit. Previously saved explicit limits up to 500 remain effective.
 Excluded, unavailable and non-HTML URLs count. Up to 500 URLs and all rechecks retain 256 MiB and 15 minutes. Larger full scopes scale both

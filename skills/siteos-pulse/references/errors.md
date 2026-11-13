@@ -15,7 +15,9 @@ Check deployments or a runner just to enable Errors. Leave existing monitoring u
    `pulse errors configure --revision <revision> --enabled true|false --origin <exact-origin>
    [--origin ...] [--destination <saved-id> | --no-destination] --environment <slug> --json`, using
    the returned revision. Omitted `--origin` or destination flags keep the saved values. Changing
-   these settings is a real write. Notifications remain off unless requested.
+   these settings is a real write. Notifications remain off unless requested. Once error alerts
+   are set per channel on the Project's Notifications page, the destination flags return a
+   conflict: change alerts on that page and omit the flags.
 4. `pulse errors key --revision <revision> --output <new-private-file> --environment <slug>` rotates
    both collection keys. Never print the resulting server key, paste it into chat or commit it.
    Prefer the SiteOS protected UI/server secret store for transferring it to hosting. Browser keys

@@ -159,6 +159,11 @@ Domain summary metrics are independent of the first 100 keywords, pages and comp
 Do not sum those samples into a domain total. A missing summary or page dataset in an older or partial
 report remains unavailable, not zero. Use `domain-summary` and `domain-pages` datasets for totals
 and page opportunities. Ranking keywords include available CPC in USD and SEO difficulty (0–100).
+New Domain Overview reports add an `ai-overview-citations` dataset: up to 100 keywords whose Google
+AI Overview linked to the domain, with search volume, the cited page, its order among the sources
+and `observedAt`, the date of the provider's saved page. `total` counts all such keywords. It is
+not a live check; cite the date, and use Rank tracking to observe one keyword's overview. An older
+report without the dataset is no data, not zero citations.
 Filtering, sorting and exporting a saved report do not start another check. Compare report dates,
 market and target before drawing conclusions; editing a search draft does not change saved evidence.
 
@@ -202,6 +207,14 @@ Review source relevance, destination page, anchor and link attributes actually p
 Deduplicate repeated source domains when making an outreach shortlist, but preserve the original
 rows in evidence. Keep provider summary totals distinct from the returned page of links. Do not
 claim links are live, new, lost or followed unless that state is recorded or separately verified.
+
+Add up to five `competitors` to a full backlinks request for a link gap: one `backlink-gap`
+dataset per competitor lists websites with live links to that competitor but none to the target,
+with the provider's 0–1000 rank, link count, spam score and first-seen date, and `total`. A website
+in several datasets links to several competitors. Each competitor is one more paid request. Treat
+the list as outreach candidates for earned links only: check relevance first, never propose bought
+links, link exchanges or mass submissions, and read a high spam score as a reason to skip. A
+missing dataset is no data, not an empty gap.
 
 A domain score alone cannot establish quality, spam or harm. Treat suspicious links as candidates
 for investigation, not automatic disavow instructions. Explain realistic editorial opportunities
