@@ -84,7 +84,15 @@ Use a unique 8–100 character retry key (letters, digits, hyphens or underscore
 exactly the same request after an uncertain response. Never generate a new key merely to retry a
 lost launch response. Admission, credits and worker dispatch are identical to the interface; there
 is no automatic paid retry. Wait exit 3 means pending, exit 4 failed/cancelled; a partial report can
-still contain useful evidence. Read each part before interpreting missing results. To stop queued
+still contain useful evidence. Read each part before interpreting missing results. A failed part
+has a stable `error` and, when the provider gave one, a `reason`: `no_results`,
+`search_engine_error`, `partial_results`, `task_failed`, `response_timeout`, `rate_limited`,
+`request_not_accepted` or `provider_account`. Only `no_results` and `request_not_accepted` point at
+the keyword or its market; the others call for a later retry of the missing parts. A keyword that
+keeps failing with `search_engine_error` may need another wording. A Rank tracking part whose
+dataset has `depthLimit` was asked for that many results because the search engine refused 100:
+read "not found" there only up to the returned depth, never as absent from deeper results. The same
+applies to a dataset with `partial: true`, where only the first results pages could be collected. To stop queued
 or subsequent parts, use `npx @siteoshq/cli seo research cancel <run-id> --json`; an in-flight provider
 request may still finish and cost credits. Do not start background schedules or batches implicitly.
 
@@ -188,6 +196,12 @@ read saved snapshots but cannot ensure a new one; a CLI run grant does not overr
 Compare the organic pages, titles, intent and useful content in the saved results (up to 20).
 Keep observation time and market in the report. Monthly volume is estimated demand, not actual
 site visits; missing months are unknown. A low difficulty score is not a guarantee of ranking.
+
+Google hides many result links. A row with an empty `url` has no known page: its `domain` is the
+site Google printed above the title. Both are empty for a result printed without an address, such
+as a forum, video or social post; do not attribute it to any site. A snapshot saved before
+mid-November 2026 can hold a `google.com/goto` link and the domain `google.com` instead; treat
+those rows as unknown addresses.
 
 ## Compare competitors
 
@@ -366,6 +380,33 @@ are deferred to the end of the list: fix the blockers, or run the missing audit 
 scope, before content or AI-answer work. Other audit findings still appear only on pages with
 search traffic. Content proposals follow the skill's honest-content rules.
 
+`not-indexed` items come from Google's saved URL Inspection answers, not from the site audit: one
+item per reason Google gives (`reason`, with Google's wording in `label`), listing the pages with
+the day each answer was saved (`checkedAt`) and Google's last crawl (`crawledAt`, null when it
+never crawled the page). Only the homepage and sitemap pages are listed. Pages with noindex, a
+robots block, a redirect or another canonical are left out, and a page Google has not inspected
+is unknown, never "not indexed". `sources.indexing` is `empty` until an indexing check has run
+in Search Console → Indexing; starting one is the user's action. The next step follows the reason:
+
+- `unknown_to_google`: check that the sitemap is submitted and read, link to the page from pages
+  Google already knows, then ask the owner to request indexing in Search Console.
+- `discovered`: add internal links and keep the page in the sitemap; a young domain is crawled
+  slowly, so do not propose more pages to speed it up.
+- `crawled`: the content overlaps another page or adds too little. Read the page and what ranks
+  for its search before proposing a rewrite or a merge.
+- Other reasons (a 404 or server error Google saw, a soft 404, a duplicate without a canonical)
+  name what to fix on the website.
+
+An answer is as of its inspection date: say that date, and never claim a page is still out of
+the index today. You cannot request indexing or start a validation; the owner does that in
+Search Console. Never create new pages to fix an indexing item. They need CLI and server
+releases that support `version=4`.
+
+`notes["average-position"]`, when present, explains why the property's average position got
+worse: a page or query gained impressions far down the results (below position 20) while
+searches for the brand name held. Quote it as an explanation of the number. It is not an item,
+not a loss and not a reason to change the named page.
+
 Search Console items also include non-branded top-3 queries whose click-through is far below the
 site's own median (`ctr-gap`: check the live results page; an AI Overview or other result features
 may explain it), non-branded queries split between several of your pages (`cannibalization`: read
@@ -394,8 +435,14 @@ They need CLI and server releases that support `version=3`.
 - `not-ranking`: a tracked keyword is below position 20 or not among the checked results. First
   confirm the search fits what the website offers. Improve the page Google already ranks before
   proposing a new one, and never create several pages for variations of one search.
-- `brand-position`: a search for the brand name alone where the website is not first. Check the
-  live results before saying who ranks above it.
+- `brand-position`: a search for the brand name alone where the website is not first. When Rank
+  tracking tracks the name, `tracked` holds what its latest check saw: country, device, date, the
+  position or `position: null` with `depth` ("not in the first N results"), and the tracked
+  competitors above it. Rank tracking saves positions only for the website and its tracked
+  competitors, so check the live results before saying who else ranks above it. `queries` are
+  the Search Console rows: that average counts only the searches where the website appeared, so
+  it overstates visibility; never present it as the position. With `untracked: true` the name is
+  not in Rank tracking: suggest adding it, and never add it or start a check yourself.
 - `ai-sources`: one list of pages on other sites cited by AI answers that leave the brand out.
   `kind` (`list`, `directory`, `forum`, `page`) is read from the address and title only. Read a
   page before saying whether it includes the brand; inclusion is earned by asking the publisher
@@ -418,7 +465,12 @@ not a live check; cite its date. `serp: null` and older reports without `serp` a
 Rank tracking datasets also carry `serp` per keyword: the page's result types and the AI Overview
 with up to 20 sources. `aiOverview: null` means none was returned. `references: null` means its
 sources were not returned; never count that as citing nobody. Checks saved before 2026-11-04 have
-no `serp`; treat them as no data.
+no `serp`; treat them as no data. `referencesHidden: true` means Google returned some sources
+without an address and they were left out, so a domain missing from the list may still be cited.
+
+A rank row can have a position with `url: null`: Google hid the result link, so the position is
+known and the ranking page is not. Rank tracking checks saved from 2026-11-04 until mid-November
+2026 could save a ranking website as not found; run the check again before citing such a result.
 
 Rank tracking keyword sets can also run daily or weekly. An owner, admin or SEO/GEO Manager enables
 that in the application on the Keyword sets tab or the report header; there is no CLI or MCP

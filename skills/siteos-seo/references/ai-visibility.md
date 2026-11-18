@@ -62,7 +62,9 @@ A prompt check samples the selected platforms; use the user's scope. An all-plat
 every currently supported platform, not just the defaults in this example. Platforms are
 `chat_gpt`, `claude`, `gemini`, `perplexity` and `google_ai_mode`. Google AI Mode answers come
 from Google's results page for the market. They are saved with the model label `google-ai-mode`
-and have no search results or fan-out queries, so the website status reads No data:
+and have no search results or fan-out queries, so the website status reads No data. An answer
+with `sourcesHidden: true` left out sources Google returned without an address: a website missing
+from its `sources` may still be cited, so report it as sources unknown, never as not cited:
 
 ```json
 {"kind":"ai-visibility","target":"example.com","brand":"Acme","prompt":"Which website analytics tools suit a small SaaS team?","platforms":["chat_gpt","perplexity"],"country":"US","language":"en"}
@@ -263,8 +265,10 @@ Plain prose and a readable JSON `answer` field can still support Mentions when A
 
 New v3 reports show **Citations** as `citations / citationDenominator`: readable answers citing the
 product's official domain, counted once per answer. Shared-domain citations do not establish which
-product was discussed. Follow `citedProductIds` and original source URLs. Mentions and citations
-can differ; names in citation metadata alone do not count as Mentions. New reports show Rankings,
+product was discussed. Follow `citedProductIds` and original source URLs. An answer listing a
+product in `citationUnknownProductIds` is outside that product's `citationDenominator`: its sources
+were partly hidden, so it shows neither a citation nor the lack of one. Mentions and citations can
+differ; names in citation metadata alone do not count as Mentions. New reports show Rankings,
 Queries & answers and Research lenses for products, models, questions and sources, without AEO or
 Why they win. Full reruns and missing-part continuations use v3; original historical reports remain
 available. Earlier readable answers copied into a continuation retain their dates and source IDs.
