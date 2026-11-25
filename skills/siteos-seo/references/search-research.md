@@ -84,7 +84,9 @@ Use a unique 8–100 character retry key (letters, digits, hyphens or underscore
 exactly the same request after an uncertain response. Never generate a new key merely to retry a
 lost launch response. Admission, credits and worker dispatch are identical to the interface; there
 is no automatic paid retry. Wait exit 3 means pending, exit 4 failed/cancelled; a partial report can
-still contain useful evidence. Read each part before interpreting missing results. A failed part
+still contain useful evidence. A Rank tracking check asks one keyword at a time and a keyword takes
+about a minute, so ten keywords take about 12 minutes: on exit 3 repeat `wait` (with `--timeout`
+up to 900) on the same run instead of starting another check. Read each part before interpreting missing results. A failed part
 has a stable `error` and, when the provider gave one, a `reason`: `no_results`,
 `search_engine_error`, `partial_results`, `task_failed`, `response_timeout`, `rate_limited`,
 `request_not_accepted` or `provider_account`. Only `no_results` and `request_not_accepted` point at
@@ -92,7 +94,10 @@ the keyword or its market; the others call for a later retry of the missing part
 keeps failing with `search_engine_error` may need another wording. A Rank tracking part whose
 dataset has `depthLimit` was asked for that many results because the search engine refused 100:
 read "not found" there only up to the returned depth, never as absent from deeper results. The same
-applies to a dataset with `partial: true`, where only the first results pages could be collected. To stop queued
+applies to a dataset with `partial: true`, where only the first results pages could be collected. A
+part with `restoredResults` had that many results read from Google's Web tab, because Google
+returned an altered page to the automated check: its positions can differ from the main results
+page. To stop queued
 or subsequent parts, use `npx @siteoshq/cli seo research cancel <run-id> --json`; an in-flight provider
 request may still finish and cost credits. Do not start background schedules or batches implicitly.
 

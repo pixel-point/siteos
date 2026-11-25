@@ -58,6 +58,26 @@ Brand lookup searches the provider's corpus:
 {"kind":"brand","target":"example.com","brand":"Acme","brandPlatform":"chat_gpt","brandMatch":"domain","country":"US","language":"en"}
 ```
 
+To ask about one page instead of the whole domain, use `brandMatch: "page"` with `brandPage`, a
+full address on `target` without `?` or `#`. Add `brandSubpaths: true` for every page under that
+path, such as a blog section. It matches cited sources only; a cited address that carries a
+tracking parameter such as `utm_source=chatgpt.com` still counts as that page:
+
+```json
+{"kind":"brand","target":"example.com","brandPlatform":"chat_gpt","brandMatch":"page","brandPage":"https://example.com/blog/","brandSubpaths":true,"country":"US","language":"en"}
+```
+
+Add `brandCompetitorPages` (up to four addresses on other domains, read with the same
+`brandSubpaths`) to compare the page with competitor pages. The report then counts the answers
+citing each page and lists the questions whose answers cite a competitor page and no page of
+`target`. The comparison costs one request and each competitor page one more, so confirm that
+scope before running it.
+
+Any Brand lookup accepts `brandHistory: true`: one more request counts the matching answers per
+month of collection since August 2025, through the last complete month, which the server fixes
+as `brandHistoryThrough`. A month counts the answers collected in it, not a running total; read
+the change between months, not a sum, and treat a missing month as unknown.
+
 A prompt check samples the selected platforms; use the user's scope. An all-platform request means
 every currently supported platform, not just the defaults in this example. Platforms are
 `chat_gpt`, `claude`, `gemini`, `perplexity` and `google_ai_mode`. Google AI Mode answers come
